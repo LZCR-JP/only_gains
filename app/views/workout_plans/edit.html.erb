@@ -1,0 +1,18 @@
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      <h1 class="mb-4">Edit Workout Plan</h1>
+
+      <div class="card shadow-sm p-4">
+        <%= render "form", workout_plan: @workout_plan %>
+      </div>
+
+      <%= link_to "Back to Plan",
+          workout_plan_path(@workout_plan),
+          class: "btn btn-outline-secondary mt-3" %>
+
+    </div>
+  </div>
+</div>
