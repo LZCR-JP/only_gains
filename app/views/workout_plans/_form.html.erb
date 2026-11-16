@@ -1,0 +1,43 @@
+
+<%= simple_form_for workout_plan do |f| %>
+
+  <%= f.input :title,
+      placeholder: "My Home Workout Plan" %>
+
+  <%= f.input :goal,
+      collection: [
+        ["Bulking", "bulking"],
+        ["Endurance", "endurance"],
+        ["Losing Weight", "losing_weight"]
+      ],
+      prompt: "Choose your fitness goal" %>
+
+  <%= f.association :mentor,
+      label_method: :name,
+      prompt: "Choose your AI coach" %>
+
+  <%= f.input :fitness_level,
+      collection: [
+        ["Beginner", "beginner"],
+        ["Intermediate", "intermediate"],
+        ["Advanced", "advanced"]
+      ],
+      prompt: "Select your fitness level" %>
+
+  <%= f.input :equipment,
+      placeholder: "Dumbbells, yoga mat, or none" %>
+
+  <%= f.input :training_days,
+      collection: 1..7 %>
+
+  <%= f.input :duration_minutes,
+      collection: [15, 20, 30, 45, 60, 90] %>
+
+  <%= f.input :description,
+      as: :text,
+      placeholder: "Additional information (optional)" %>
+
+  <%= f.button :submit,
+      class: "btn btn-primary mt-3" %>
+
+<% end %>
