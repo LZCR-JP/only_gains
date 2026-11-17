@@ -1,0 +1,19 @@
+<h1><%= @chat.title %></h1>
+
+<div>
+  <% @chat.messages.order(:created_at).each do |message| %>
+    <p>
+      <strong><%= message.role.capitalize %>:</strong>
+      <%= message.content %>
+    </p>
+  <% end %>
+</div>
+
+<%= form_with model: [@chat, @message] do |form| %>
+  <div>
+    <%= form.label :content, "Your message" %>
+    <%= form.text_area :content, rows: 3 %>
+  </div>
+
+  <%= form.submit "Send" %>
+<% end %>
