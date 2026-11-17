@@ -42,12 +42,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "bookmarks", force: :cascade do |t|
+    t.text "comment"
+    t.bigint "movie_id", null: false
+    t.bigint "list_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_bookmarks_on_list_id"
+    t.index ["movie_id"], name: "index_bookmarks_on_movie_id"
+  end
+
   create_table "chats", force: :cascade do |t|
     t.bigint "workout_plan_id", null: false
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["workout_plan_id"], name: "index_chats_on_workout_plan_id"
+  end
+
+  create_table "completions", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.text "note"
+    t.integer "rating"
+    t.bigint "quest_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quest_id"], name: "index_completions_on_quest_id"
+  end
+
+  create_table "lists", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "photo"
   end
 
   create_table "mentors", force: :cascade do |t|
@@ -57,9 +84,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
     t.string "avatar_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "tagline"
-    t.string "badge"
-    t.string "emoji"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -69,6 +93,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chat_id"], name: "index_messages_on_chat_id"
+  end
+
+  create_table "movies", force: :cascade do |t|
+    t.string "title"
+    t.text "overview"
+    t.string "poster_url"
+    t.integer "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "poster"
+  end
+
+  create_table "quests", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.string "category"
+    t.string "difficulty"
+    t.integer "duration_minutes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.text "comment"
+    t.integer "rating"
+    t.bigint "list_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["list_id"], name: "index_reviews_on_list_id"
   end
 
   create_table "ruby_llm_batches", force: :cascade do |t|
@@ -244,17 +297,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "workout_change_proposals", force: :cascade do |t|
-    t.bigint "message_id", null: false
-    t.jsonb "proposal", null: false
-    t.jsonb "workout_snapshot", null: false
-    t.datetime "plan_updated_at", null: false
-    t.string "status", default: "pending", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["message_id"], name: "index_workout_change_proposals_on_message_id", unique: true
-  end
-
   create_table "workout_plans", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "mentor_id", null: false
@@ -268,16 +310,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
     t.text "system_prompt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "generated_workout"
     t.index ["mentor_id"], name: "index_workout_plans_on_mentor_id"
     t.index ["user_id"], name: "index_workout_plans_on_user_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bookmarks", "lists"
+  add_foreign_key "bookmarks", "movies"
   add_foreign_key "chats", "workout_plans"
+  add_foreign_key "completions", "quests"
   add_foreign_key "messages", "chats"
-  add_foreign_key "workout_change_proposals", "messages"
+  add_foreign_key "reviews", "lists"
   add_foreign_key "workout_plans", "mentors"
   add_foreign_key "workout_plans", "users"
 end
