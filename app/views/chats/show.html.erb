@@ -1,19 +1,56 @@
-<h1><%= @chat.title %></h1>
 
-<div>
-  <% @chat.messages.order(:created_at).each do |message| %>
-    <p>
-      <strong><%= message.role.capitalize %>:</strong>
-      <%= message.content %>
-    </p>
-  <% end %>
-</div>
+<div class="container py-5">
 
-<%= form_with model: [@chat, @message] do |form| %>
-  <div>
-    <%= form.label :content, "Your message" %>
-    <%= form.text_area :content, rows: 3 %>
+  <%= link_to "Back to Workout",
+      workout_plan_path(@workout_plan),
+      class: "btn btn-outline-secondary mb-4" %>
+
+  <h1><%= @workout_plan.mentor.name %></h1>
+
+  <p class="text-muted">Your AI Fitness Coach</p>
+
+  <div class="card p-4 mb-4">
+
+    <% @messages.each do |message| %>
+
+      <div class="d-flex mb-3
+        <%= message.role == "user" ?
+            "justify-content-end" :
+            "justify-content-start" %>">
+
+        <div class="rounded p-3
+          <%= message.role == "user" ?
+              "bg-primary text-white" :
+              "bg-light text-dark" %>"
+          style="max-width: 80%;">
+
+          <strong>
+            <%= message.role == "user" ?
+                "You" :
+                @workout_plan.mentor.name %>
+          </strong>
+
+          <%= simple_format(message.content) %>
+
+        </div>
+
+      </div>
+
+    <% end %>
+
   </div>
 
-  <%= form.submit "Send" %>
-<% end %>
+  <%= form_with model: [@chat, @message] do |form| %>
+
+    <%= form.text_area :content,
+        rows: 3,
+        placeholder: "Ask your AI coach anything...",
+        class: "form-control mb-3",
+        required: true %>
+
+    <%= form.submit "Send",
+        class: "btn btn-primary" %>
+
+  <% end %>
+
+</div>
