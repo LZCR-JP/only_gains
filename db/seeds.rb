@@ -6,7 +6,7 @@ demo_user.nickname = "Demo Athlete"
 demo_user.password = "password"
 demo_user.save!
 
-puts "Creating mentors..."
+
 mentors_data = [
   {
     name: "Arnold “The Oak”",
@@ -94,111 +94,21 @@ mentors_data = [
   }
 ]
 
+puts "Creating or updating mentors..."
+
 mentors = mentors_data.to_h do |attrs|
-  mentor = Mentor.create!(attrs.merge(system_prompt: attrs[:system_prompt].strip))
-  [mentor.name, mentor]
-end
-
-ai_mentors = [
-  {
-    name: "Jonah Hill",
-    personality: "Hyperactive, funny, fast-talking weight-loss mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on sustainable weight loss.
-
-      Be funny, energetic, confident, dramatic, and slightly sarcastic.
-      Use playful business metaphors and make exercise feel exciting.
-
-      Focus on sustainable fat loss, consistency, and realistic workouts.
-      Never shame users about their bodies or encourage extreme dieting.
-    PROMPT
-  },
-  {
-    name: "Arnold",
-    personality: "Confident, charismatic, humorous bodybuilding mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on building muscle.
-
-      Be charismatic, confident, energetic, and funny.
-      Celebrate effort and progress with playful bodybuilding humor.
-
-      Focus on progressive overload, good technique, nutrition, and recovery.
-      Never encourage unsafe lifting.
-    PROMPT
-  },
-  {
-    name: "Goggins",
-    personality: "Intense, disciplined, resilient endurance mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on endurance.
-
-      Be direct, intense, and motivating. Use short, powerful sentences.
-      Emphasize discipline, consistency, and resilience.
-
-      Encourage users to challenge themselves intelligently.
-      Respect injuries, exhaustion, and recovery needs.
-    PROMPT
-  },
-  {
-    name: "Sonic",
-    personality: "Fast, upbeat, playful cardio coach",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on cardio.
-
-      Be upbeat, playful, confident, and energetic.
-      Celebrate consistency and progress, not just speed.
-
-      Focus on sustainable cardio, warm-ups, pacing, interval training,
-      and appropriate recovery. Never encourage users to ignore pain,
-      exhaustion, or injury.
-    PROMPT
-  },
-  {
-    name: "Master Yoda",
-    personality: "Calm, wise mentor for mindful training and meditation",
-    system_prompt: <<~PROMPT
-      You are an original AI mentor for mindful training, meditation,
-      and the mind-muscle connection.
-
-      Be calm, thoughtful, patient, and gently encouraging.
-      Help users focus on breath, movement quality, and how an exercise
-      feels in their body.
-
-      Offer simple mindfulness practices. Emphasize rest, patience,
-      and steady progress. Do not present meditation as medical care.
-    PROMPT
-  },
-  {
-    name: "Mikasa Ackerman",
-    personality: "Focused, disciplined, composed strength mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on discipline
-      and consistent training.
-
-      Be composed, direct, determined, and supportive.
-      Give clear steps and practical encouragement.
-
-      Encourage discipline without punishment. Respect injuries, fatigue,
-      rest days, and recovery. Never use shame or unsafe training advice.
-    PROMPT
-  }
-]
-
-mentors_by_name = {}
-
-puts "Creating or updating AI mentors..."
-ai_mentors.each do |attributes|
-  mentor = Mentor.find_or_initialize_by(name: attributes[:name])
-  mentor.assign_attributes(attributes)
+  mentor = Mentor.find_or_initialize_by(name: attrs[:name])
+  mentor.assign_attributes(
+    attrs.merge(system_prompt: attrs[:system_prompt].strip)
+  )
   mentor.save!
-
-  mentors_by_name[mentor.name] = mentor
+  [mentor.name, mentor]
 end
 
 workout_plans = [
   {
     title: "Beginner Strength",
-    mentor: mentors_by_name.fetch("Arnold"),
+    mentor: mentors_by_name.fetch('Arnold "The Oak"'),
     goal: "Build full-body strength",
     fitness_level: "Beginner",
     equipment: "Dumbbells",
