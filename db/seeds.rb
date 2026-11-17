@@ -3,9 +3,8 @@ puts "Seeding OnlyGains..."
 puts "Creating demo user..."
 demo_user = User.find_or_initialize_by(email: "demo@onlygains.test")
 demo_user.nickname = "Demo Athlete"
-demo_user.password = "password"
+demo_user.password = "password" if demo_user.new_record?
 demo_user.save!
-
 
 mentors_data = [
   {
@@ -38,9 +37,9 @@ mentors_data = [
   },
   {
     name: "David Goggins",
+    avatar_url: "mentors/david-goggins.jpg",
     emoji: "💀",
     badge: "Stay Hard",
-    avatar_url: "mentors/david-goggins.jpg",
     tagline: "Who's gonna carry the boats?! You're only at 40%. Stay hard.",
     personality: "Relentless, raw, zero excuses. Turns suffering into fuel and makes you callous your mind.",
     system_prompt: <<~PROMPT
@@ -52,9 +51,9 @@ mentors_data = [
   },
   {
     name: "Jonah Hill",
+    avatar_url: "mentors/jonah-hill.jpg",
     emoji: "🥊",
     badge: "Glow-Up Mode",
-    avatar_url: "mentors/jonah-hill.jpg",
     tagline: "Gloves on, phone down. We're not chasing perfect — we're chasing Tuesday.",
     personality: "Funny, warm and self-aware. All about small wins, boxing cardio and being kind to yourself.",
     system_prompt: <<~PROMPT
@@ -95,12 +94,9 @@ mentors_data = [
 ]
 
 puts "Creating or updating mentors..."
-
 mentors = mentors_data.to_h do |attrs|
   mentor = Mentor.find_or_initialize_by(name: attrs[:name])
-  mentor.assign_attributes(
-    attrs.merge(system_prompt: attrs[:system_prompt].strip)
-  )
+  mentor.assign_attributes(attrs.merge(system_prompt: attrs[:system_prompt].strip))
   mentor.save!
   [mentor.name, mentor]
 end
@@ -108,23 +104,23 @@ end
 workout_plans = [
   {
     title: "Beginner Strength",
-    mentor: mentors_by_name.fetch('Arnold "The Oak"'),
-    goal: "Build full-body strength",
-    fitness_level: "Beginner",
+    mentor: mentors.fetch("Arnold “The Oak”"),
+    goal: "strength",
+    fitness_level: "beginner",
     equipment: "Dumbbells",
     training_days: 3,
     duration_minutes: 45,
-    description: "A balanced three-day plan covering the major movement patterns."
+    description: "Build full-body strength. A balanced three-day plan covering the major movement patterns."
   },
   {
     title: "Daily Mobility",
-    mentor: mentors_by_name.fetch("Master Yoda"),
-    goal: "Improve mobility and flexibility",
-    fitness_level: "All levels",
+    mentor: mentors.fetch("Master Yoda"),
+    goal: "mobility",
+    fitness_level: "beginner",
     equipment: "None",
     training_days: 5,
     duration_minutes: 20,
-    description: "A short, equipment-free routine for regular mobility practice."
+    description: "Improve mobility and flexibility. A short, equipment-free routine for regular mobility practice."
   }
 ]
 
@@ -136,14 +132,16 @@ workout_plans.each do |attributes|
 end
 
 legacy_mentor_replacements = {
-  "Strength Coach" => "Arnold",
-  "Mobility Coach" => "Master Yoda"
+  "Strength Coach" => "Arnold “The Oak”",
+  "Mobility Coach" => "Master Yoda",
+  "Arnold" => "Arnold “The Oak”",
+  "Goggins" => "David Goggins"
 }
 
-puts "Removing old demo mentors..."
+puts "Replacing and removing legacy mentors..."
 legacy_mentor_replacements.each do |old_name, replacement_name|
   Mentor.where(name: old_name).find_each do |old_mentor|
-    replacement = mentors_by_name.fetch(replacement_name)
+    replacement = mentors.fetch(replacement_name)
 
     old_mentor.workout_plans.find_each do |plan|
       plan.update!(mentor: replacement)
