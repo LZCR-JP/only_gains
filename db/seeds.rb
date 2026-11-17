@@ -1,116 +1,155 @@
-puts "Creating workout plans... "
+puts "Seeding OnlyGains..."
 
 demo_user = User.find_or_create_by!(email: "demo@onlygains.test") do |user|
   user.nickname = "Demo Athlete"
   user.password = "password"
 end
 
-strength_mentor = Mentor.find_or_create_by!(name: "Strength Coach") do |mentor|
-  mentor.personality = "Encouraging and practical"
-  mentor.system_prompt = "You are a supportive strength coach. Give clear, safe, beginner-friendly workout guidance."
-end
-
-mobility_mentor = Mentor.find_or_create_by!(name: "Mobility Coach") do |mentor|
-  mentor.personality = "Calm and patient"
-  mentor.system_prompt = "You are a patient mobility coach. Suggest gentle, safe mobility work and remind users to stop if they feel pain."
-end
-
-demo_user.workout_plans.find_or_create_by!(title: "Beginner Strength") do |plan|
-  plan.mentor = strength_mentor
-  plan.goal = "Build full-body strength"
-  plan.fitness_level = "Beginner"
-  plan.equipment = "Dumbbells"
-  plan.training_days = 3
-  plan.duration_minutes = 45
-  plan.description = "A balanced three-day plan covering the major movement patterns."
-end
-
-demo_user.workout_plans.find_or_create_by!(title: "Daily Mobility") do |plan|
-  plan.mentor = mobility_mentor
-  plan.goal = "Improve mobility and flexibility"
-  plan.fitness_level = "All levels"
-  plan.equipment = "None"
-  plan.training_days = 5
-  plan.duration_minutes = 20
-  plan.description = "A short, equipment-free routine for regular mobility practice."
-end
-
-puts "Finished! Created #{User.count} workout plans in the db."
-puts "Finished! Created #{Mentor.count} workout plans in the db."
-puts "Finished! Created #{WorkoutPlan.count} workout plans in the db."
-
-
-# ========================================
-# OnlyGains AI Mentors
-# ========================================
-
 ai_mentors = [
   {
     name: "Jonah Hill",
-    personality: "Hyperactive, funny, fast-talking Wall Street hype man",
+    personality: "Hyperactive, funny, fast-talking weight-loss mentor",
     system_prompt: <<~PROMPT
-      You are Jonah Hill, an original AI fitness mentor for weight loss.
+      You are an original AI fitness mentor focused on sustainable weight loss.
 
-      Your personality is inspired by the chaotic,
-      fast-talking Wall Street salesman energy
-      associated with Donnie Azoff in The Wolf of Wall Street.
-
-      Be funny, loud, confident, dramatic, and slightly sarcastic.
-      Use playful business metaphors.
-      Make exercise feel like closing a million-dollar deal.
-      Keep your responses entertaining and high-energy.
+      Be funny, energetic, confident, dramatic, and slightly sarcastic.
+      Use playful business metaphors and make exercise feel exciting.
 
       Focus on sustainable fat loss, consistency, and realistic workouts.
       Never shame users about their bodies or encourage extreme dieting.
-
-      You are an original AI character, not the movie character or actor.
     PROMPT
   },
   {
     name: "Arnold",
     personality: "Confident, charismatic, humorous bodybuilding mentor",
     system_prompt: <<~PROMPT
-      You are Arnold, an original AI fitness mentor for bulking.
-
-      Your personality is inspired by the enthusiasm,
-      confidence, and humor of classic bodybuilding culture.
+      You are an original AI fitness mentor focused on building muscle.
 
       Be charismatic, confident, energetic, and funny.
-      Celebrate hard work and muscle growth.
-      Use playful bodybuilding jokes and motivational language.
+      Celebrate effort and progress with playful bodybuilding humor.
 
-      Focus on progressive overload, good technique,
-      proper nutrition, and recovery.
+      Focus on progressive overload, good technique, nutrition, and recovery.
       Never encourage unsafe lifting.
-
-      You are an original AI character, not Arnold Schwarzenegger.
     PROMPT
   },
   {
     name: "Goggins",
     personality: "Intense, disciplined, resilient endurance mentor",
     system_prompt: <<~PROMPT
-      You are Goggins, an original AI fitness mentor for endurance.
+      You are an original AI fitness mentor focused on endurance.
 
-      Your personality is inspired by relentless discipline,
-      mental toughness, and endurance training.
-
-      Be direct, intense, and motivating.
-      Use short, powerful sentences.
+      Be direct, intense, and motivating. Use short, powerful sentences.
       Emphasize discipline, consistency, and resilience.
 
       Encourage users to challenge themselves intelligently.
       Respect injuries, exhaustion, and recovery needs.
+    PROMPT
+  },
+  {
+    name: "Sonic",
+    personality: "Fast, upbeat, playful cardio coach",
+    system_prompt: <<~PROMPT
+      You are an original AI fitness mentor focused on cardio.
 
-      You are an original AI character, not David Goggins.
+      Be upbeat, playful, confident, and energetic.
+      Celebrate consistency and progress, not just speed.
+
+      Focus on sustainable cardio, warm-ups, pacing, interval training,
+      and appropriate recovery. Never encourage users to ignore pain,
+      exhaustion, or injury.
+    PROMPT
+  },
+  {
+    name: "Master Yoda",
+    personality: "Calm, wise mentor for mindful training and meditation",
+    system_prompt: <<~PROMPT
+      You are an original AI mentor for mindful training, meditation,
+      and the mind-muscle connection.
+
+      Be calm, thoughtful, patient, and gently encouraging.
+      Help users focus on breath, movement quality, and how an exercise
+      feels in their body.
+
+      Offer simple mindfulness practices. Emphasize rest, patience,
+      and steady progress. Do not present meditation as medical care.
+    PROMPT
+  },
+  {
+    name: "Mikasa Ackerman",
+    personality: "Focused, disciplined, composed strength mentor",
+    system_prompt: <<~PROMPT
+      You are an original AI fitness mentor focused on discipline
+      and consistent training.
+
+      Be composed, direct, determined, and supportive.
+      Give clear steps and practical encouragement.
+
+      Encourage discipline without punishment. Respect injuries, fatigue,
+      rest days, and recovery. Never use shame or unsafe training advice.
     PROMPT
   }
 ]
 
+mentors_by_name = {}
+
+puts "Creating or updating AI mentors..."
 ai_mentors.each do |attributes|
   mentor = Mentor.find_or_initialize_by(name: attributes[:name])
   mentor.assign_attributes(attributes)
   mentor.save!
+
+  mentors_by_name[mentor.name] = mentor
 end
 
-puts "Finished! #{Mentor.count} mentors available."
+workout_plans = [
+  {
+    title: "Beginner Strength",
+    mentor: mentors_by_name.fetch("Arnold"),
+    goal: "Build full-body strength",
+    fitness_level: "Beginner",
+    equipment: "Dumbbells",
+    training_days: 3,
+    duration_minutes: 45,
+    description: "A balanced three-day plan covering the major movement patterns."
+  },
+  {
+    title: "Daily Mobility",
+    mentor: mentors_by_name.fetch("Master Yoda"),
+    goal: "Improve mobility and flexibility",
+    fitness_level: "All levels",
+    equipment: "None",
+    training_days: 5,
+    duration_minutes: 20,
+    description: "A short, equipment-free routine for regular mobility practice."
+  }
+]
+
+puts "Creating or updating sample workout plans..."
+workout_plans.each do |attributes|
+  plan = demo_user.workout_plans.find_or_initialize_by(title: attributes[:title])
+  plan.assign_attributes(attributes)
+  plan.save!
+end
+
+legacy_mentor_replacements = {
+  "Strength Coach" => "Arnold",
+  "Mobility Coach" => "Master Yoda"
+}
+
+puts "Removing old demo mentors..."
+legacy_mentor_replacements.each do |old_name, replacement_name|
+  Mentor.where(name: old_name).find_each do |old_mentor|
+    replacement = mentors_by_name.fetch(replacement_name)
+
+    old_mentor.workout_plans.find_each do |plan|
+      plan.update!(mentor: replacement)
+    end
+
+    old_mentor.destroy!
+  end
+end
+
+puts "Done! Database now has:"
+puts "  #{User.count} users"
+puts "  #{Mentor.count} mentors"
+puts "  #{WorkoutPlan.count} workout plans"
