@@ -1,22 +1,21 @@
+<% content_for :title, "New plan · Only Gains" %>
 
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
+<div class="gf-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-9 col-lg-7" data-controller="reveal">
+        <%= link_to "← Back to my plans", workout_plans_path, class: "gf-back" %>
 
-      <h1 class="mb-3">Create Your Workout Plan 💪</h1>
+        <header class="gf-header">
+          <span class="gf-eyebrow"><span class="gf-dot"></span>New plan</span>
+          <h1 class="gf-title">Create your plan 💪</h1>
+          <p class="gf-subtitle">Tell us about your goals and home setup. Your mentor handles the yelling.</p>
+        </header>
 
-      <p class="text-muted mb-4">
-        Tell us about your fitness goals and home workout setup.
-      </p>
-
-      <div class="card shadow-sm p-4">
-        <%= render "form", workout_plan: @workout_plan %>
+        <div class="gf-form-card">
+          <%= render "form", workout_plan: @workout_plan %>
+        </div>
       </div>
-
-      <%= link_to "Back to My Plans",
-          workout_plans_path,
-          class: "btn btn-outline-secondary mt-3" %>
-
     </div>
   </div>
 </div>

@@ -1,18 +1,21 @@
+<% content_for :title, "Edit #{@workout_plan.title} · Only Gains" %>
 
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
+<div class="gf-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-9 col-lg-7" data-controller="reveal">
+        <%= link_to "← Back to plan", workout_plan_path(@workout_plan), class: "gf-back" %>
 
-      <h1 class="mb-4">Edit Workout Plan</h1>
+        <header class="gf-header">
+          <span class="gf-eyebrow"><span class="gf-dot"></span>Edit plan</span>
+          <h1 class="gf-title"><%= @workout_plan.title_was.presence || @workout_plan.title %></h1>
+          <p class="gf-subtitle">Tweak the plan. Progressive overload applies to planning too.</p>
+        </header>
 
-      <div class="card shadow-sm p-4">
-        <%= render "form", workout_plan: @workout_plan %>
+        <div class="gf-form-card">
+          <%= render "form", workout_plan: @workout_plan %>
+        </div>
       </div>
-
-      <%= link_to "Back to Plan",
-          workout_plan_path(@workout_plan),
-          class: "btn btn-outline-secondary mt-3" %>
-
     </div>
   </div>
 </div>

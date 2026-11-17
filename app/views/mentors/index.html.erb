@@ -1,0 +1,43 @@
+<% content_for :title, "Mentors · Only Gains" %>
+
+<div class="gf-page">
+  <div class="container">
+
+    <header class="gf-header" data-controller="reveal">
+      <span class="gf-eyebrow"><span class="gf-dot"></span><%= @mentors.size %> mentors online</span>
+      <h1 class="gf-title">Choose your mentor</h1>
+      <p class="gf-subtitle">
+        Every mentor coaches differently. Assign one to any of your plans — you can switch whenever
+        their pep talks get too intense.
+      </p>
+    </header>
+
+    <div class="row g-3" data-controller="reveal">
+      <% @mentors.each do |mentor| %>
+        <% coached = @plan_counts[mentor.id].to_i %>
+        <div class="col-md-6 col-lg-4" data-reveal-target="item">
+          <article class="gf-card gf-mentor-card" data-controller="tilt" data-tilt-max-value="5">
+            <div class="gf-card-top">
+              <span class="gf-label"><span class="gf-dot"></span><%= mentor.badge %></span>
+              <span class="gf-mono gf-muted">
+                <%= coached.zero? ? "Free agent" : "Coaching #{pluralize(coached, 'plan')}" %>
+              </span>
+            </div>
+
+            <div class="gf-mentor-head">
+              <%= mentor_avatar(mentor, size: :lg) %>
+              <h2 class="gf-mentor-name"><%= link_to mentor.name, mentor_path(mentor) %></h2>
+            </div>
+
+            <p class="gf-personality"><%= mentor.personality %></p>
+
+            <blockquote class="gf-quote">“<%= mentor.tagline %>”</blockquote>
+
+            <%= render "assign_form", mentor: mentor, plans: @plans %>
+          </article>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>

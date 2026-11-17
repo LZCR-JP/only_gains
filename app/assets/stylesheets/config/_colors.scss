@@ -1,10 +1,22 @@
-// Define variables for your color scheme
+// Only Gains palette (dark)
+$gf-bg:      #0f0e0f;
+$gf-card:    #1c1b1b;
+$gf-card-2:  #2a2a2a;
+$gf-border:  #2f2e2e;
+$gf-text:    #e5e2e1;
+$gf-muted:   #9a9696;
+$gf-pink:    #f0b0ff;
+$gf-purple:  #c77dff;
+$gf-yellow:  #f5c84b;
+$gf-lime:    #d9ff3d;
+$gf-red:     #ff5c7a;
+$gf-ink:     #2a0a3d; // text on the pink→purple gradient
 
-// For example:
-$red: #FD1015;
-$blue: #0D6EFD;
-$yellow: #FFC65A;
-$orange: #E67E22;
-$green: #1EDD88;
-$gray: #0E0000;
-$light-gray: #F4F4F4;
+// Bootstrap-facing names
+$red:        $gf-red;
+$blue:       $gf-purple;
+$yellow:     $gf-yellow;
+$orange:     #ff9f43;
+$green:      $gf-lime;
+$gray:       $gf-text;
+$light-gray: $gf-bg;

@@ -15,6 +15,10 @@ Rails.application.routes.draw do
     member do
       patch :accept
       patch :reject
+
+  resources :mentors, only: %i[index show] do
+    member do
+      patch :assign
     end
   end
 

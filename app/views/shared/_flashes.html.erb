@@ -1,0 +1,14 @@
+<% if notice.present? || alert.present? %>
+  <div class="gf-toasts" aria-live="polite">
+    <% { notice: notice, alert: alert }.each do |type, message| %>
+      <% next if message.blank? %>
+      <div class="gf-toast gf-toast-<%= type %>" role="<%= type == :alert ? "alert" : "status" %>"
+           data-controller="flash"
+           data-action="mouseenter->flash#pause mouseleave->flash#resume">
+        <span aria-hidden="true"><%= type == :alert ? "⚠️" : "✅" %></span>
+        <p><%= message %></p>
+        <button type="button" data-action="flash#dismiss" aria-label="Dismiss">&times;</button>
+      </div>
+    <% end %>
+  </div>
+<% end %>
