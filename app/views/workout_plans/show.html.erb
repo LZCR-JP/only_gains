@@ -1,59 +1,71 @@
+<% content_for :title, "#{@workout_plan.title} · Only Gains" %>
+<% mentor = @workout_plan.mentor %>
 
-<div class="container py-5">
+<div class="gf-page">
+  <div class="container" data-controller="reveal">
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><%= @workout_plan.title %> 💪</h1>
+    <%= link_to "← Back to plans", workout_plans_path, class: "gf-back" %>
 
-    <%= link_to "Back to Plans",
-        workout_plans_path,
-        class: "btn btn-outline-secondary" %>
-  </div>
+    <header class="gf-header" data-reveal-target="item">
+      <span class="gf-eyebrow"><span class="gf-dot"></span><%= @workout_plan.goal&.humanize || "Workout plan" %></span>
+      <h1 class="gf-title"><%= @workout_plan.title %> 💪</h1>
+    </header>
 
-  <div class="card shadow-sm p-4">
+    <div class="row g-3">
+      <div class="col-lg-8" data-reveal-target="item">
+        <section class="gf-card">
+          <div class="gf-card-top">
+            <span class="gf-label"><span class="gf-dot"></span>Workout details</span>
+            <span class="gf-mono gf-muted">Created <%= @workout_plan.created_at.to_date.to_fs(:long) %></span>
+          </div>
 
-    <h3 class="mb-4">Workout Details</h3>
+          <div class="gf-detail-grid">
+            <div class="gf-detail"><small>Goal</small><strong><%= @workout_plan.goal&.humanize || "—" %></strong></div>
+            <div class="gf-detail"><small>Level</small><strong><%= @workout_plan.fitness_level&.humanize || "—" %></strong></div>
+            <div class="gf-detail"><small>Days / week</small><strong class="gf-lime"><%= @workout_plan.training_days %></strong></div>
+            <div class="gf-detail"><small>Session</small><strong class="gf-yellow"><%= @workout_plan.duration_minutes %> min</strong></div>
+            <div class="gf-detail"><small>Weekly total</small><strong><%= @workout_plan.training_days.to_i * @workout_plan.duration_minutes.to_i %> min</strong></div>
+            <div class="gf-detail"><small>Equipment</small><strong><%= @workout_plan.equipment.presence || "None" %></strong></div>
+          </div>
 
-    <p><strong>Goal:</strong>
-      <%= @workout_plan.goal&.humanize %></p>
+          <div>
+            <span class="gf-mentor">Notes</span>
+            <p class="gf-description"><%= @workout_plan.description.presence || "No description yet." %></p>
+          </div>
 
-    <p><strong>AI Coach:</strong>
-      <%= @workout_plan.mentor&.name || "Not selected" %></p>
+          <div class="gf-actions mt-auto">
+            <%= link_to "✏️ Edit plan", edit_workout_plan_path(@workout_plan), class: "gf-btn gf-btn-ghost" %>
+            <%= button_to "Delete plan", workout_plan_path(@workout_plan),
+                  method: :delete,
+                  class: "gf-btn gf-btn-danger",
+                  form: { data: { turbo_confirm: "Delete “#{@workout_plan.title}”? This can't be undone." } } %>
+          </div>
+        </section>
+      </div>
 
-    <p><strong>Fitness Level:</strong>
-      <%= @workout_plan.fitness_level&.humanize %></p>
+      <div class="col-lg-4" data-reveal-target="item">
+        <aside class="gf-card" data-controller="tilt">
+          <span class="gf-label"><span class="gf-dot"></span>Your mentor</span>
 
-    <p><strong>Equipment:</strong>
-      <%= @workout_plan.equipment %></p>
+          <div class="gf-coach-card">
+            <%= mentor_avatar(mentor, size: :lg) %>
+            <div>
+              <h3><%= link_to mentor.name, mentor_path(mentor), class: "gf-pink text-decoration-none" %></h3>
+              <span class="gf-mono gf-muted small"><%= mentor.badge %></span>
+            </div>
+          </div>
 
-    <p><strong>Training Days:</strong>
-      <%= @workout_plan.training_days %> days/week</p>
+          <blockquote class="gf-quote">“<%= mentor.tagline %>”</blockquote>
 
-    <p><strong>Duration:</strong>
-      <%= @workout_plan.duration_minutes %> minutes</p>
-
-    <p><strong>Description:</strong>
-      <%= @workout_plan.description.presence || "No description" %></p>
-
-    <hr>
-
-    <div class="d-flex gap-2">
-
-      <%= link_to "Edit Plan",
-          edit_workout_plan_path(@workout_plan),
-          class: "btn btn-primary" %>
-
-      <%= button_to "Delete Plan",
-          workout_plan_path(@workout_plan),
-          method: :delete,
-          class: "btn btn-danger",
-          form: {
-            data: {
-              turbo_confirm: "Are you sure you want to delete this plan?"
-            }
-          } %>
-
+          <div class="gf-actions mt-auto">
+            <%= link_to "Switch mentor", mentors_path, class: "gf-btn gf-btn-ghost gf-btn-sm" %>
+            <span class="gf-btn gf-btn-ghost gf-btn-sm disabled" aria-disabled="true">
+              💬 Chat<span class="gf-soon">soon</span>
+            </span>
+          </div>
+        </aside>
+      </div>
     </div>
 
   </div>
-
 </div>

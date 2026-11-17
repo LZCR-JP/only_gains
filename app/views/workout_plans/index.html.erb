@@ -1,62 +1,108 @@
+<% content_for :title, "Your plans · Only Gains" %>
 
-<div class="container py-5">
+<div class="gf-page">
+  <div class="container">
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>My Workout Plans 💪</h1>
-
-    <%= link_to "Create New Plan",
-        new_workout_plan_path,
-        class: "btn btn-primary" %>
-  </div>
-
-  <% if @workout_plans.any? %>
-
-    <div class="row">
-      <% @workout_plans.each do |plan| %>
-
-        <div class="col-md-6 col-lg-4 mb-4">
-          <div class="card p-4 h-100 shadow-sm">
-
-            <h3><%= plan.title %></h3>
-
-            <p>
-              <strong>Goal:</strong>
-              <%= plan.goal.humanize %>
-            </p>
-
-            <p>
-              <strong>Fitness Level:</strong>
-              <%= plan.fitness_level&.humanize %>
-            </p>
-
-            <p>
-              <strong>Duration:</strong>
-              <%= plan.duration_minutes %> minutes
-            </p>
-
-            <%= link_to "View Plan",
-                workout_plan_path(plan),
-                class: "btn btn-primary mt-auto" %>
-
-          </div>
-        </div>
-
-      <% end %>
-    </div>
-
-  <% else %>
-
-    <div class="text-center py-5">
-      <h3>No workout plans yet!</h3>
-      <p class="text-muted">
-        Create your first personalized home workout plan.
+    <header class="gf-header" data-controller="reveal">
+      <span class="gf-eyebrow"><span class="gf-dot"></span>Workout plans</span>
+      <h1 class="gf-title">Your Workout Plans</h1>
+      <p class="gf-subtitle">
+        Pick a plan. Pick a mentor. Pick up the weights. Your couch has been notified.
       </p>
 
-      <%= link_to "Create My First Plan",
-          new_workout_plan_path,
-          class: "btn btn-primary mt-3" %>
-    </div>
+      <div class="gf-kpis">
+        <div class="gf-kpi">
+          <strong class="gf-pink" data-controller="counter" data-counter-to-value="<%= @workout_plans.size %>"><%= @workout_plans.size %></strong>
+          <small>Plans loaded</small>
+        </div>
+        <div class="gf-kpi">
+          <% total_minutes = @workout_plans.sum { |p| p.duration_minutes.to_i * p.training_days.to_i } %>
+          <strong class="gf-yellow" data-controller="counter" data-counter-to-value="<%= total_minutes %>"><%= total_minutes %></strong>
+          <small>Min of glorious pain / week</small>
+        </div>
+        <div class="gf-kpi">
+          <% mentor_count = @workout_plans.map(&:mentor_id).uniq.size %>
+          <strong class="gf-lime" data-controller="counter" data-counter-to-value="<%= mentor_count %>"><%= mentor_count %></strong>
+          <small>Mentors in your corner</small>
+        </div>
+      </div>
 
-  <% end %>
+      <div class="gf-header-row">
+        <span class="gf-mono gf-muted small">Newest first</span>
+        <%= link_to new_workout_plan_path, class: "gf-btn gf-btn-primary" do %>
+          ⚡ Create New Plan
+        <% end %>
+      </div>
+    </header>
 
+    <% if @workout_plans.any? %>
+
+      <div class="gf-section-label">
+        <span>Available Neural Bench</span>
+        <small class="gf-mono gf-muted">Tap to inspect</small>
+      </div>
+
+      <div class="row g-3" data-controller="reveal">
+        <% @workout_plans.each_with_index do |plan, i| %>
+          <% mentor = plan.mentor %>
+          <div class="col-md-6 col-lg-4" data-reveal-target="item">
+            <article class="gf-card" data-controller="tilt">
+
+              <div class="gf-card-top">
+                <span class="gf-label"><span class="gf-dot"></span>Plan <%= format("%02d", i + 1) %></span>
+                <span class="gf-mono gf-muted"><%= mentor.badge %></span>
+              </div>
+
+              <h3 class="gf-card-title"><%= plan.title %></h3>
+
+              <div class="gf-stats">
+                <div class="gf-stat">
+                  <small>Goal</small>
+                  <strong><%= plan.goal&.humanize || "—" %></strong>
+                </div>
+                <div class="gf-stat">
+                  <small>Level</small>
+                  <strong><%= plan.fitness_level&.humanize || "Beast?" %></strong>
+                </div>
+                <div class="gf-stat">
+                  <small>Time</small>
+                  <strong class="gf-yellow"><%= plan.duration_minutes %> min</strong>
+                </div>
+              </div>
+
+              <blockquote class="gf-quote">
+                <span class="gf-mentor"><%= mentor.display_name %></span>
+                “<%= mentor.tagline.presence || "Let's get to work." %>”
+              </blockquote>
+
+              <%= link_to workout_plan_path(plan), class: "gf-btn gf-btn-primary gf-btn-block" do %>
+                ▶ Let's go! View plan
+              <% end %>
+
+            </article>
+          </div>
+        <% end %>
+      </div>
+
+      <p class="gf-footer-note gf-mono gf-muted">
+        • Hype Engine v4.2 active &nbsp;·&nbsp; Next rest interval: 45s (don't sit down!)
+      </p>
+
+    <% else %>
+
+      <div class="gf-card gf-empty" data-controller="reveal">
+        <span class="gf-label"><span class="gf-dot"></span>0 plans loaded</span>
+        <h3 class="gf-card-title">The bench is empty.</h3>
+        <blockquote class="gf-quote">
+          <span class="gf-mentor">🟢 Master Yoda</span>
+          “Do or do not, there is no empty list. Create a plan, you must.”
+        </blockquote>
+        <%= link_to new_workout_plan_path, class: "gf-btn gf-btn-primary" do %>
+          ⚡ Create my first plan
+        <% end %>
+      </div>
+
+    <% end %>
+
+  </div>
 </div>

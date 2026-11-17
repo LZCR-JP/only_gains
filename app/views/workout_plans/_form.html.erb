@@ -1,43 +1,45 @@
-
 <%= simple_form_for workout_plan do |f| %>
+  <%= f.error_notification %>
 
-  <%= f.input :title,
-      placeholder: "My Home Workout Plan" %>
+  <%= f.input :title, placeholder: "My Home Workout Plan" %>
 
-  <%= f.input :goal,
-      collection: [
-        ["Bulking", "bulking"],
-        ["Endurance", "endurance"],
-        ["Losing Weight", "losing_weight"]
-      ],
-      prompt: "Choose your fitness goal" %>
+  <div class="row">
+    <div class="col-sm-6">
+      <%= f.input :goal,
+          collection: WorkoutPlan.goal_options,
+          prompt: "Choose your fitness goal" %>
+    </div>
+    <div class="col-sm-6">
+      <%= f.input :fitness_level,
+          collection: WorkoutPlan.fitness_level_options,
+          prompt: "Select your level" %>
+    </div>
+  </div>
 
   <%= f.association :mentor,
-      label_method: :name,
-      prompt: "Choose your AI coach" %>
+      collection: Mentor.order(:id),
+      label: "AI mentor",
+      label_method: :display_name,
+      prompt: "Choose your AI coach",
+      hint: link_to("Not sure? Meet the mentors →", mentors_path, class: "gf-pink") %>
 
-  <%= f.input :fitness_level,
-      collection: [
-        ["Beginner", "beginner"],
-        ["Intermediate", "intermediate"],
-        ["Advanced", "advanced"]
-      ],
-      prompt: "Select your fitness level" %>
+  <%= f.input :equipment, placeholder: "Dumbbells, yoga mat, or none" %>
 
-  <%= f.input :equipment,
-      placeholder: "Dumbbells, yoga mat, or none" %>
-
-  <%= f.input :training_days,
-      collection: 1..7 %>
-
-  <%= f.input :duration_minutes,
-      collection: [15, 20, 30, 45, 60, 90] %>
+  <div class="row">
+    <div class="col-sm-6">
+      <%= f.input :training_days, label: "Training days / week", collection: 1..7, include_blank: false %>
+    </div>
+    <div class="col-sm-6">
+      <%= f.input :duration_minutes, label: "Session length (min)", collection: [15, 20, 30, 45, 60, 90], include_blank: false %>
+    </div>
+  </div>
 
   <%= f.input :description,
       as: :text,
-      placeholder: "Additional information (optional)" %>
+      input_html: { rows: 4 },
+      placeholder: "Injuries, preferences, anything your mentor should know (optional)" %>
 
-  <%= f.button :submit,
-      class: "btn btn-primary mt-3" %>
-
+  <%= f.button :button, class: "gf-btn gf-btn-primary gf-btn-block mt-2" do %>
+    ⚡ <%= workout_plan.persisted? ? "Save changes" : "Create plan" %>
+  <% end %>
 <% end %>
