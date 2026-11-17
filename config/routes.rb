@@ -1,4 +1,3 @@
-
 Rails.application.routes.draw do
   devise_for :users
 
@@ -11,6 +10,11 @@ Rails.application.routes.draw do
   resources :chats, only: [] do
     resources :messages, only: [:create]
   end
+
+  resources :workout_change_proposals, only: [] do
+    member do
+      patch :accept
+      patch :reject
 
   resources :mentors, only: %i[index show] do
     member do

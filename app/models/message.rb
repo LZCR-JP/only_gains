@@ -1,5 +1,8 @@
 class Message < ApplicationRecord
   belongs_to :chat
+
+  has_one :workout_change_proposal, dependent: :destroy
+
   delegate :workout_plan, to: :chat
 
   validates :role, inclusion: { in: ["user", "assistant"] }

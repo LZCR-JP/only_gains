@@ -1,0 +1,91 @@
+
+<% change = proposal.proposal %>
+<% replacement = change["replacement"] %>
+
+<div class="card border mt-3 p-3 text-dark">
+
+  <h5>Suggested Workout Change</h5>
+
+  <p class="text-muted">
+    <%= change["day_name"] %>
+  </p>
+
+  <div class="row g-2">
+
+    <div class="col-6">
+      <div class="bg-light rounded p-3 h-100">
+
+        <small class="text-muted">BEFORE</small>
+
+        <h6 class="mt-2">
+          <%= change["original_exercise"] %>
+        </h6>
+
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="bg-light rounded p-3 h-100">
+
+        <small class="text-muted">AFTER</small>
+
+        <h6 class="mt-2">
+          <%= replacement["name"] %>
+        </h6>
+
+        <p class="mb-1">
+          <%= replacement["sets"] %> sets ×
+          <%= replacement["reps"] %> reps
+        </p>
+
+        <small>
+          Rest: <%= replacement["rest_seconds"] %> sec
+        </small>
+
+      </div>
+    </div>
+
+  </div>
+
+  <p class="mt-3">
+    <%= change["reason"] %>
+  </p>
+
+  <% case proposal.status %>
+  <% when "pending" %>
+
+    <div class="d-flex gap-2">
+
+      <%= button_to "Accept Change",
+          accept_workout_change_proposal_path(proposal),
+          method: :patch,
+          class: "btn btn-success" %>
+
+      <%= button_to "Reject",
+          reject_workout_change_proposal_path(proposal),
+          method: :patch,
+          class: "btn btn-outline-danger" %>
+
+    </div>
+
+  <% when "accepted" %>
+
+    <div class="text-success">
+      ✓ Workout updated
+    </div>
+
+  <% when "rejected" %>
+
+    <div class="text-muted">
+      Change rejected
+    </div>
+
+  <% when "stale" %>
+
+    <div class="text-warning">
+      This proposal has expired. Request a new change.
+    </div>
+
+  <% end %>
+
+</div>
