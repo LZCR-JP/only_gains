@@ -3,10 +3,9 @@ puts "Seeding OnlyGains..."
 puts "Creating demo user..."
 demo_user = User.find_or_initialize_by(email: "demo@onlygains.test")
 demo_user.nickname = "Demo Athlete"
-demo_user.password = "password"
+demo_user.password = "password" if demo_user.new_record?
 demo_user.save!
 
-puts "Creating mentors..."
 mentors_data = [
   {
     name: "Arnold “The Oak”",
@@ -38,9 +37,9 @@ mentors_data = [
   },
   {
     name: "David Goggins",
+    avatar_url: "mentors/david-goggins.jpg",
     emoji: "💀",
     badge: "Stay Hard",
-    avatar_url: "mentors/david-goggins.jpg",
     tagline: "Who's gonna carry the boats?! You're only at 40%. Stay hard.",
     personality: "Relentless, raw, zero excuses. Turns suffering into fuel and makes you callous your mind.",
     system_prompt: <<~PROMPT
@@ -52,9 +51,9 @@ mentors_data = [
   },
   {
     name: "Jonah Hill",
+    avatar_url: "mentors/jonah-hill.jpg",
     emoji: "🥊",
     badge: "Glow-Up Mode",
-    avatar_url: "mentors/jonah-hill.jpg",
     tagline: "Gloves on, phone down. We're not chasing perfect — we're chasing Tuesday.",
     personality: "Funny, warm and self-aware. All about small wins, boxing cardio and being kind to yourself.",
     system_prompt: <<~PROMPT
@@ -94,127 +93,34 @@ mentors_data = [
   }
 ]
 
+puts "Creating or updating mentors..."
 mentors = mentors_data.to_h do |attrs|
-  mentor = Mentor.create!(attrs.merge(system_prompt: attrs[:system_prompt].strip))
-  [mentor.name, mentor]
-end
-
-ai_mentors = [
-  {
-    name: "Jonah Hill",
-    personality: "Hyperactive, funny, fast-talking weight-loss mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on sustainable weight loss.
-
-      Be funny, energetic, confident, dramatic, and slightly sarcastic.
-      Use playful business metaphors and make exercise feel exciting.
-
-      Focus on sustainable fat loss, consistency, and realistic workouts.
-      Never shame users about their bodies or encourage extreme dieting.
-    PROMPT
-  },
-  {
-    name: "Arnold",
-    personality: "Confident, charismatic, humorous bodybuilding mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on building muscle.
-
-      Be charismatic, confident, energetic, and funny.
-      Celebrate effort and progress with playful bodybuilding humor.
-
-      Focus on progressive overload, good technique, nutrition, and recovery.
-      Never encourage unsafe lifting.
-    PROMPT
-  },
-  {
-    name: "Goggins",
-    personality: "Intense, disciplined, resilient endurance mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on endurance.
-
-      Be direct, intense, and motivating. Use short, powerful sentences.
-      Emphasize discipline, consistency, and resilience.
-
-      Encourage users to challenge themselves intelligently.
-      Respect injuries, exhaustion, and recovery needs.
-    PROMPT
-  },
-  {
-    name: "Sonic",
-    personality: "Fast, upbeat, playful cardio coach",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on cardio.
-
-      Be upbeat, playful, confident, and energetic.
-      Celebrate consistency and progress, not just speed.
-
-      Focus on sustainable cardio, warm-ups, pacing, interval training,
-      and appropriate recovery. Never encourage users to ignore pain,
-      exhaustion, or injury.
-    PROMPT
-  },
-  {
-    name: "Master Yoda",
-    personality: "Calm, wise mentor for mindful training and meditation",
-    system_prompt: <<~PROMPT
-      You are an original AI mentor for mindful training, meditation,
-      and the mind-muscle connection.
-
-      Be calm, thoughtful, patient, and gently encouraging.
-      Help users focus on breath, movement quality, and how an exercise
-      feels in their body.
-
-      Offer simple mindfulness practices. Emphasize rest, patience,
-      and steady progress. Do not present meditation as medical care.
-    PROMPT
-  },
-  {
-    name: "Mikasa Ackerman",
-    personality: "Focused, disciplined, composed strength mentor",
-    system_prompt: <<~PROMPT
-      You are an original AI fitness mentor focused on discipline
-      and consistent training.
-
-      Be composed, direct, determined, and supportive.
-      Give clear steps and practical encouragement.
-
-      Encourage discipline without punishment. Respect injuries, fatigue,
-      rest days, and recovery. Never use shame or unsafe training advice.
-    PROMPT
-  }
-]
-
-mentors_by_name = {}
-
-puts "Creating or updating AI mentors..."
-ai_mentors.each do |attributes|
-  mentor = Mentor.find_or_initialize_by(name: attributes[:name])
-  mentor.assign_attributes(attributes)
+  mentor = Mentor.find_or_initialize_by(name: attrs[:name])
+  mentor.assign_attributes(attrs.merge(system_prompt: attrs[:system_prompt].strip))
   mentor.save!
-
-  mentors_by_name[mentor.name] = mentor
+  [mentor.name, mentor]
 end
 
 workout_plans = [
   {
     title: "Beginner Strength",
-    mentor: mentors_by_name.fetch("Arnold"),
-    goal: "Build full-body strength",
-    fitness_level: "Beginner",
+    mentor: mentors.fetch("Arnold “The Oak”"),
+    goal: "strength",
+    fitness_level: "beginner",
     equipment: "Dumbbells",
     training_days: 3,
     duration_minutes: 45,
-    description: "A balanced three-day plan covering the major movement patterns."
+    description: "Build full-body strength. A balanced three-day plan covering the major movement patterns."
   },
   {
     title: "Daily Mobility",
-    mentor: mentors_by_name.fetch("Master Yoda"),
-    goal: "Improve mobility and flexibility",
-    fitness_level: "All levels",
+    mentor: mentors.fetch("Master Yoda"),
+    goal: "mobility",
+    fitness_level: "beginner",
     equipment: "None",
     training_days: 5,
     duration_minutes: 20,
-    description: "A short, equipment-free routine for regular mobility practice."
+    description: "Improve mobility and flexibility. A short, equipment-free routine for regular mobility practice."
   }
 ]
 
@@ -226,14 +132,16 @@ workout_plans.each do |attributes|
 end
 
 legacy_mentor_replacements = {
-  "Strength Coach" => "Arnold",
-  "Mobility Coach" => "Master Yoda"
+  "Strength Coach" => "Arnold “The Oak”",
+  "Mobility Coach" => "Master Yoda",
+  "Arnold" => "Arnold “The Oak”",
+  "Goggins" => "David Goggins"
 }
 
-puts "Removing old demo mentors..."
+puts "Replacing and removing legacy mentors..."
 legacy_mentor_replacements.each do |old_name, replacement_name|
   Mentor.where(name: old_name).find_each do |old_mentor|
-    replacement = mentors_by_name.fetch(replacement_name)
+    replacement = mentors.fetch(replacement_name)
 
     old_mentor.workout_plans.find_each do |plan|
       plan.update!(mentor: replacement)

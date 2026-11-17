@@ -4,17 +4,19 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   resources :workout_plans do
-    resources :chats, only: [:create, :show]
+    resources :chats, only: %i[create show]
   end
 
   resources :chats, only: [] do
-    resources :messages, only: [:create]
+    resources :messages, only: :create
   end
 
   resources :workout_change_proposals, only: [] do
     member do
       patch :accept
       patch :reject
+    end
+  end
 
   resources :mentors, only: %i[index show] do
     member do
