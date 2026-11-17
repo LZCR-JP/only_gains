@@ -76,3 +76,4 @@ end
 gem "devise"
 
 gem "openai", "~> 0.125.0"
+gem "ruby_llm"
