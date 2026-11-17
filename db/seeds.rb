@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-puts "Cleaning workout plans, chats and mentors..."
-Message.destroy_all
-Chat.destroy_all
-WorkoutPlan.destroy_all
-Mentor.destroy_all
-=======
 puts "Seeding OnlyGains..."
->>>>>>> 5df6577a9b45a9f1e284f9e6063d8427fbe09d02
 
 puts "Creating demo user..."
 demo_user = User.find_or_initialize_by(email: "demo@onlygains.test")
@@ -107,43 +99,6 @@ mentors = mentors_data.to_h do |attrs|
   [mentor.name, mentor]
 end
 
-<<<<<<< HEAD
-puts "Creating demo workout plans..."
-demo_user.workout_plans.create!(
-  title: "Golden Era Push/Pull",
-  mentor: mentors["Arnold “The Oak”"],
-  goal: :bulking,
-  fitness_level: :intermediate,
-  equipment: "Dumbbells, bench, pull-up bar",
-  training_days: 4,
-  duration_minutes: 60,
-  description: "Classic upper/lower split with heavy compounds and a pump finisher."
-)
-
-demo_user.workout_plans.create!(
-  title: "Daily Jedi Mobility",
-  mentor: mentors["Master Yoda"],
-  goal: :mobility,
-  fitness_level: :beginner,
-  equipment: "Yoga mat",
-  training_days: 5,
-  duration_minutes: 20,
-  description: "Short, equipment-free flows for hips, shoulders and spine."
-)
-
-demo_user.workout_plans.create!(
-  title: "Sonic Speed Circuits",
-  mentor: mentors["Sonic"],
-  goal: :endurance,
-  fitness_level: :advanced,
-  equipment: "None",
-  training_days: 3,
-  duration_minutes: 30,
-  description: "High-intensity intervals with minimal rest. Gotta go fast."
-)
-
-puts "Done! #{User.count} users, #{Mentor.count} mentors, #{WorkoutPlan.count} workout plans."
-=======
 ai_mentors = [
   {
     name: "Jonah Hill",
@@ -292,4 +247,3 @@ puts "Done! Database now has:"
 puts "  #{User.count} users"
 puts "  #{Mentor.count} mentors"
 puts "  #{WorkoutPlan.count} workout plans"
->>>>>>> 5df6577a9b45a9f1e284f9e6063d8427fbe09d02

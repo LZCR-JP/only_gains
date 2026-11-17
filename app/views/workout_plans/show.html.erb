@@ -4,72 +4,6 @@
 <div class="gf-page">
   <div class="container" data-controller="reveal">
 
-<<<<<<< HEAD
-    <%= link_to "← Back to plans", workout_plans_path, class: "gf-back" %>
-
-    <header class="gf-header" data-reveal-target="item">
-      <span class="gf-eyebrow"><span class="gf-dot"></span><%= @workout_plan.goal&.humanize || "Workout plan" %></span>
-      <h1 class="gf-title"><%= @workout_plan.title %> 💪</h1>
-    </header>
-
-    <div class="row g-3">
-      <div class="col-lg-8" data-reveal-target="item">
-        <section class="gf-card">
-          <div class="gf-card-top">
-            <span class="gf-label"><span class="gf-dot"></span>Workout details</span>
-            <span class="gf-mono gf-muted">Created <%= @workout_plan.created_at.to_date.to_fs(:long) %></span>
-          </div>
-
-          <div class="gf-detail-grid">
-            <div class="gf-detail"><small>Goal</small><strong><%= @workout_plan.goal&.humanize || "—" %></strong></div>
-            <div class="gf-detail"><small>Level</small><strong><%= @workout_plan.fitness_level&.humanize || "—" %></strong></div>
-            <div class="gf-detail"><small>Days / week</small><strong class="gf-lime"><%= @workout_plan.training_days %></strong></div>
-            <div class="gf-detail"><small>Session</small><strong class="gf-yellow"><%= @workout_plan.duration_minutes %> min</strong></div>
-            <div class="gf-detail"><small>Weekly total</small><strong><%= @workout_plan.training_days.to_i * @workout_plan.duration_minutes.to_i %> min</strong></div>
-            <div class="gf-detail"><small>Equipment</small><strong><%= @workout_plan.equipment.presence || "None" %></strong></div>
-          </div>
-
-          <div>
-            <span class="gf-mentor">Notes</span>
-            <p class="gf-description"><%= @workout_plan.description.presence || "No description yet." %></p>
-          </div>
-
-          <div class="gf-actions mt-auto">
-            <%= link_to "✏️ Edit plan", edit_workout_plan_path(@workout_plan), class: "gf-btn gf-btn-ghost" %>
-            <%= button_to "Delete plan", workout_plan_path(@workout_plan),
-                  method: :delete,
-                  class: "gf-btn gf-btn-danger",
-                  form: { data: { turbo_confirm: "Delete “#{@workout_plan.title}”? This can't be undone." } } %>
-          </div>
-        </section>
-      </div>
-
-      <div class="col-lg-4" data-reveal-target="item">
-        <aside class="gf-card" data-controller="tilt">
-          <span class="gf-label"><span class="gf-dot"></span>Your mentor</span>
-
-          <div class="gf-coach-card">
-            <%= mentor_avatar(mentor, size: :lg) %>
-            <div>
-              <h3><%= link_to mentor.name, mentor_path(mentor), class: "gf-pink text-decoration-none" %></h3>
-              <span class="gf-mono gf-muted small"><%= mentor.badge %></span>
-            </div>
-          </div>
-
-          <blockquote class="gf-quote">“<%= mentor.tagline %>”</blockquote>
-
-          <div class="gf-actions mt-auto">
-            <%= link_to "Switch mentor", mentors_path, class: "gf-btn gf-btn-ghost gf-btn-sm" %>
-            <span class="gf-btn gf-btn-ghost gf-btn-sm disabled" aria-disabled="true">
-              💬 Chat<span class="gf-soon">soon</span>
-            </span>
-          </div>
-        </aside>
-      </div>
-    </div>
-
-  </div>
-=======
   <%= link_to "Back to My Plans",
       workout_plans_path,
       class: "btn btn-outline-secondary mb-4" %>
@@ -186,5 +120,4 @@
       form: { data: { turbo_confirm: "Are you sure?" } },
       class: "btn btn-outline-danger mt-4" %>
 
->>>>>>> 5df6577a9b45a9f1e284f9e6063d8427fbe09d02
 </div>

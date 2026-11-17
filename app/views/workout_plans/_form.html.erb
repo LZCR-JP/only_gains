@@ -1,34 +1,9 @@
 <%= simple_form_for workout_plan do |f| %>
-<<<<<<< HEAD
-  <%= f.error_notification %>
-=======
 <%= f.error_notification %>
 <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
->>>>>>> 5df6577a9b45a9f1e284f9e6063d8427fbe09d02
 
   <%= f.input :title, placeholder: "My Home Workout Plan" %>
 
-<<<<<<< HEAD
-  <div class="row">
-    <div class="col-sm-6">
-      <%= f.input :goal,
-          collection: WorkoutPlan.goal_options,
-          prompt: "Choose your fitness goal" %>
-    </div>
-    <div class="col-sm-6">
-      <%= f.input :fitness_level,
-          collection: WorkoutPlan.fitness_level_options,
-          prompt: "Select your level" %>
-    </div>
-  </div>
-
-  <%= f.association :mentor,
-      collection: Mentor.order(:id),
-      label: "AI mentor",
-      label_method: :display_name,
-      prompt: "Choose your AI coach",
-      hint: link_to("Not sure? Meet the mentors →", mentors_path, class: "gf-pink") %>
-=======
   <%= f.input :goal,
       collection: [
         ["Bulking", "bulking"],
@@ -38,7 +13,6 @@
       prompt: "Choose your fitness goal",
       hint: "Your AI coach will be automatically assigned based on your goal.",
       required: true %>
->>>>>>> 5df6577a9b45a9f1e284f9e6063d8427fbe09d02
 
   <%= f.input :equipment, placeholder: "Dumbbells, yoga mat, or none" %>
 
