@@ -75,4 +75,5 @@ end
 # Custom Added Gems
 gem "devise"
 
-gem "ruby_llm", "~> 2.2"
+gem "openai", "~> 0.125.0"
+gem "ruby_llm"
