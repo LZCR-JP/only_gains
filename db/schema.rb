@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_17_052642) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_17_061024) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -241,6 +241,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_052642) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "workout_change_proposals", force: :cascade do |t|
+    t.bigint "message_id", null: false
+    t.jsonb "proposal", null: false
+    t.jsonb "workout_snapshot", null: false
+    t.datetime "plan_updated_at", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_workout_change_proposals_on_message_id", unique: true
+  end
+
   create_table "workout_plans", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "mentor_id", null: false
@@ -263,6 +274,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_052642) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "chats", "workout_plans"
   add_foreign_key "messages", "chats"
+  add_foreign_key "workout_change_proposals", "messages"
   add_foreign_key "workout_plans", "mentors"
   add_foreign_key "workout_plans", "users"
 end
