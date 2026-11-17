@@ -57,6 +57,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_052642) do
     t.string "avatar_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "tagline"
+    t.string "badge"
+    t.string "emoji"
   end
 
   create_table "messages", force: :cascade do |t|

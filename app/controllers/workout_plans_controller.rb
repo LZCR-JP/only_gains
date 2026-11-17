@@ -1,16 +1,15 @@
 class WorkoutPlansController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_workout_plan, only: %i[show edit update destroy]
 
   def index
-    @workout_plans = current_user.workout_plans
+    @workout_plans = current_user.workout_plans.includes(:mentor).order(created_at: :desc)
   end
 
   def show
   end
 
   def new
-    @workout_plan = current_user.workout_plans.new
+    @workout_plan = current_user.workout_plans.new(mentor_id: params[:mentor_id])
   end
 
   def create
