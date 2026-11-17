@@ -31,6 +31,12 @@
           </strong>
 
           <%= simple_format(message.content) %>
+            <% if message.workout_change_proposal.present? %>
+
+              <%= render "chats/workout_proposal",
+                  proposal: message.workout_change_proposal %>
+
+            <% end %>
 
         </div>
 
