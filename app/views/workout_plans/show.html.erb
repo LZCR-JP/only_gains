@@ -4,6 +4,7 @@
 <div class="gf-page">
   <div class="container" data-controller="reveal">
 
+<<<<<<< HEAD
     <%= link_to "← Back to plans", workout_plans_path, class: "gf-back" %>
 
     <header class="gf-header" data-reveal-target="item">
@@ -68,4 +69,122 @@
     </div>
 
   </div>
+=======
+  <%= link_to "Back to My Plans",
+      workout_plans_path,
+      class: "btn btn-outline-secondary mb-4" %>
+
+  <h1><%= @workout_plan.title %></h1>
+
+  <div class="card shadow-sm p-4 mt-4">
+
+    <h2>Workout Overview</h2>
+
+    <p><strong>Goal:</strong>
+      <%= @workout_plan.goal.humanize %>
+    </p>
+
+    <p><strong>AI Mentor:</strong>
+      <%= @workout_plan.mentor.name %>
+    </p>
+
+    <p><strong>Fitness Level:</strong>
+      <%= @workout_plan.fitness_level&.humanize %>
+    </p>
+
+    <p><strong>Equipment:</strong>
+      <%= @workout_plan.equipment %>
+    </p>
+
+    <p><strong>Training Days:</strong>
+      <%= @workout_plan.training_days %>
+    </p>
+
+    <p><strong>Duration:</strong>
+      <%= @workout_plan.duration_minutes %> minutes
+    </p>
+
+    <p><strong>Description:</strong>
+      <%= @workout_plan.description %>
+    </p>
+
+    <%= link_to "Edit Workout",
+        edit_workout_plan_path(@workout_plan),
+        class: "btn btn-outline-primary" %>
+
+  </div>
+
+  <div class="card shadow-sm p-4 mt-4">
+
+    <h2>AI Generated Workout</h2>
+
+    <% if @workout_plan.generated_workout.present? %>
+
+      <% @workout_plan.generated_workout.fetch("days", []).each do |day| %>
+
+        <div class="card p-3 mt-3">
+
+          <h4><%= day["name"] %></h4>
+
+          <% day["exercises"].each do |exercise| %>
+
+            <div class="border-bottom py-3">
+
+              <h5><%= exercise["name"] %></h5>
+
+              <p class="mb-1">
+                Sets: <%= exercise["sets"] %>
+                |
+                Reps: <%= exercise["reps"] %>
+              </p>
+
+              <small class="text-muted">
+                Rest: <%= exercise["rest_seconds"] %> seconds
+              </small>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      <% end %>
+
+    <% else %>
+
+      <p>No AI workout has been generated yet.</p>
+
+    <% end %>
+
+  </div>
+
+  <div class="card shadow-sm p-4 mt-4">
+
+    <h2>AI Coach Chats</h2>
+
+    <p>Chat with <%= @workout_plan.mentor.name %>
+      about your workout.</p>
+
+    <%= button_to "Start a Chat",
+        workout_plan_chats_path(@workout_plan),
+        method: :post,
+        class: "btn btn-primary mb-3" %>
+
+    <% @workout_plan.chats.order(created_at: :desc).each do |chat| %>
+
+      <%= link_to chat.title,
+          workout_plan_chat_path(@workout_plan, chat),
+          class: "btn btn-outline-secondary mb-2" %>
+
+    <% end %>
+
+  </div>
+
+  <%= button_to "Delete Workout",
+      workout_plan_path(@workout_plan),
+      method: :delete,
+      form: { data: { turbo_confirm: "Are you sure?" } },
+      class: "btn btn-outline-danger mt-4" %>
+
+>>>>>>> 5df6577a9b45a9f1e284f9e6063d8427fbe09d02
 </div>
