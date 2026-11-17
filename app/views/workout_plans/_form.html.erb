@@ -8,13 +8,11 @@
       collection: [
         ["Bulking", "bulking"],
         ["Endurance", "endurance"],
-        ["Losing Weight", "losing_weight"]
+        ["Weight Loss", "losing_weight"]
       ],
-      prompt: "Choose your fitness goal" %>
-
-  <%= f.association :mentor,
-      label_method: :name,
-      prompt: "Choose your AI coach" %>
+      prompt: "Choose your fitness goal",
+      hint: "Your AI coach will be automatically assigned based on your goal.",
+      required: true %>
 
   <%= f.input :fitness_level,
       collection: [

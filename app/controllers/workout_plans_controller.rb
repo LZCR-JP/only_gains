@@ -14,7 +14,8 @@ class WorkoutPlansController < ApplicationController
   end
 
   def create
-    @workout_plan = current_user.workout_plans.new(workout_plan_params)
+    @workout_plan = current_user.workout_plans.build(workout_plan_params)
+    @workout_plan.mentor = Mentor.for_goal(@workout_plan.goal)
 
     if @workout_plan.save
       redirect_to @workout_plan, notice: "Workout plan created!"
@@ -23,15 +24,18 @@ class WorkoutPlansController < ApplicationController
     end
   end
 
-  def edit
-  end
-
   def update
-    if @workout_plan.update(workout_plan_params)
+    @workout_plan.assign_attributes(workout_plan_params)
+    @workout_plan.mentor = Mentor.for_goal(@workout_plan.goal)
+
+    if @workout_plan.save
       redirect_to @workout_plan, notice: "Workout plan updated!"
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def edit
   end
 
   def destroy
@@ -52,7 +56,6 @@ class WorkoutPlansController < ApplicationController
     params.require(:workout_plan).permit(
       :title,
       :goal,
-      :mentor_id,
       :fitness_level,
       :equipment,
       :training_days,
