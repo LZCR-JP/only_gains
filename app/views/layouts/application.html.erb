@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="dark">
   <head>
     <title><%= content_for(:title) || "Only Gains" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Only Gains">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f0e0f">
+    <meta property="og:image" content="<%= image_url("logo-original.jpg") %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -15,17 +17,19 @@
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <%# Fonts are imported once, in app/assets/stylesheets/config/_fonts.scss %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-    <%= yield %>
+    <%= render "shared/navbar" %>
+    <%= render "shared/flashes" %>
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

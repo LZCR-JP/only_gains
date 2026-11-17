@@ -1,0 +1,15 @@
+<%# locals: mentor, plans %>
+<% if plans.any? %>
+  <%= form_with url: assign_mentor_path(mentor), method: :patch, class: "gf-assign" do |f| %>
+    <% options = plans.map { |p| [p.mentor_id == mentor.id ? "#{p.title} ✓" : p.title, p.id, { disabled: p.mentor_id == mentor.id }] } %>
+    <%= f.select :workout_plan_id, options,
+          { prompt: "Assign to plan…" },
+          class: "form-select", required: true,
+          aria: { label: "Choose a plan for #{mentor.name}" } %>
+    <%= f.button "Assign", type: "submit", class: "gf-btn gf-btn-primary gf-btn-sm" %>
+  <% end %>
+<% else %>
+  <%= link_to new_workout_plan_path(mentor_id: mentor.id), class: "gf-btn gf-btn-primary gf-btn-block gf-btn-sm" do %>
+    ⚡ Start a plan with <%= mentor.name.split.first %>
+  <% end %>
+<% end %>

@@ -1,28 +1,46 @@
-// This is where you override default Bootstrap variables
-// 1. Find all Bootstrap variables that you can override at the end of each component's documentation under the `Sass variables` anchor
-// e.g. here are the ones you can override for the navbar https://getbootstrap.com/docs/5.3/components/navbar/#sass-variables
-// 2. These variables are defined with default value (see https://robots.thoughtbot.com/sass-default)
-// 3. You can override them below!
+// Bootstrap overrides — the app runs with data-bs-theme="dark" on <html>.
 
-// General style
-$font-family-sans-serif: $body-font;
-$headings-font-family:   $headers-font;
-$body-bg:                $light-gray;
-$font-size-base:         1rem;
+// Typography
+$font-family-sans-serif:  $body-font;
+$font-family-monospace:   $mono-font;
+$headings-font-family:    $headers-font;
+$headings-font-weight:    700;
+$font-size-base:          1rem;
 
-// Colors
-$body-color: $gray;
-$primary:    $blue;
-$success:    $green;
-$info:       $yellow;
-$danger:     $red;
-$warning:    $orange;
+// Theme colors
+$primary:   $gf-purple;
+$secondary: $gf-card-2;
+$success:   $gf-lime;
+$info:      $gf-pink;
+$warning:   $gf-yellow;
+$danger:    $gf-red;
 
-// Buttons & inputs' radius
-$border-radius-sm:            .0625rem;
-$border-radius:               .125rem;
-$border-radius-lg:            .25rem;
-$border-radius-xl:            .5rem;
-$border-radius-xxl:           1rem;
+// Light-mode fallbacks (in case data-bs-theme is ever removed)
+$body-bg:    $gf-bg;
+$body-color: $gf-text;
 
-// Override other variables below!
+// Dark mode
+$body-bg-dark:                  $gf-bg;
+$body-color-dark:               $gf-text;
+$body-secondary-color-dark:     $gf-muted;
+$body-secondary-bg-dark:        $gf-card;
+$body-tertiary-bg-dark:         $gf-card-2;
+$border-color-dark:             $gf-border;
+$link-color-dark:               $gf-pink;
+$link-hover-color-dark:         $gf-purple;
+$form-select-indicator-color-dark: $gf-text;
+
+// Radius
+$border-radius-sm:  .375rem;
+$border-radius:     .625rem;
+$border-radius-lg:  .875rem;
+$border-radius-xl:  1.25rem;
+$border-radius-xxl: 2rem;
+
+// Forms
+$input-bg:                $gf-card-2;
+$input-border-color:      $gf-border;
+$input-focus-border-color: $gf-purple;
+$input-placeholder-color: $gf-muted;
+$input-btn-focus-color:   rgba($gf-purple, .35);
+$form-label-font-weight:  600;

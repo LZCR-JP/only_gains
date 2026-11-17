@@ -1,0 +1,122 @@
+<% primary_path = user_signed_in? ? new_workout_plan_path : new_user_registration_path %>
+
+<!-- HERO -->
+<section class="gf-hero" data-controller="spotlight">
+  <span class="gf-ghost" aria-hidden="true">GAINS</span>
+
+  <div class="container gf-hero-inner" data-controller="reveal" data-reveal-stagger-value="120">
+    <%= image_tag "logo.png", alt: "Only Gains — Build Strength", class: "gf-hero-logo", data: { reveal_target: "item" } %>
+
+    <span class="gf-pill" data-reveal-target="item"><span class="gf-dot"></span>AI mentors online · <%= @mentors.size %> ready</span>
+
+    <h1 class="gf-hero-title" data-reveal-target="item">
+      Train with a<br><span class="gf-gradient-text">legend</span> in your corner.
+    </h1>
+
+    <p class="gf-hero-sub" data-reveal-target="item">
+      Build a home workout plan, pick an iconic AI mentor, and let them yell
+      (lovingly) until the gains arrive. Your couch has been notified.
+    </p>
+
+    <div class="gf-hero-ctas" data-reveal-target="item">
+      <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
+        ⚡ <%= user_signed_in? ? "Build a plan" : "Start for free" %>
+      <% end %>
+      <%= link_to (user_signed_in? ? mentors_path : new_user_session_path), class: "gf-btn gf-btn-ghost gf-btn-lg" do %>
+        <%= user_signed_in? ? "Meet the mentors" : "I already lift" %>
+      <% end %>
+    </div>
+  </div>
+
+  <span class="gf-scroll-hint" aria-hidden="true">scroll ↓</span>
+</section>
+
+<!-- MARQUEE -->
+<% marquee_words = ["No excuses", "Home workouts", "AI mentors", "Progressive overload", "Rest is training", "Gotta go fast", "Do or do not"] %>
+<div class="gf-marquee" aria-hidden="true">
+  <div class="gf-marquee-track">
+    <% 2.times do %>
+      <% marquee_words.each do |word| %>
+        <span><%= word %> <em>✦</em></span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="gf-section">
+  <div class="container">
+    <span class="gf-eyebrow"><span class="gf-dot"></span>How it works</span>
+    <h2 class="gf-section-title">Three steps. Zero gym fees.</h2>
+
+    <div class="row g-3" data-controller="reveal" data-reveal-stagger-value="120">
+      <% [
+        ["01", "Build your plan", "Tell us your goal, level, equipment and how many days you can actually commit to. Be honest."],
+        ["02", "Pick a mentor", "Arnold, Yoda, Goggins, Jonah, Sonic or Mikasa. Each one coaches with a very… distinct personality."],
+        ["03", "Get coached", "Chat with your mentor about your plan, swap exercises, and keep showing up."]
+      ].each do |num, title, body| %>
+        <div class="col-md-4" data-reveal-target="item">
+          <article class="gf-card gf-step" data-controller="tilt">
+            <span class="gf-step-num"><%= num %></span>
+            <h3><%= title %></h3>
+            <p><%= body %></p>
+          </article>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- ROTATING MENTOR QUOTE -->
+<% if @mentors.any? %>
+  <section class="gf-section pt-0">
+    <div class="container">
+      <span class="gf-eyebrow"><span class="gf-dot"></span>Words from the bench</span>
+      <h2 class="gf-section-title">Your mentors have opinions.</h2>
+
+      <div class="gf-rotator" data-controller="rotator" data-rotator-interval-value="5000"
+           data-action="mouseenter->rotator#pause mouseleave->rotator#resume" aria-live="polite">
+        <% @mentors.each_with_index do |mentor, i| %>
+          <div class="gf-rotator-item<%= " is-active" if i.zero? %>" data-rotator-target="item">
+            <blockquote>“<%= mentor.tagline %>”</blockquote>
+            <div class="gf-rotator-who">
+              <%= mentor_avatar(mentor) %>
+              <div>
+                <span class="gf-mentor mb-0"><%= mentor.name %></span>
+                <small class="gf-mono gf-muted"><%= mentor.badge %></small>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="gf-rotator-dots">
+          <% @mentors.each_with_index do |mentor, i| %>
+            <button type="button" data-rotator-target="dot" data-action="rotator#go" data-index="<%= i %>"
+                    aria-label="Show quote from <%= mentor.name %>"></button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<!-- FINAL CTA -->
+<section class="gf-section pt-0">
+  <div class="container" data-controller="reveal">
+    <div class="gf-cta">
+      <span class="gf-eyebrow justify-content-center mb-3"><span class="gf-dot"></span>Rest interval over</span>
+      <h2>Stop scrolling.<br><span class="gf-gradient-text">Start lifting.</span></h2>
+      <p class="gf-muted mb-4">Your first plan takes under a minute. Your mentor is already warming up.</p>
+      <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
+        ⚡ <%= user_signed_in? ? "Create a plan" : "Create my account" %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<footer class="gf-site-footer">
+  <div class="container d-flex justify-content-between flex-wrap gap-2">
+    <span>© <%= Date.current.year %> Only Gains · Hype Engine v4.2</span>
+    <span>Not medical advice. Your mentor is an AI, not a doctor.</span>
+  </div>
+</footer>

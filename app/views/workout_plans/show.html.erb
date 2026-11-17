@@ -1,5 +1,8 @@
+<% content_for :title, "#{@workout_plan.title} · Only Gains" %>
+<% mentor = @workout_plan.mentor %>
 
-<div class="container py-5">
+<div class="gf-page">
+  <div class="container" data-controller="reveal">
 
   <%= link_to "Back to My Plans",
       workout_plans_path,

@@ -1,0 +1,41 @@
+// ---------- Plan show ----------
+.gf-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .75rem;
+}
+.gf-detail {
+  padding: 1rem;
+  background: var(--gf-card-2);
+  border-radius: 12px;
+  small {
+    display: block;
+    margin-bottom: .3rem;
+    font-family: $mono-font;
+    font-size: .62rem;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--gf-muted);
+  }
+  strong { font-family: $headers-font; font-size: 1.1rem; }
+}
+
+.gf-coach-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  h3 { font-family: $headers-font; font-size: 1.25rem; margin: 0 0 .25rem; }
+}
+
+.gf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  form { margin: 0; }
+}
+
+.gf-description {
+  color: var(--gf-text);
+  white-space: pre-line;
+  margin: 0;
+}

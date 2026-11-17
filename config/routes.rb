@@ -12,5 +12,11 @@ Rails.application.routes.draw do
     resources :messages, only: [:create]
   end
 
+  resources :mentors, only: %i[index show] do
+    member do
+      patch :assign
+    end
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
 end
