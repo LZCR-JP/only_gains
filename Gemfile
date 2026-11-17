@@ -74,3 +74,5 @@ end
 
 # Custom Added Gems
 gem "devise"
+
+gem "ruby_llm", "~> 2.2"
