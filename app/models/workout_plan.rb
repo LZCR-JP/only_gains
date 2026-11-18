@@ -16,7 +16,7 @@ class WorkoutPlan < ApplicationRecord
   enum :fitness_level, FITNESS_LEVELS, validate: { allow_nil: true }
 
   validates :title, presence: true
-  validates :fitness_level, presence: true, on: [:create, :profile_step]
+  validates :fitness_level, presence: true, on: %i[create profile_step]
   validates :mentor, :goal, presence: true, unless: -> { validation_context == :profile_step }
   validates :training_days, numericality: { only_integer: true, in: 1..7 }
   validates :duration_minutes, numericality: { only_integer: true, greater_than: 0 }

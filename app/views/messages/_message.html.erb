@@ -1,0 +1,16 @@
+<div id="<%= dom_id(message) %>"
+     class="d-flex mb-3 <%= message.role == "user" ? "justify-content-end" : "justify-content-start" %>">
+
+  <div class="rounded p-3 <%= message.role == "user" ? "bg-primary text-white" : "bg-light text-dark" %>"
+       style="max-width: 80%;">
+
+    <strong><%= message.role == "user" ? "You" : workout_plan.mentor.name %></strong>
+
+    <%= simple_format(message.content) %>
+
+    <% if message.workout_change_proposal.present? %>
+      <%= render "chats/workout_proposal", proposal: message.workout_change_proposal %>
+    <% end %>
+
+  </div>
+</div>
