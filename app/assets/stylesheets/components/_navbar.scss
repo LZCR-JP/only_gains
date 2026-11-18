@@ -134,3 +134,17 @@
 @media (prefers-reduced-motion: reduce) {
   .gf-eq span { animation: none !important; height: 8px; }
 }
+
+.gf-navbar {
+  padding-block: .35rem;
+
+  .navbar-nav {
+    gap: .25rem;
+  }
+
+  .navbar-nav,
+  .navbar-brand,
+  .gf-user {
+    align-items: center;
+  }
+}
