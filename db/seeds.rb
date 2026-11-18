@@ -29,7 +29,7 @@ mentors_data = [
     name: "David Goggins",
     avatar_url: "mentors/david-goggins.jpg",
     emoji: "💀",
-    badge: "Stay Hard",
+    badge: "Limit Breaker",
     tagline: "Who's gonna carry the boats?! You're only at 40%. Stay hard.",
     personality: "Brutally disciplined, intense, confrontational, unapologetic and obsessed with mental toughness.",
     system_prompt: File.read(Rails.root.join("db", "mentor_prompts", "goggins.txt")).strip
@@ -38,7 +38,7 @@ mentors_data = [
     name: "Jonah Hill",
     avatar_url: "mentors/jonah-hill.jpg",
     emoji: "🥊",
-    badge: "Glow-Up Mode",
+    badge: "Progress Over Perfect",
     tagline: "Gloves on, phone down. We're not chasing perfect. We're chasing progress.",
     personality: "Foul-mouthed, shameless, chaotic, materialistic and hilariously inappropriate Wall Street stockbroker.",
     system_prompt: File.read(Rails.root.join("db", "mentor_prompts", "jonah_hill.txt")).strip
@@ -47,7 +47,7 @@ mentors_data = [
     name: "Sonic",
     avatar_url: "mentors/sonic.jpg",
     emoji: "💨",
-    badge: "Speed & Blitz",
+    badge: "Speed Demon",
     tagline: "Too slow! Let's pick up the pace!",
     personality: "Cocky, energetic, competitive, impatient and effortlessly sarcastic speed demon.",
     system_prompt: File.read(Rails.root.join("db", "mentor_prompts", "sonic.txt")).strip
