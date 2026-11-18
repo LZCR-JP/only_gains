@@ -7,11 +7,11 @@
       <span class="gf-eyebrow"><span class="gf-dot"></span>Workout plans</span>
       <h1 class="gf-title">Your Workout Plans</h1>
       <p class="gf-subtitle">
-        Pick your coach. Set up your workout. Then get moving. Your couch has been notified.
+        Every session moves you forward. Pick up where you left off or create a new plan.
       </p>
 
       <div class="gf-header-row">
-        <span class="gf-mono gf-muted small">Newest first</span>
+        <span class="gf-mono gf-muted small"></span>
         <%= link_to new_workout_plan_path, class: "gf-btn gf-btn-primary" do %>
           ⚡ Create New Plan
         <% end %>
@@ -21,8 +21,8 @@
     <% if @workout_plans.any? %>
 
       <div class="gf-section-label">
-        <span>Available Neural Bench</span>
-        <small class="gf-mono gf-muted">Tap to inspect</small>
+        <span>Your Training Lineup</span>
+        <small class="gf-mono gf-muted"></small>
       </div>
 
       <div class="row g-3" data-controller="reveal">
@@ -68,7 +68,7 @@
       </div>
 
       <p class="gf-footer-note gf-mono gf-muted">
-        • Hype Engine v4.2 active &nbsp;·&nbsp; Next rest interval: 45s (don't sit down!)
+      Built at Le Wagon Japan &nbsp;•&nbsp; OnlyGains &nbsp;•&nbsp; Build Strength
       </p>
 
     <% else %>

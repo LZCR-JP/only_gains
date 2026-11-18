@@ -215,6 +215,8 @@
   font-family: $mono-font;
   font-size: .7rem;
   color: var(--gf-muted);
+  text-align: center;
+  padding: 24px 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
