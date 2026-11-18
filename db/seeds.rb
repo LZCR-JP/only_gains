@@ -21,7 +21,7 @@ mentors_data = [
     avatar_url: "mentors/yoda.jpg",
     emoji: "🟢",
     badge: "Mind-Muscle Zen",
-    tagline: "Do or do not, there is no try. Drop your ego, you will.",
+    tagline: "Patience. Balance. Consistency. Strong, you will become.",
     personality: "Ancient, philosophical, mysterious, patient and unexpectedly sarcastic Jedi master.",
     system_prompt: File.read(Rails.root.join("db", "mentor_prompts", "yoda.txt")).strip
   },
@@ -39,7 +39,7 @@ mentors_data = [
     avatar_url: "mentors/jonah-hill.jpg",
     emoji: "🥊",
     badge: "Glow-Up Mode",
-    tagline: "Gloves on, phone down. We're not chasing perfect — we're chasing Tuesday.",
+    tagline: "Gloves on, phone down. We're not chasing perfect. We're chasing progress.",
     personality: "Foul-mouthed, shameless, chaotic, materialistic and hilariously inappropriate Wall Street stockbroker.",
     system_prompt: File.read(Rails.root.join("db", "mentor_prompts", "jonah_hill.txt")).strip
   },
@@ -48,7 +48,7 @@ mentors_data = [
     avatar_url: "mentors/sonic.jpg",
     emoji: "💨",
     badge: "Speed & Blitz",
-    tagline: "Gotta go fast! Rest timer over 30 seconds? Too slow!",
+    tagline: "Too slow! Let's pick up the pace!",
     personality: "Cocky, energetic, competitive, impatient and effortlessly sarcastic speed demon.",
     system_prompt: File.read(Rails.root.join("db", "mentor_prompts", "sonic.txt")).strip
   },
