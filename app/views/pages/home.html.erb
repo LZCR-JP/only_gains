@@ -30,18 +30,6 @@
   <span class="gf-scroll-hint" aria-hidden="true">scroll ↓</span>
 </section>
 
-<!-- MARQUEE -->
-<% marquee_words = ["No excuses", "Home workouts", "AI mentors", "Progressive overload", "Rest is training", "Gotta go fast", "Do or do not"] %>
-<div class="gf-marquee" aria-hidden="true">
-  <div class="gf-marquee-track">
-    <% 2.times do %>
-      <% marquee_words.each do |word| %>
-        <span><%= word %> <em>✦</em></span>
-      <% end %>
-    <% end %>
-  </div>
-</div>
-
 <!-- HOW IT WORKS -->
 <section class="gf-section">
   <div class="container">
@@ -115,7 +103,7 @@
 
 <footer class="gf-site-footer">
   <div class="container d-flex justify-content-between flex-wrap gap-2">
-    <span>© <%= Date.current.year %> Only Gains · Built at Le Wagon</span>
-    <span>Not medical advice. Your mentor is an AI, not a doctor.</span>
+    <span>Built at Le Wagon Japan © <%= Date.current.year %> · Only Gains</span>
+    <span>Keep showing up · The gains will follow</span>
   </div>
 </footer>
