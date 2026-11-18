@@ -34,7 +34,8 @@ class MessagesController < ApplicationController
       fitness_level: workout_plan.fitness_level,
       equipment: workout_plan.equipment,
       training_days: workout_plan.training_days,
-      duration_minutes: workout_plan.duration_minutes
+      duration_minutes: workout_plan.duration_minutes,
+      description: workout_plan.description
     }
 
     if snapshot.present?

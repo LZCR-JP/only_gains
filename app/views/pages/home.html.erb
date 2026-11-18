@@ -7,23 +7,22 @@
   <div class="container gf-hero-inner" data-controller="reveal" data-reveal-stagger-value="120">
     <%= image_tag "logo.png", alt: "Only Gains — Build Strength", class: "gf-hero-logo", data: { reveal_target: "item" } %>
 
-    <span class="gf-pill" data-reveal-target="item"><span class="gf-dot"></span>AI mentors online · <%= @mentors.size %> ready</span>
 
     <h1 class="gf-hero-title" data-reveal-target="item">
       Train with a<br><span class="gf-gradient-text">legend</span> in your corner.
     </h1>
 
     <p class="gf-hero-sub" data-reveal-target="item">
-      Build a home workout plan, pick an iconic AI mentor, and let them yell
-      (lovingly) until the gains arrive. Your couch has been notified.
+      Pick your iconic AI coach, tell them how you want to train, and get a personalized home workout.
+      Your couch has been notified.
     </p>
 
     <div class="gf-hero-ctas" data-reveal-target="item">
       <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
-        ⚡ <%= user_signed_in? ? "Build a plan" : "Start for free" %>
+        ⚡ <%= user_signed_in? ? "Choose my coach" : "Start for free" %>
       <% end %>
-      <%= link_to (user_signed_in? ? mentors_path : new_user_session_path), class: "gf-btn gf-btn-ghost gf-btn-lg" do %>
-        <%= user_signed_in? ? "Meet the mentors" : "I already lift" %>
+      <%= link_to (user_signed_in? ? workout_plans_path : new_user_session_path), class: "gf-btn gf-btn-ghost gf-btn-lg" do %>
+        <%= user_signed_in? ? "My plans" : "I already lift" %>
       <% end %>
     </div>
   </div>
@@ -51,8 +50,8 @@
 
     <div class="row g-3" data-controller="reveal" data-reveal-stagger-value="120">
       <% [
-        ["01", "Build your plan", "Tell us your goal, level, equipment and how many days you can actually commit to. Be honest."],
-        ["02", "Pick a mentor", "Arnold, Yoda, Goggins, Jonah, Sonic or Mikasa. Each one coaches with a very… distinct personality."],
+        ["01", "Choose your coach", "Browse each coach’s specialty and signature quote, then pick your training partner."],
+        ["02", "Set up your workout", "Tell your coach your level, equipment, and how many days you can actually commit to."],
         ["03", "Get coached", "Chat with your mentor about your plan, swap exercises, and keep showing up."]
       ].each do |num, title, body| %>
         <div class="col-md-4" data-reveal-target="item">
@@ -106,9 +105,9 @@
     <div class="gf-cta">
       <span class="gf-eyebrow justify-content-center mb-3"><span class="gf-dot"></span>Rest interval over</span>
       <h2>Stop scrolling.<br><span class="gf-gradient-text">Start lifting.</span></h2>
-      <p class="gf-muted mb-4">Your first plan takes under a minute. Your mentor is already warming up.</p>
+      <p class="gf-muted mb-4">Choose your coach and build a plan. They are already warming up.</p>
       <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
-        ⚡ <%= user_signed_in? ? "Create a plan" : "Create my account" %>
+        ⚡ <%= user_signed_in? ? "Choose my coach" : "Create my account" %>
       <% end %>
     </div>
   </div>

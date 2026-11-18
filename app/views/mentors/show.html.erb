@@ -1,55 +1,33 @@
-<% content_for :title, "#{@mentor.name} · Only Gains" %>
+<% content_for :title, "#{@mentor.display_name} · Only Gains" %>
 
 <div class="gf-page">
   <div class="container" data-controller="reveal">
-
-    <%= link_to "← All mentors", mentors_path, class: "gf-back" %>
+    <%= link_to "← Choose your coach", new_workout_plan_path, class: "gf-back" %>
 
     <header class="gf-header gf-mentor-hero" data-reveal-target="item">
       <%= mentor_avatar(@mentor, size: :xl) %>
       <div>
-        <span class="gf-eyebrow"><span class="gf-dot"></span><%= @mentor.badge %></span>
-        <h1 class="gf-title mb-0"><%= @mentor.name %></h1>
+        <h1 class="gf-title mb-0"><%= @mentor.display_name %></h1>
       </div>
     </header>
 
     <div class="row g-3">
       <div class="col-lg-7" data-reveal-target="item">
         <section class="gf-card">
-          <span class="gf-label"><span class="gf-dot"></span>Coaching style</span>
+          <h2 class="gf-pink h5"><%= @mentor.specialty %></h2>
           <blockquote class="gf-quote fs-5">“<%= @mentor.tagline %>”</blockquote>
-          <p class="mb-0"><%= @mentor.personality %></p>
-
-          <details>
-            <summary class="gf-mono gf-muted small mb-2">View system prompt</summary>
-            <pre class="gf-prompt"><%= @mentor.system_prompt %></pre>
-          </details>
+          <%= link_to "Choose #{@mentor.display_name} →",
+                new_workout_plan_path(mentor_id: @mentor.id),
+                class: "gf-btn gf-btn-primary gf-btn-block" %>
         </section>
       </div>
 
       <div class="col-lg-5" data-reveal-target="item">
         <aside class="gf-card">
-          <span class="gf-label"><span class="gf-dot"></span>Assign to plan</span>
+          <span class="gf-label"><span class="gf-dot"></span>Change coach for an existing plan</span>
           <%= render "assign_form", mentor: @mentor, plans: @plans %>
-
-          <div>
-            <span class="gf-mentor">Currently coaching</span>
-            <% if @mentor_plans.any? %>
-              <div class="d-grid gap-2">
-                <% @mentor_plans.each do |plan| %>
-                  <%= link_to workout_plan_path(plan), class: "gf-plan-row" do %>
-                    <span><%= plan.title %></span>
-                    <span class="gf-mono gf-muted small"><%= plan.training_days %>×<%= plan.duration_minutes %>m →</span>
-                  <% end %>
-                <% end %>
-              </div>
-            <% else %>
-              <p class="gf-muted small mb-0">None of your plans yet. Assign one above.</p>
-            <% end %>
-          </div>
         </aside>
       </div>
     </div>
-
   </div>
 </div>

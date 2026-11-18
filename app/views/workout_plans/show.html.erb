@@ -1,123 +1,209 @@
+
 <% content_for :title, "#{@workout_plan.title} · Only Gains" %>
+
 <% mentor = @workout_plan.mentor %>
+<% days = @workout_plan.generated_workout&.fetch("days", []) || [] %>
+<% chats = @workout_plan.chats.order(created_at: :desc, id: :desc).to_a %>
 
-<div class="gf-page">
-  <div class="container" data-controller="reveal">
+<div class="gf-page gf-workout-page">
+  <div class="container">
 
-  <%= link_to "Back to My Plans",
-      workout_plans_path,
-      class: "btn btn-outline-secondary mb-4" %>
+    <%= link_to "← My plans",
+        workout_plans_path,
+        class: "gf-back" %>
 
-  <h1><%= @workout_plan.title %></h1>
+    <!-- Plan title -->
 
-  <div class="card shadow-sm p-4 mt-4">
+    <div class="gf-workout-heading">
 
-    <h2>Workout Overview</h2>
+      <h1><%= @workout_plan.title %></h1>
 
-    <p><strong>Goal:</strong>
-      <%= @workout_plan.goal.humanize %>
-    </p>
+      <%= link_to "Edit plan",
+          edit_workout_plan_path(@workout_plan),
+          class: "gf-btn gf-btn-outline" %>
 
-    <p><strong>AI Mentor:</strong>
-      <%= @workout_plan.mentor.name %>
-    </p>
+    </div>
 
-    <p><strong>Fitness Level:</strong>
-      <%= @workout_plan.fitness_level&.humanize %>
-    </p>
+    <!-- Coach -->
 
-    <p><strong>Equipment:</strong>
-      <%= @workout_plan.equipment %>
-    </p>
+    <section class="gf-workout-summary">
 
-    <p><strong>Training Days:</strong>
-      <%= @workout_plan.training_days %>
-    </p>
+      <div class="gf-workout-coach">
 
-    <p><strong>Duration:</strong>
-      <%= @workout_plan.duration_minutes %> minutes
-    </p>
+        <div class="gf-workout-coach-info">
 
-    <p><strong>Description:</strong>
-      <%= @workout_plan.description %>
-    </p>
+          <%= mentor_avatar(mentor) %>
 
-    <%= link_to "Edit Workout",
-        edit_workout_plan_path(@workout_plan),
-        class: "btn btn-outline-primary" %>
-
-  </div>
-
-  <div class="card shadow-sm p-4 mt-4">
-
-    <h2>AI Generated Workout</h2>
-
-    <% if @workout_plan.generated_workout.present? %>
-
-      <% @workout_plan.generated_workout.fetch("days", []).each do |day| %>
-
-        <div class="card p-3 mt-3">
-
-          <h4><%= day["name"] %></h4>
-
-          <% day["exercises"].each do |exercise| %>
-
-            <div class="border-bottom py-3">
-
-              <h5><%= exercise["name"] %></h5>
-
-              <p class="mb-1">
-                Sets: <%= exercise["sets"] %>
-                |
-                Reps: <%= exercise["reps"] %>
-              </p>
-
-              <small class="text-muted">
-                Rest: <%= exercise["rest_seconds"] %> seconds
-              </small>
-
-            </div>
-
-          <% end %>
+          <div>
+            <h3><%= mentor.display_name %></h3>
+            <p><%= mentor.specialty %></p>
+          </div>
 
         </div>
 
+        <% if chats.any? %>
+
+          <%= link_to "Chat with coach ↗",
+              workout_plan_chat_path(@workout_plan, chats.first),
+              class: "gf-btn gf-btn-primary" %>
+
+        <% else %>
+
+          <%= button_to "Chat with coach ↗",
+              workout_plan_chats_path(@workout_plan),
+              method: :post,
+              class: "gf-btn gf-btn-primary" %>
+
+        <% end %>
+
+      </div>
+
+      <!-- Compact workout information -->
+
+      <div class="gf-workout-meta">
+
+        <span>
+          <%= @workout_plan.fitness_level&.humanize || "All levels" %>
+        </span>
+
+        <span>
+          <%= @workout_plan.training_days %> days / week
+        </span>
+
+        <span>
+          <%= @workout_plan.duration_minutes %> min / session
+        </span>
+
+        <span>
+          <%= @workout_plan.equipment.presence || "Bodyweight" %>
+        </span>
+
+      </div>
+
+      <% if @workout_plan.description.present? %>
+        <details class="gf-workout-notes">
+          <summary>Training notes</summary>
+          <p><%= @workout_plan.description %></p>
+        </details>
       <% end %>
+
+    </section>
+
+    <!-- AI generated workout -->
+
+    <div class="gf-workout-section-heading">
+
+      <h2>Your workout</h2>
+
+      <span>✦ AI generated</span>
+
+    </div>
+
+    <% if days.any? %>
+
+      <div class="gf-workout-grid">
+
+        <% days.each_with_index do |day, index| %>
+
+          <% exercises = day.fetch("exercises", []) %>
+
+          <% day_title = day["name"].to_s.sub(/\ADay\s*\d+\s*[-:–—]?\s*/i, "").presence || "Workout" %>
+
+          <article class="gf-workout-day">
+
+            <header class="gf-workout-day-header">
+
+              <div class="gf-workout-day-number">
+                <%= format("%02d", index + 1) %>
+              </div>
+
+              <div>
+                <h3><%= day_title %></h3>
+
+                <small>
+                  <%= pluralize(exercises.size, "exercise") %>
+                </small>
+              </div>
+
+            </header>
+
+            <table class="gf-workout-table">
+
+              <thead>
+                <tr>
+                  <th scope="col">Exercise</th>
+                  <th scope="col">Sets</th>
+                  <th scope="col">Reps</th>
+                  <th scope="col">Rest</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <% exercises.each do |exercise| %>
+
+                  <tr>
+
+                    <td class="gf-exercise-name">
+                      <%= exercise["name"] %>
+                    </td>
+
+                    <td class="gf-exercise-sets">
+                      <%= exercise["sets"] %>
+                    </td>
+
+                    <td>
+                      <%= exercise["reps"] %>
+                    </td>
+
+                    <td class="gf-exercise-rest">
+                      <%= exercise["rest_seconds"] %>s
+                    </td>
+
+                  </tr>
+
+                <% end %>
+
+              </tbody>
+
+            </table>
+
+          </article>
+
+        <% end %>
+
+      </div>
 
     <% else %>
 
-      <p>No AI workout has been generated yet.</p>
+      <div class="gf-workout-empty">
+
+        <h3>Your workout is not ready yet.</h3>
+
+        <p>Edit your plan to generate a personalized workout.</p>
+
+        <%= link_to "Generate workout",
+            edit_workout_plan_path(@workout_plan),
+            class: "gf-btn gf-btn-primary" %>
+
+      </div>
 
     <% end %>
 
-  </div>
 
-  <div class="card shadow-sm p-4 mt-4">
+    <div class="gf-workout-footer">
 
-    <h2>AI Coach Chats</h2>
+      <%= button_to "Delete workout",
+          workout_plan_path(@workout_plan),
+          method: :delete,
+          form: {
+            data: {
+              turbo_confirm: "Delete this workout and its conversations?"
+            }
+          },
+          class: "gf-workout-delete" %>
 
-    <p>Chat with <%= @workout_plan.mentor.name %>
-      about your workout.</p>
-
-    <%= button_to "Start a Chat",
-        workout_plan_chats_path(@workout_plan),
-        method: :post,
-        class: "btn btn-primary mb-3" %>
-
-    <% @workout_plan.chats.order(created_at: :desc).each do |chat| %>
-
-      <%= link_to chat.title,
-          workout_plan_chat_path(@workout_plan, chat),
-          class: "btn btn-outline-secondary mb-2" %>
-
-    <% end %>
+    </div>
 
   </div>
-
-  <%= button_to "Delete Workout",
-      workout_plan_path(@workout_plan),
-      method: :delete,
-      form: { data: { turbo_confirm: "Are you sure?" } },
-      class: "btn btn-outline-danger mt-4" %>
-
 </div>

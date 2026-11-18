@@ -1,21 +1,34 @@
-<% content_for :title, "New plan · Only Gains" %>
+<% content_for :title, "Choose your coach · Only Gains" %>
 
 <div class="gf-page">
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-9 col-lg-7" data-controller="reveal">
-        <%= link_to "← Back to my plans", workout_plans_path, class: "gf-back" %>
+    <%= link_to "← Back to my plans", workout_plans_path, class: "gf-back" %>
 
-        <header class="gf-header">
-          <span class="gf-eyebrow"><span class="gf-dot"></span>New plan</span>
-          <h1 class="gf-title">Create your plan 💪</h1>
-          <p class="gf-subtitle">Tell us about your goals and home setup. Your mentor handles the yelling.</p>
-        </header>
+    <header class="gf-header" data-controller="reveal">
+      <span class="gf-eyebrow"><span class="gf-dot"></span>Step 1 of 2 · Your coach</span>
+      <h1 class="gf-title">Choose your coach</h1>
+      <p class="gf-subtitle">Pick your coach first. Then set up your workout.</p>
+    </header>
 
-        <div class="gf-form-card">
-          <%= render "form", workout_plan: @workout_plan %>
-        </div>
+    <% if @workout_plan.errors.any? %>
+      <div class="alert alert-danger" role="alert"><%= @workout_plan.errors.full_messages.to_sentence %></div>
+    <% end %>
+
+    <% if @mentors.empty? %>
+      <div class="gf-card"><p class="gf-muted mb-0">No coaches available yet. Run <code>bin/rails db:seed</code> and try again.</p></div>
+    <% else %>
+      <div class="row g-3" data-controller="reveal">
+        <% @mentors.each do |mentor| %>
+          <div class="col-md-6 col-lg-4" data-reveal-target="item">
+            <article class="gf-card gf-mentor-card h-100 d-flex flex-column" data-controller="tilt" data-tilt-max-value="5">
+              <%= render "mentors/coach_profile", mentor: mentor %>
+              <%= link_to "Choose #{mentor.display_name} →",
+                    new_workout_plan_path(mentor_id: mentor.id),
+                    class: "gf-btn gf-btn-primary gf-btn-block mt-auto" %>
+            </article>
+          </div>
+        <% end %>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>

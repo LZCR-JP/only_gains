@@ -3,7 +3,7 @@ class MentorsController < ApplicationController
   before_action :set_plans, only: %i[index show]
 
   def index
-    @mentors = Mentor.order(:id)
+    @mentors = Mentor.selectable.order(:id)
     @plan_counts = current_user.workout_plans.group(:mentor_id).count
   end
 
@@ -15,19 +15,18 @@ class MentorsController < ApplicationController
     plan = current_user.workout_plans.find_by(id: params[:workout_plan_id])
 
     if plan.nil?
-      redirect_back_or_to mentors_path, alert: "Pick one of your plans first."
-    elsif plan.update(mentor: @mentor)
-      redirect_to workout_plan_path(plan),
-                  notice: "#{@mentor.display_name} is now coaching “#{plan.title}”."
+      redirect_back_or_to mentors_path, alert: "Pick one of your plans first.", status: :see_other
     else
-      redirect_back_or_to mentors_path, alert: plan.errors.full_messages.to_sentence
+      redirect_to edit_workout_plan_path(plan, mentor_id: @mentor.id),
+                  notice: "Review your coach and save to regenerate your workout.",
+                  status: :see_other
     end
   end
 
   private
 
   def set_mentor
-    @mentor = Mentor.find(params[:id])
+    @mentor = Mentor.selectable.find(params[:id])
   end
 
   def set_plans

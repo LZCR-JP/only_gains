@@ -1,36 +1,82 @@
-<%= simple_form_for workout_plan do |f| %>
-<%= f.error_notification %>
-<%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <%= f.input :title, placeholder: "My Home Workout Plan" %>
+<% editing = workout_plan.persisted? %>
 
-  <%= f.input :goal,
-      collection: [
-        ["Bulking", "bulking"],
-        ["Endurance", "endurance"],
-        ["Weight Loss", "losing_weight"]
-      ],
-      prompt: "Choose your fitness goal",
-      hint: "Your AI coach will be automatically assigned based on your goal.",
-      required: true %>
+<%= simple_form_for workout_plan,
+      url: editing ? workout_plan_path(workout_plan) : workout_plans_path,
+      html: { data: { turbo: false } } do |f| %>
 
-  <%= f.input :equipment, placeholder: "Dumbbells, yoga mat, or none" %>
+  <%= f.error_notification %>
 
-  <div class="row">
-    <div class="col-sm-6">
-      <%= f.input :training_days, label: "Training days / week", collection: 1..7, include_blank: false %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <% unless editing %>
+    <%= f.hidden_field :mentor_id %>
+  <% end %>
+
+  <div class="row g-2">
+
+    <div class="col-md-6">
+      <%= f.input :title,
+          label: "Plan name",
+          placeholder: "My Home Workout" %>
     </div>
-    <div class="col-sm-6">
-      <%= f.input :duration_minutes, label: "Session length (min)", collection: [15, 20, 30, 45, 60, 90], include_blank: false %>
+
+    <div class="col-md-6">
+      <%= f.input :fitness_level,
+          collection: WorkoutPlan.fitness_levels.keys.map { |level| [level.humanize, level] },
+          include_blank: "Select level",
+          required: true %>
     </div>
+
+  </div>
+
+  <%= f.input :equipment,
+      placeholder: "Bodyweight, dumbbells, yoga mat...",
+      hint: "Leave blank for bodyweight-only workouts." %>
+
+  <div class="row g-2">
+
+    <div class="col-sm-6">
+      <%= f.input :training_days,
+          label: "Training days / week",
+          collection: 1..7,
+          include_blank: "Select days",
+          required: true %>
+    </div>
+
+    <div class="col-sm-6">
+      <%= f.input :duration_minutes,
+          label: "Session length (min)",
+          collection: [15, 20, 30, 45, 60, 90],
+          include_blank: "Select duration",
+          required: true %>
+    </div>
+
   </div>
 
   <%= f.input :description,
+      label: "Anything else? (Optional)",
       as: :text,
-      input_html: { rows: 4 },
-      placeholder: "Injuries, preferences, anything your mentor should know (optional)" %>
+      input_html: { rows: 2 },
+      placeholder: "Preferences, limitations, or special requests..." %>
 
-  <%= f.button :button, class: "gf-btn gf-btn-primary gf-btn-block mt-2" do %>
-    ⚡ <%= workout_plan.persisted? ? "Save changes" : "Create plan" %>
+  <% if editing %>
+
+    <%= f.input :mentor_id,
+        label: "AI coach",
+        collection: @mentors.map { |mentor| ["#{mentor.display_name} — #{mentor.specialty}", mentor.id] },
+        include_blank: "Select your coach",
+        required: true,
+        hint: "Changing your coach or training preferences will regenerate your workout." %>
+
   <% end %>
+
+  <%= f.button :button,
+      type: "submit",
+      class: "gf-btn gf-btn-primary gf-btn-block mt-2" do %>
+
+    <%= editing ? "Save changes" : "Generate my workout →" %>
+
+  <% end %>
+
 <% end %>
