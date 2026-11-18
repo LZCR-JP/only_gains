@@ -1,0 +1,218 @@
+// 3D coach stage on "Set up your workout" (mentor_stage_controller.js).
+// --stage-color / --stage-accent are set per coach by the controller.
+
+.gf-mentor-stage {
+  --stage-color: var(--gf-purple);
+  --stage-accent: var(--gf-pink);
+  position: relative;
+  height: 100%;
+}
+
+// Fills the whole left column (as tall as the form beside it on desktop)
+.gf-mentor-stage-view {
+  position: relative;
+  height: 100%;
+  min-height: 600px;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--gf-border);
+  background:
+    radial-gradient(60% 45% at 50% 85%, color-mix(in srgb, var(--stage-color) 35%, transparent), transparent 70%),
+    radial-gradient(80% 60% at 50% 30%, color-mix(in srgb, var(--stage-color) 18%, transparent), transparent 70%),
+    #0c0b0d;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--stage-color) 25%, transparent) inset,
+    0 20px 60px rgba(0, 0, 0, .45),
+    0 0 40px color-mix(in srgb, var(--stage-color) 18%, transparent);
+
+  @media (max-width: 991.98px) { height: 460px; min-height: 0; }
+  @media (max-width: 575.98px) { height: 420px; }
+}
+
+.gf-mentor-stage-canvas {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .35s ease;
+
+  .is-live & { opacity: 1; }
+}
+
+.gf-mentor-stage-gl {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// ---------- HUD: coach name (top-left) + voice toggle (top-right) ----------
+
+.gf-mentor-stage-hud {
+  position: absolute;
+  top: .9rem;
+  left: 1rem;
+  right: 7.5rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.gf-mentor-stage-tag {
+  display: inline-block;
+  margin-bottom: .35rem;
+  padding: .25rem .6rem;
+  font-family: $mono-font;
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #fff;
+  background: color-mix(in srgb, var(--stage-color) 30%, rgba(12, 11, 13, .7));
+  border: 1px solid color-mix(in srgb, var(--stage-color) 70%, transparent);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+
+.gf-mentor-stage-name {
+  margin: 0;
+  font-family: $headers-font;
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .8), 0 0 18px color-mix(in srgb, var(--stage-color) 55%, transparent);
+}
+
+.gf-mentor-stage-voice {
+  position: absolute;
+  top: .9rem;
+  right: .9rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .7rem;
+  font-family: $mono-font;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gf-text);
+  background: rgba(12, 11, 13, .65);
+  border: 1px solid var(--gf-border);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: border-color .2s, color .2s, box-shadow .2s;
+
+  &:hover, &:focus-visible { border-color: var(--stage-color); color: #fff; }
+  &:focus-visible { outline: 2px solid var(--stage-color); outline-offset: 2px; }
+
+  .gf-voice-off { display: none; }
+  &[aria-pressed="false"] {
+    color: var(--gf-muted);
+    .gf-voice-on { display: none; }
+    .gf-voice-off { display: inline; }
+  }
+  // Browser blocked autoplay speech: invite a click
+  &.is-blocked {
+    color: #fff;
+    border-color: var(--stage-color);
+    animation: gf-voice-invite 1.6s ease-in-out infinite;
+  }
+  .is-speaking & .gf-voice-on { animation: gf-voice-wave .6s ease-in-out infinite alternate; }
+}
+
+// ---------- Cinematic subtitle banner (bottom of the canvas) ----------
+
+.gf-mentor-stage-subtitle {
+  position: absolute;
+  left: .75rem;
+  right: .75rem;
+  bottom: 1rem;
+  z-index: 2;
+  padding: .65rem 1rem .75rem;
+  text-align: center;
+  background: linear-gradient(90deg, transparent, rgba(8, 7, 9, .82) 12%, rgba(8, 7, 9, .82) 88%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--stage-color) 60%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--stage-color) 60%, transparent);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .45s ease, transform .45s ease;
+  pointer-events: none;
+
+  &.is-visible {
+    opacity: 1;
+    transform: none;
+    p { animation: gf-subtitle-in .5s cubic-bezier(.2, 1.2, .4, 1); }
+  }
+
+  p {
+    margin: 0;
+    font-family: $headers-font;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, .9);
+    &::before { content: "“"; }
+    &::after  { content: "”"; }
+  }
+}
+
+.gf-mentor-stage-speaker {
+  display: block;
+  margin-bottom: .2rem;
+  font-family: $mono-font;
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--stage-color);
+}
+
+// ---------- No WebGL: glowing CSS aura with the coach's emoji ----------
+
+.gf-mentor-stage-fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+
+  span {
+    display: grid;
+    place-items: center;
+    width: 9rem;
+    height: 9rem;
+    font-size: 4.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--stage-color);
+    box-shadow: 0 0 40px var(--stage-color), inset 0 0 30px color-mix(in srgb, var(--stage-color) 50%, transparent);
+    animation: gf-stage-breathe 2.4s ease-in-out infinite;
+  }
+
+  .is-fallback & { display: grid; }
+}
+
+@keyframes gf-subtitle-in {
+  from { opacity: 0; letter-spacing: .06em; filter: blur(4px); }
+  to   { opacity: 1; letter-spacing: normal; filter: none; }
+}
+
+@keyframes gf-voice-invite {
+  50% { box-shadow: 0 0 18px color-mix(in srgb, var(--stage-color) 70%, transparent); }
+}
+
+@keyframes gf-voice-wave {
+  to { transform: scale(1.18); }
+}
+
+@keyframes gf-stage-breathe {
+  50% { transform: scale(1.06); box-shadow: 0 0 60px var(--stage-color), inset 0 0 40px color-mix(in srgb, var(--stage-color) 60%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gf-mentor-stage-subtitle { transform: none; }
+  .gf-mentor-stage-subtitle.is-visible p,
+  .gf-mentor-stage-voice.is-blocked,
+  .is-speaking .gf-mentor-stage-voice .gf-voice-on,
+  .gf-mentor-stage-fallback span { animation: none; }
+}
