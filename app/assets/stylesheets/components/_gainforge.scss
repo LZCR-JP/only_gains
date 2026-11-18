@@ -459,3 +459,16 @@ body {
 }
 .gf-mentor-card:hover .gf-avatar,
 .gf-coach-card:hover .gf-avatar { border-color: var(--gf-pink); }
+
+// Auth pages (sign in): centered in the viewport below the navbar
+.gf-auth {
+  min-height: calc(100vh - var(--gf-nav-h));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+.gf-auth-card {
+  width: 100%;
+  max-width: 420px;
+}
