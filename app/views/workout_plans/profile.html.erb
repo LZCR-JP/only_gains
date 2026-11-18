@@ -20,12 +20,47 @@
       </p>
     </header>
 
-    <div class="row g-3 align-items-start">
+    <div class="row g-3 align-items-stretch">
 
       <div class="col-lg-4">
-        <section class="gf-card gf-mentor-card h-auto">
-          <%= render "mentors/coach_profile",
-              mentor: @selected_mentor %>
+        <section class="gf-mentor-stage"
+                 data-controller="mentor-stage"
+                 data-mentor-stage-name-value="<%= @selected_mentor.name %>"
+                 data-mentor-stage-slug-value="<%= MentorVoice.slug_for(@selected_mentor.name) %>"
+                 data-mentor-stage-quotes-value="<%= MentorVoice.quotes_for(@selected_mentor.name).to_json %>"
+                 data-mentor-stage-voice-url-value="<%= mentor_voice_path %>">
+          <div class="gf-mentor-stage-view">
+            <div class="gf-mentor-stage-canvas"
+                 data-mentor-stage-target="canvas"
+                 role="img"
+                 aria-label="Animated 3D figure of <%= @selected_mentor.display_name %>"></div>
+            <div class="gf-mentor-stage-fallback" aria-hidden="true">
+              <span><%= @selected_mentor.emoji %></span>
+            </div>
+
+            <header class="gf-mentor-stage-hud">
+              <% if @selected_mentor.badge.present? %>
+                <span class="gf-mentor-stage-tag"><%= @selected_mentor.badge %></span>
+              <% end %>
+              <h2 class="gf-mentor-stage-name"><%= @selected_mentor.display_name %></h2>
+            </header>
+
+            <button type="button"
+                    class="gf-mentor-stage-voice"
+                    data-mentor-stage-target="voiceButton"
+                    data-action="mentor-stage#toggleVoice"
+                    aria-pressed="true"
+                    hidden>
+              <i class="fa-solid fa-volume-high gf-voice-on" aria-hidden="true"></i>
+              <i class="fa-solid fa-volume-xmark gf-voice-off" aria-hidden="true"></i>
+              <span data-mentor-stage-target="voiceLabel">Sound ON</span>
+            </button>
+
+            <div class="gf-mentor-stage-subtitle" data-mentor-stage-target="subtitle">
+              <span class="gf-mentor-stage-speaker"><%= @selected_mentor.display_name %></span>
+              <p data-mentor-stage-target="subtitleText"></p>
+            </div>
+          </div>
         </section>
       </div>
 

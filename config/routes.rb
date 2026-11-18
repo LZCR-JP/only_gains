@@ -24,5 +24,8 @@ Rails.application.routes.draw do
     end
   end
 
+  # Neural voice-over for the 3D mentor stage (edge-tts, cached)
+  post "mentor_voice", to: "mentor_voices#create", as: :mentor_voice
+
   get "up" => "rails/health#show", as: :rails_health_check
 end
