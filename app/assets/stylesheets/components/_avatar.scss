@@ -26,3 +26,37 @@
   object-fit: cover;
   flex: 0 0 42px;
 }
+
+.mentor-avatar {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-message {
+  width: 100%;
+}
+
+.chat-bubble {
+  max-width: 70%;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.chat-bubble--assistant {
+  background-color: #f8f9fa;
+  color: #171717;
+}
+
+.chat-bubble--user {
+  background-color: #c678f5;
+  color: #fff;
+}

@@ -1,5 +1,5 @@
 <div id="<%= dom_id(message) %>"
-     class="d-flex align-items-start gap-2 mb-3 <%= message.role == "user" ? "justify-content-end" : "justify-content-start" %>">
+     class="chat-message d-flex align-items-start gap-2 mb-3 <%= message.role == "user" ? "chat-message--user justify-content-end" : "chat-message--assistant justify-content-start" %>">
 
   <% if message.role == "assistant" && workout_plan.mentor.avatar_url.present? %>
     <%= image_tag workout_plan.mentor.avatar_url,
@@ -7,15 +7,16 @@
         class: "mentor-avatar" %>
   <% end %>
 
-  <div class="rounded p-3 <%= message.role == "user" ? "bg-primary text-white" : "bg-light text-dark" %>"
-       style="max-width: 80%;">
-
-    <strong><%= message.role == "user" ? "You" : workout_plan.mentor.name %></strong>
+  <div class="chat-bubble <%= message.role == "user" ? "chat-bubble--user" : "chat-bubble--assistant" %>">
+    <strong>
+      <%= message.role == "user" ? "You" : workout_plan.mentor.name %>
+    </strong>
 
     <%= simple_format(message.content) %>
 
     <% if message.workout_change_proposal.present? %>
-      <%= render "chats/workout_proposal", proposal: message.workout_change_proposal %>
+      <%= render "chats/workout_proposal",
+          proposal: message.workout_change_proposal %>
     <% end %>
   </div>
 </div>
