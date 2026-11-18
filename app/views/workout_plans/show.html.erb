@@ -43,13 +43,13 @@
 
         <% if chats.any? %>
 
-          <%= link_to "Chat with coach ↗",
+          <%= link_to "Unlock #{@workout_plan.mentor.name}'s wisdom ↗",
               workout_plan_chat_path(@workout_plan, chats.first),
               class: "gf-btn gf-btn-primary" %>
 
         <% else %>
 
-          <%= button_to "Chat with coach ↗",
+          <%= button_to "Unlock #{@workout_plan.mentor.name}'s wisdom ↗",
               workout_plan_chats_path(@workout_plan),
               method: :post,
               class: "gf-btn gf-btn-primary" %>
@@ -94,8 +94,6 @@
     <div class="gf-workout-section-heading">
 
       <h2>Your workout</h2>
-
-      <span>✦ AI generated</span>
 
     </div>
 
