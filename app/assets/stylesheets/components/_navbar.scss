@@ -76,12 +76,28 @@
   display: block;
   height: 40px;
   width: auto;
-  transition: transform .2s, filter .2s;
+  transform: perspective(600px) rotateY(-4deg);
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, .35))
+    drop-shadow(0 3px 0 rgba(115, 20, 68, .8))
+    drop-shadow(0 7px 8px rgba(0, 0, 0, .55));
+  transition: transform .25s ease, filter .25s ease;
+
   .navbar-brand:hover & {
-    transform: scale(1.04);
-    filter: drop-shadow(0 0 12px rgba(#e0357a, .45));
+    transform: perspective(600px) rotateY(0) rotateX(5deg) translateY(-2px);
+    filter:
+      drop-shadow(0 1px 0 rgba(255, 255, 255, .45))
+      drop-shadow(0 4px 0 rgba(115, 20, 68, .85))
+      drop-shadow(0 10px 14px rgba(224, 53, 122, .35));
   }
-  @media (max-width: 575.98px) { height: 34px; }
+
+  @media (max-width: 575.98px) {
+    height: 34px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 // ---------- Music toggle ----------
@@ -133,4 +149,18 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .gf-eq span { animation: none !important; height: 8px; }
+}
+
+.gf-navbar {
+  padding-block: .35rem;
+
+  .navbar-nav {
+    gap: .25rem;
+  }
+
+  .navbar-nav,
+  .navbar-brand,
+  .gf-user {
+    align-items: center;
+  }
 }

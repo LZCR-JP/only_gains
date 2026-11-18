@@ -1,0 +1,10 @@
+<%= turbo_stream.append "messages" do %>
+  <%= render "messages/message", message: @user_message, workout_plan: @chat.workout_plan %>
+  <%= render "messages/message", message: @assistant_message, workout_plan: @chat.workout_plan %>
+<% end %>
+
+<%= turbo_stream.update "message_form" do %>
+  <%= render "messages/form", chat: @chat, message: Message.new %>
+<% end %>
+
+<%= turbo_stream.update "chat_alert" do %><% end %>

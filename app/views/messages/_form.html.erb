@@ -1,0 +1,21 @@
+<%= form_with model: [chat, message],
+      data: {
+        controller: "chat-submit",
+        action: "turbo:submit-start->chat-submit#start turbo:submit-end->chat-submit#finish"
+      } do |form| %>
+
+  <%= form.text_area :content,
+      rows: 3,
+      placeholder: "Need more gains? Start typing mf!",
+      class: "form-control mb-3",
+      required: true %>
+
+  <div class="d-flex align-items-center gap-3">
+    <%= form.submit "Get Gains", class: "btn btn-primary" %>
+
+    <div class="d-none" data-chat-submit-target="indicator" role="status">
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      <span class="ms-2">One sec, loading gains...</span>
+    </div>
+  </div>
+<% end %>

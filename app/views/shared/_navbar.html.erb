@@ -1,48 +1,80 @@
+<% plans_active = controller_name == "workout_plans" && action_name != "new" %>
+<% coach_active = controller_name == "workout_plans" && action_name == "new" %>
+
 <nav class="navbar navbar-expand-lg gf-navbar">
   <div class="container">
-    <%= link_to root_path, class: "navbar-brand", aria: { label: "Only Gains — home" } do %>
-      <%= image_tag "logo.png", alt: "Only Gains — Build Strength", class: "gf-brand-logo" %>
+    <%= link_to root_path,
+        class: "navbar-brand",
+        aria: { label: "Only Gains — home" } do %>
+      <%= image_tag "logo.png",
+          alt: "Only Gains — Build Strength",
+          class: "gf-brand-logo" %>
     <% end %>
 
     <div class="gf-music order-lg-last ms-auto ms-lg-3 me-2 me-lg-0"
          data-controller="music"
          data-music-src-value="<%= audio_path("background-music.mp3") %>"
          data-music-volume-value="0.12">
-      <button type="button" class="gf-music-btn" data-music-target="button" data-action="music#toggle"
-              aria-pressed="false" aria-label="Mute background music">
+      <button type="button"
+              class="gf-music-btn"
+              data-music-target="button"
+              data-action="music#toggle"
+              aria-pressed="false"
+              aria-label="Toggle background music">
         <i class="fa-solid fa-volume-high gf-icon-on" aria-hidden="true"></i>
         <i class="fa-solid fa-volume-xmark gf-icon-off" aria-hidden="true"></i>
-        <span class="gf-eq" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="gf-eq" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
       </button>
     </div>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#gfNav"
-            aria-controls="gfNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#gfNav"
+            aria-controls="gfNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="gfNav">
       <ul class="navbar-nav me-auto ms-lg-4">
         <li class="nav-item">
-          <%= link_to "Plans", workout_plans_path,
-                class: ["nav-link", { active: controller_name == "workout_plans" }],
-                aria: { current: (controller_name == "workout_plans" ? "page" : nil) } %>
+          <%= link_to "My plans",
+              workout_plans_path,
+              class: ["nav-link", { active: plans_active }],
+              aria: { current: (plans_active ? "page" : nil) } %>
         </li>
+
         <li class="nav-item">
-          <%= link_to "Choose coach", new_workout_plan_path,
-                class: ["nav-link", { active: controller_name == "workout_plans" && action_name == "new" }],
-                aria: { current: (controller_name == "workout_plans" && action_name == "new" ? "page" : nil) } %>
+          <%= link_to "Create a plan",
+              new_workout_plan_path,
+              class: ["nav-link", { active: coach_active }],
+              aria: { current: (coach_active ? "page" : nil) } %>
         </li>
       </ul>
 
       <div class="d-flex align-items-center gap-2 flex-wrap">
         <% if user_signed_in? %>
-          <span class="gf-user me-1">@<%= current_user.nickname.presence || current_user.email.split("@").first %></span>
-          <%= button_to "Log out", destroy_user_session_path, method: :delete,
-                class: "gf-btn gf-btn-ghost gf-btn-sm", form: { class: "m-0" } %>
+          <span class="gf-user me-1">
+            @<%= current_user.nickname.presence || current_user.email.split("@").first %>
+          </span>
+
+          <%= button_to "Log out",
+              destroy_user_session_path,
+              method: :delete,
+              class: "gf-btn gf-btn-ghost gf-btn-sm",
+              form: { class: "m-0" } %>
         <% else %>
-          <%= link_to "Log in", new_user_session_path, class: "gf-btn gf-btn-ghost gf-btn-sm" %>
-          <%= link_to "Join", new_user_registration_path, class: "gf-btn gf-btn-primary gf-btn-sm" %>
+          <%= link_to "Log in",
+              new_user_session_path,
+              class: "gf-btn gf-btn-ghost gf-btn-sm" %>
+
+          <%= link_to "Join",
+              new_user_registration_path,
+              class: "gf-btn gf-btn-primary gf-btn-sm" %>
         <% end %>
       </div>
     </div>

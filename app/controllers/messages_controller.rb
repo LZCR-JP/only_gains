@@ -7,9 +7,7 @@ class MessagesController < ApplicationController
     content = message_params[:content].to_s.strip
 
     if content.blank?
-      redirect_to workout_plan_chat_path(workout_plan, @chat),
-                  alert: "Please enter a message.",
-                  status: :see_other
+      respond_with_alert("Please enter a message.")
       return
     end
 
@@ -18,12 +16,7 @@ class MessagesController < ApplicationController
                    .limit(20)
                    .to_a
                    .reverse
-                   .map do |message|
-      {
-        role: message.role,
-        content: message.content
-      }
-    end
+                   .map { |message| { role: message.role, content: message.content } }
 
     snapshot = workout_plan.generated_workout.deep_dup
     plan_updated_at = workout_plan.updated_at
@@ -34,8 +27,7 @@ class MessagesController < ApplicationController
       fitness_level: workout_plan.fitness_level,
       equipment: workout_plan.equipment,
       training_days: workout_plan.training_days,
-      duration_minutes: workout_plan.duration_minutes,
-      description: workout_plan.description
+      duration_minutes: workout_plan.duration_minutes
     }
 
     if snapshot.present?
@@ -61,18 +53,18 @@ class MessagesController < ApplicationController
     end
 
     Message.transaction do
-      @chat.messages.create!(
+      @user_message = @chat.messages.create!(
         role: "user",
         content: content
       )
 
-      assistant_message = @chat.messages.create!(
+      @assistant_message = @chat.messages.create!(
         role: "assistant",
         content: result.fetch("message")
       )
 
       if result["proposal"].present?
-        assistant_message.create_workout_change_proposal!(
+        @assistant_message.create_workout_change_proposal!(
           proposal: result["proposal"],
           workout_snapshot: snapshot,
           plan_updated_at: plan_updated_at,
@@ -81,19 +73,38 @@ class MessagesController < ApplicationController
       end
     end
 
-    redirect_to workout_plan_chat_path(workout_plan, @chat),
-                status: :see_other
+    respond_to do |format|
+      format.turbo_stream
+      format.html do
+        redirect_to workout_plan_chat_path(workout_plan, @chat),
+                    status: :see_other
+      end
+    end
   rescue AiCoachService::ChatError,
          WorkoutChangeProposalService::ProposalError => e
-
-    redirect_to workout_plan_chat_path(@chat.workout_plan, @chat),
-                alert: e.message,
-                status: :see_other
+    respond_with_alert(e.message)
   end
 
   private
 
   def message_params
     params.require(:message).permit(:content)
+  end
+
+  def respond_with_alert(message)
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update(
+          "chat_alert",
+          partial: "messages/alert",
+          locals: { message: message }
+        )
+      end
+      format.html do
+        redirect_to workout_plan_chat_path(@chat.workout_plan, @chat),
+                    alert: message,
+                    status: :see_other
+      end
+    end
   end
 end
