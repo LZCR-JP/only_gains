@@ -29,15 +29,9 @@
                 aria: { current: (controller_name == "workout_plans" ? "page" : nil) } %>
         </li>
         <li class="nav-item">
-          <%= link_to "Mentors", mentors_path,
-                class: ["nav-link", { active: controller_name == "mentors" }],
-                aria: { current: (controller_name == "mentors" ? "page" : nil) } %>
-        </li>
-        <li class="nav-item">
-          <span class="nav-link disabled" aria-disabled="true">Tracker<span class="gf-soon">soon</span></span>
-        </li>
-        <li class="nav-item">
-          <span class="nav-link disabled" aria-disabled="true">Coach<span class="gf-soon">soon</span></span>
+          <%= link_to "Choose coach", new_workout_plan_path,
+                class: ["nav-link", { active: controller_name == "workout_plans" && action_name == "new" }],
+                aria: { current: (controller_name == "workout_plans" && action_name == "new" ? "page" : nil) } %>
         </li>
       </ul>
 

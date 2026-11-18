@@ -39,3 +39,460 @@
   white-space: pre-line;
   margin: 0;
 }
+
+
+// ---------- Compact workout setup ----------
+
+.gf-setup-page {
+  padding: 1rem 0 2rem;
+
+  .container {
+    max-width: 1100px;
+  }
+
+  .gf-header {
+    padding: .75rem 0 1.25rem;
+  }
+
+  .gf-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    margin: .4rem 0;
+  }
+
+  .gf-mentor-card {
+    height: auto;
+    min-height: 0;
+    gap: .75rem;
+    padding: 1.25rem;
+  }
+
+  .gf-form-card {
+    padding: 1.25rem;
+
+    .mb-3 {
+      margin-bottom: .65rem !important;
+    }
+
+    .form-label {
+      margin-bottom: .3rem;
+    }
+
+    .form-control,
+    .form-select {
+      min-height: 40px;
+      padding: .5rem .75rem;
+    }
+
+    textarea {
+      min-height: 65px;
+      resize: vertical;
+    }
+
+    .form-text {
+      font-size: .75rem;
+    }
+  }
+
+  .gf-quote {
+    font-size: .85rem;
+    line-height: 1.5;
+  }
+}
+
+// ======================================================
+// WORKOUT DASHBOARD
+// ======================================================
+
+.gf-workout-page {
+  padding: 1.5rem 0 3rem;
+
+  .container {
+    max-width: 1380px;
+  }
+
+  form {
+    margin: 0;
+  }
+}
+
+// Plan heading
+
+.gf-workout-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  h1 {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: var(--gf-text);
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.gf-workout-page .gf-btn-outline {
+  background: transparent;
+  color: var(--gf-pink);
+  border: 1px solid var(--gf-border);
+
+  &:hover {
+    background: var(--gf-card-2);
+    border-color: var(--gf-purple);
+  }
+}
+
+// Compact summary
+
+.gf-workout-summary {
+  background: var(--gf-card);
+  border: 1px solid var(--gf-border);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+}
+
+.gf-workout-coach {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gf-workout-coach-info {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+
+  .gf-avatar {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 .25rem;
+    color: var(--gf-text);
+  }
+
+  p {
+    margin: 0;
+    font-size: .8rem;
+    color: var(--gf-pink);
+  }
+}
+
+.gf-workout-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .85rem;
+
+  span {
+    padding: .4rem .75rem;
+    background: var(--gf-card-2);
+    border-radius: 7px;
+    color: var(--gf-text);
+    font-size: .78rem;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+  }
+}
+
+.gf-workout-notes {
+  margin-top: .75rem;
+  font-size: .8rem;
+  color: var(--gf-muted);
+
+  summary {
+    cursor: pointer;
+  }
+
+  p {
+    margin: .5rem 0 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+// Section headings
+
+.gf-workout-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin: 1.75rem 0 1rem;
+
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gf-text);
+    margin: 0;
+  }
+
+  > span {
+    color: var(--gf-pink);
+    font-size: .75rem;
+  }
+}
+
+// Responsive workout grid
+
+.gf-workout-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 1rem;
+}
+
+// Daily workout card
+
+.gf-workout-day {
+  background: var(--gf-card);
+  border: 1px solid var(--gf-border);
+  border-radius: 14px;
+  padding: 1rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.gf-workout-day-header {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding-bottom: 1rem;
+
+  h3 {
+    color: var(--gf-text);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 .15rem;
+    overflow-wrap: anywhere;
+  }
+
+  small {
+    font-size: .75rem;
+    color: var(--gf-muted);
+  }
+}
+
+.gf-workout-day-number {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  background: rgba(201, 130, 229, .12);
+  color: var(--gf-pink);
+  border-radius: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+// Exercise table
+
+.gf-workout-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: .8rem .25rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  th {
+    padding-top: .55rem;
+    padding-bottom: .55rem;
+    color: var(--gf-muted);
+    font-size: .65rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-bottom: 1px solid var(--gf-border);
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 52%;
+    text-align: left;
+    padding-right: .5rem;
+  }
+
+  th:not(:first-child) {
+    width: 16%;
+  }
+
+  td {
+    color: var(--gf-text);
+    font-size: .85rem;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid var(--gf-border);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover {
+    background: var(--gf-card-2);
+  }
+
+  .gf-exercise-name {
+    font-weight: 600;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  .gf-exercise-sets {
+    font-weight: 700;
+    color: var(--gf-pink);
+  }
+
+  .gf-exercise-rest {
+    color: var(--gf-muted);
+    font-size: .8rem;
+  }
+}
+
+// Empty workout
+
+.gf-workout-empty {
+  padding: 2rem;
+  text-align: center;
+  background: var(--gf-card);
+  border: 1px solid var(--gf-border);
+  border-radius: 14px;
+
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+  }
+
+  p {
+    color: var(--gf-muted);
+    font-size: .9rem;
+  }
+}
+
+// Coach conversations
+
+.gf-workout-chats {
+  margin-top: 2rem;
+}
+
+.gf-workout-chat-list {
+  display: grid;
+  gap: .5rem;
+}
+
+.gf-workout-chat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--gf-card);
+  border: 1px solid var(--gf-border);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  color: var(--gf-text);
+  text-decoration: none;
+  transition: border-color .2s;
+
+  strong {
+    display: block;
+    font-size: .9rem;
+  }
+
+  small {
+    display: block;
+    color: var(--gf-muted);
+    font-size: .75rem;
+    margin-top: .2rem;
+  }
+
+  > span {
+    color: var(--gf-pink);
+  }
+
+  &:hover {
+    color: var(--gf-text);
+    border-color: var(--gf-purple);
+  }
+}
+
+// Delete workout
+
+.gf-workout-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gf-border);
+}
+
+.gf-workout-delete {
+  background: transparent;
+  border: 0;
+  color: var(--gf-muted);
+  font-size: .75rem;
+  padding: .5rem;
+
+  &:hover {
+    color: var(--gf-red);
+  }
+}
+
+// Tablet
+
+@media (max-width: 1199.98px) {
+  .gf-workout-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// Mobile
+
+@media (max-width: 767.98px) {
+  .gf-workout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gf-workout-page {
+    padding-top: 1rem;
+  }
+
+  .gf-workout-summary {
+    padding: 1rem;
+  }
+
+  .gf-workout-coach {
+    align-items: stretch;
+
+    > a,
+    > form,
+    > form button {
+      width: 100%;
+    }
+  }
+
+  .gf-workout-day {
+    padding: .85rem;
+  }
+
+  .gf-workout-table td {
+    font-size: .8rem;
+  }
+}

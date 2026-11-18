@@ -1,42 +1,73 @@
 class WorkoutPlansController < ApplicationController
   before_action :set_workout_plan, only: %i[show edit update destroy]
+  before_action :load_mentors, only: %i[new create edit update]
 
   def index
     @workout_plans = current_user.workout_plans.includes(:mentor).order(created_at: :desc)
   end
 
-  def show
-  end
+  def show; end
 
+  # Step 1: GET /workout_plans/new displays all six coaches.
+  # Step 2: GET /workout_plans/new?mentor_id=ID shows the profile form.
+  # Nothing is written to the database until Create is submitted.
   def new
-    @workout_plan = current_user.workout_plans.new(mentor_id: params[:mentor_id])
+    @workout_plan = current_user.workout_plans.new(
+      fitness_level: "beginner", training_days: 3, duration_minutes: 30
+    )
+
+    if params[:mentor_id].present?
+      @selected_mentor = @mentors.find_by(id: params[:mentor_id])
+      unless @selected_mentor
+        redirect_to new_workout_plan_path, alert: "Please choose an available coach."
+        return
+      end
+
+      @workout_plan.mentor = @selected_mentor
+      @workout_plan.goal = @selected_mentor.training_goal
+      render :profile
+    end
   end
 
   def create
-    @workout_plan = current_user.workout_plans.build(workout_plan_params)
+    @workout_plan = current_user.workout_plans.build(profile_params)
+    @selected_mentor = @mentors.find_by(id: params.dig(:workout_plan, :mentor_id))
 
-    if prepare_workout && generate_workout && @workout_plan.save
-      redirect_to @workout_plan, notice: "AI workout plan created!"
-    else
+    unless @selected_mentor
+      @workout_plan.errors.add(:mentor, "Please choose an available coach.")
       render :new, status: :unprocessable_entity
+      return
+    end
+
+    # The coach determines the goal; ignore any goal submitted by the browser.
+    @workout_plan.mentor = @selected_mentor
+    @workout_plan.goal = @selected_mentor.training_goal
+
+    if @workout_plan.valid? && generate_workout && @workout_plan.save
+      redirect_to @workout_plan, notice: "AI workout plan created!", status: :see_other
+    else
+      render :profile, status: :unprocessable_entity
     end
   end
 
   def edit
+    # A coach picked from the mentor page is only previewed until Save.
+    if params[:mentor_id].present?
+      mentor = @mentors.find_by(id: params[:mentor_id])
+      @workout_plan.mentor = mentor if mentor
+    end
   end
 
   def update
-    @workout_plan.assign_attributes(workout_plan_params)
+    @workout_plan.assign_attributes(profile_params)
+    assign_selected_mentor
 
     regenerate = @workout_plan.generated_workout.blank? ||
-                 %w[goal fitness_level equipment training_days duration_minutes]
-                 .any? { |attribute| @workout_plan.will_save_change_to_attribute?(attribute) }
+                 %w[mentor_id goal fitness_level equipment training_days duration_minutes description]
+                   .any? { |attribute| @workout_plan.will_save_change_to_attribute?(attribute) }
 
-    if prepare_workout &&
-       (!regenerate || generate_workout) &&
-       @workout_plan.save
-
-      redirect_to @workout_plan, notice: "Workout plan updated!"
+    if @workout_plan.valid? && (!regenerate || generate_workout) && @workout_plan.save
+      redirect_to @workout_plan, notice: "Workout plan updated!", status: :see_other
     else
       render :edit, status: :unprocessable_entity
     end
@@ -44,33 +75,30 @@ class WorkoutPlansController < ApplicationController
 
   def destroy
     @workout_plan.destroy!
-
-    redirect_to workout_plans_path,
-                notice: "Workout plan deleted!",
-                status: :see_other
+    redirect_to workout_plans_path, notice: "Workout plan deleted!", status: :see_other
   end
 
   private
 
-  def prepare_workout
-    @workout_plan.mentor = Mentor.for_goal(@workout_plan.goal) if Mentor::GOAL_MENTORS.key?(@workout_plan.goal)
+  def load_mentors
+    @mentors = Mentor.selectable.order(:id)
+  end
 
-    @workout_plan.valid?(:onboarding)
-  rescue ActiveRecord::RecordNotFound
-    @workout_plan.errors.add(:base, "AI mentor is unavailable.")
-    false
+  def assign_selected_mentor
+    @workout_plan.mentor = @mentors.find_by(id: params.require(:workout_plan)[:mentor_id])
+    @workout_plan.goal = @workout_plan.mentor&.training_goal
   end
 
   def generate_workout
-    generated = WorkoutGeneratorService.new(
+    @workout_plan.generated_workout = WorkoutGeneratorService.new(
       goal: @workout_plan.goal,
+      mentor: @workout_plan.mentor,
       fitness_level: @workout_plan.fitness_level,
       equipment: @workout_plan.equipment,
       training_days: @workout_plan.training_days,
-      duration_minutes: @workout_plan.duration_minutes
+      duration_minutes: @workout_plan.duration_minutes,
+      description: @workout_plan.description
     ).call
-
-    @workout_plan.generated_workout = generated
     true
   rescue WorkoutGeneratorService::GenerationError => e
     @workout_plan.errors.add(:base, e.message)
@@ -81,15 +109,7 @@ class WorkoutPlansController < ApplicationController
     @workout_plan = current_user.workout_plans.find(params[:id])
   end
 
-  def workout_plan_params
-    params.require(:workout_plan).permit(
-      :title,
-      :goal,
-      :fitness_level,
-      :equipment,
-      :training_days,
-      :duration_minutes,
-      :description
-    )
+  def profile_params
+    params.require(:workout_plan).permit(*WorkoutPlan::PROFILE_FIELDS)
   end
 end

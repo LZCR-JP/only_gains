@@ -7,25 +7,8 @@
       <span class="gf-eyebrow"><span class="gf-dot"></span>Workout plans</span>
       <h1 class="gf-title">Your Workout Plans</h1>
       <p class="gf-subtitle">
-        Pick a plan. Pick a mentor. Pick up the weights. Your couch has been notified.
+        Pick your coach. Set up your workout. Then get moving. Your couch has been notified.
       </p>
-
-      <div class="gf-kpis">
-        <div class="gf-kpi">
-          <strong class="gf-pink" data-controller="counter" data-counter-to-value="<%= @workout_plans.size %>"><%= @workout_plans.size %></strong>
-          <small>Plans loaded</small>
-        </div>
-        <div class="gf-kpi">
-          <% total_minutes = @workout_plans.sum { |p| p.duration_minutes.to_i * p.training_days.to_i } %>
-          <strong class="gf-yellow" data-controller="counter" data-counter-to-value="<%= total_minutes %>"><%= total_minutes %></strong>
-          <small>Min of glorious pain / week</small>
-        </div>
-        <div class="gf-kpi">
-          <% mentor_count = @workout_plans.map(&:mentor_id).uniq.size %>
-          <strong class="gf-lime" data-controller="counter" data-counter-to-value="<%= mentor_count %>"><%= mentor_count %></strong>
-          <small>Mentors in your corner</small>
-        </div>
-      </div>
 
       <div class="gf-header-row">
         <span class="gf-mono gf-muted small">Newest first</span>
