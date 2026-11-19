@@ -1,5 +1,9 @@
+require "json"
+
 class WorkoutChangeProposalService
   class ProposalError < StandardError; end
+
+  TOOL_ROUNDS_LIMIT = 3
 
   def initialize(goal:, workout_plan:, mentor: nil, profile: {})
     @mentor = mentor || Mentor.for_goal(goal)
@@ -20,13 +24,56 @@ class WorkoutChangeProposalService
           content: "Respond in JSON.\nUser message: #{message}"
         }
       ],
+      tools: [exercise_alternatives_tool_schema],
       text: { format: { type: "json_object" } }
     )
 
-    result = JSON.parse(response.output_text)
+    tool_rounds = 0
 
+    loop do
+      tool_calls = response.output.select do |item|
+        item.type.to_s == "function_call"
+      end
+
+      break if tool_calls.empty?
+
+      tool_rounds += 1
+      raise ProposalError if tool_rounds > TOOL_ROUNDS_LIMIT
+
+      tool_outputs = tool_calls.map do |tool_call|
+        result = execute_tool_call(tool_call)
+
+        {
+          type: "function_call_output",
+          call_id: tool_call.call_id,
+          output: result.to_json
+        }
+      end
+
+      response = client.responses.create(
+        model: "gpt-6.1-terra",
+        reasoning: { effort: "none" },
+        instructions: instructions,
+        previous_response_id: response.id,
+        input: tool_outputs,
+        tools: [exercise_alternatives_tool_schema],
+        text: { format: { type: "json_object" } }
+      )
+    end
+
+    raw_output = response.output_text.to_s.strip
+
+    if raw_output.empty?
+      Rails.logger.error(
+        "AI returned no text. status=#{response.status.inspect} " \
+        "output_types=#{response.output.map(&:type).inspect} " \
+        "incomplete_details=#{response.incomplete_details.inspect}"
+      )
+      raise ProposalError, "The AI returned an empty response."
+    end
+
+    result = JSON.parse(raw_output)
     validate_result!(result)
-
     result
   rescue StandardError => e
     Rails.logger.error("AI proposal failed: #{e.class}: #{e.message}")
@@ -34,6 +81,38 @@ class WorkoutChangeProposalService
   end
 
   private
+
+  def exercise_alternatives_tool_schema
+    {
+      type: "function",
+      name: "find_exercise_alternatives",
+      description: "Find curated alternatives for an exercise in the user's current workout when the user asks to replace or swap that exercise.",
+      parameters: {
+        type: "object",
+        properties: {
+          exercise_name: {
+            type: "string",
+            description: "The exact exercise name from the user's current workout."
+          }
+        },
+        required: ["exercise_name"],
+        additionalProperties: false
+      },
+      strict: true
+    }
+  end
+
+  def execute_tool_call(tool_call)
+    raise ProposalError, "Unknown AI tool: #{tool_call.name}" unless tool_call.name == "find_exercise_alternatives"
+
+    arguments = JSON.parse(tool_call.arguments)
+
+    ExerciseAlternativesTool.new(
+      workout_plan: @workout_plan
+    ).call(
+      exercise_name: arguments.fetch("exercise_name")
+    )
+  end
 
   def instructions
     <<~PROMPT
@@ -75,19 +154,25 @@ class WorkoutChangeProposalService
       - Reply naturally in character.
       - Set proposal to null.
 
-      Only create a proposal when the user requests
-      a modification to their existing workout.
+      Only create a proposal when the user requests a modification
+      to their existing workout.
 
       For workout modification requests:
       - Suggest exactly one exercise replacement.
       - Use the exact existing day and exercise names.
-      - Respect the user's goal, level and equipment.
+      - Respect the user's goal, level, and equipment.
       - Keep the message short and in character.
       - Explain the replacement in the reason field.
       - Do not repeat the proposal details in the message.
       - Tell the user to accept or reject the change.
       - If the request is unclear, ask for clarification
         and set proposal to null.
+      - When helpful, use find_exercise_alternatives to look up
+        alternatives for an exercise in the current workout.
+      - Only use alternatives returned by that tool.
+      - If the tool reports that it cannot find alternatives,
+        ask the user for clarification or offer general advice
+        without creating a proposal.
 
       Never claim a workout has already been changed.
       Only the Accept button can apply a change.
@@ -141,7 +226,6 @@ class WorkoutChangeProposalService
     end
 
     proposal = result["proposal"]
-
     return if proposal.nil?
 
     raise ProposalError unless proposal.is_a?(Hash)
