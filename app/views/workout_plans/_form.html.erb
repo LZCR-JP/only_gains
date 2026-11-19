@@ -15,21 +15,10 @@
     <%= f.hidden_field :mentor_id %>
   <% end %>
 
-  <div class="row g-2">
-    <div class="col-md-6">
-      <%= f.input :title,
-          label: "Plan name",
-          placeholder: "e.g. #{workout_plan.goal&.humanize || 'Custom workout'} plan",
-          required: true %>
-    </div>
-
-    <div class="col-md-6">
-      <%= f.input :fitness_level,
-          collection: WorkoutPlan.fitness_levels.keys.map { |level| [level.humanize, level] },
-          include_blank: "Select level",
-          required: true %>
-    </div>
-  </div>
+  <%= f.input :fitness_level,
+      collection: WorkoutPlan.fitness_levels.keys.map { |level| [level.humanize, level] },
+      include_blank: "Select level",
+      required: true %>
 
   <div class="mb-3 position-relative" data-controller="equipment-picker">
     <label class="form-label">Equipment (optional)</label>

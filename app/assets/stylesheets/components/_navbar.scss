@@ -12,7 +12,7 @@
     display: inline-flex;
     align-items: center;
     gap: .55rem;
-    font-family: $headers-font;
+    font-family: $body-font;
     font-weight: 700;
     letter-spacing: .02em;
     color: var(--gf-text);
@@ -31,7 +31,7 @@
 
   .nav-link {
     position: relative;
-    font-family: $headers-font;
+    font-family: $body-font;
     font-weight: 500;
     color: var(--gf-muted);
     transition: color .2s;
@@ -58,7 +58,7 @@
   }
 
   .gf-user {
-    font-family: $mono-font;
+    font-family: $body-font;
     font-size: .72rem;
     text-transform: uppercase;
     letter-spacing: .1em;

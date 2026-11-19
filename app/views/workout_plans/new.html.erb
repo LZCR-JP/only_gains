@@ -42,12 +42,12 @@
     <% else %>
 
       <% specialties = {
-        "Arnold “The Oak”" => "Muscle Building",
-        "David Goggins" => "Endurance",
-        "Jonah Hill" => "Fat Loss",
-        "Master Yoda" => "Mobility",
-        "Sonic" => "HIIT",
-        "Mikasa Ackerman" => "Strength"
+        "Arnold “The Oak”" => "Muscle Growth & Strength",
+        "David Goggins" => "Endurance & Mental Toughness",
+        "Jonah Hill" => "Weight Loss & Healthy Habits",
+        "Master Yoda" => "Mobility & Recovery",
+        "Sonic" => "HIIT & Cardio",
+        "Mikasa Ackerman" => "Functional Strength & Balance"
       } %>
 
       <!-- COACH GRID -->
@@ -68,17 +68,13 @@
             <!-- COACH INFORMATION -->
             <div class="gf-selection-content">
 
-              <span class="gf-selection-category">
-                <%= specialties.fetch(mentor.name, "Fitness") %>
-              </span>
-
               <h2 class="gf-selection-name">
                 <%= mentor.display_name %>
               </h2>
 
-              <blockquote class="gf-selection-quote">
-                “<%= mentor.tagline %>”
-              </blockquote>
+              <p class="gf-selection-specialty">
+                <%= specialties.fetch(mentor.name, "General Fitness") %>
+              </p>
 
               <%= link_to new_workout_plan_path(mentor_id: mentor.id),
                   class: "gf-btn gf-btn-primary gf-btn-block mt-auto",
