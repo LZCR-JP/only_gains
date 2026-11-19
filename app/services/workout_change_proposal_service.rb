@@ -5,9 +5,10 @@ class WorkoutChangeProposalService
 
   TOOL_ROUNDS_LIMIT = 3
 
-  def initialize(goal:, workout_plan:, mentor: nil, profile: {})
+  def initialize(goal:, workout_plan:, workout_plan_record:, mentor: nil, profile: {})
     @mentor = mentor || Mentor.for_goal(goal)
     @workout_plan = workout_plan
+    @workout_plan_record = workout_plan_record
     @profile = profile
   end
 
@@ -24,7 +25,7 @@ class WorkoutChangeProposalService
           content: "Respond in JSON.\nUser message: #{message}"
         }
       ],
-      tools: [exercise_alternatives_tool_schema],
+      tools: available_tools,
       text: { format: { type: "json_object" } }
     )
 
@@ -56,7 +57,7 @@ class WorkoutChangeProposalService
         instructions: instructions,
         previous_response_id: response.id,
         input: tool_outputs,
-        tools: [exercise_alternatives_tool_schema],
+        tools: available_tools,
         text: { format: { type: "json_object" } }
       )
     end
@@ -102,16 +103,77 @@ class WorkoutChangeProposalService
     }
   end
 
-  def execute_tool_call(tool_call)
-    raise ProposalError, "Unknown AI tool: #{tool_call.name}" unless tool_call.name == "find_exercise_alternatives"
+  def log_workout_tool_schema
+    {
+      type: "function",
+      name: "log_completed_workout",
+      description: "Record a workout only when the user clearly says they completed it. Never log a planned or hypothetical workout.",
+      parameters: {
+        type: "object",
+        properties: {
+          day_name: {
+            type: "string",
+            description: "The exact day name from the user's workout plan."
+          },
+          notes: {
+            type: "string",
+            description: "Optional notes the user provided about the completed workout. Use an empty string if there are none."
+          }
+        },
+        required: ["day_name", "notes"],
+        additionalProperties: false
+      },
+      strict: true
+    }
+  end
 
+  def workout_logs_tool_schema
+    {
+      type: "function",
+      name: "get_workout_logs",
+      description: "Retrieve the user's 10 most recent completed workout logs for the current workout plan when they ask to see or review their workout history.",
+      parameters: {
+        type: "object",
+        properties: {},
+        required: [],
+        additionalProperties: false
+      },
+      strict: true
+    }
+  end
+
+  def available_tools
+    [
+      exercise_alternatives_tool_schema,
+      log_workout_tool_schema,
+      workout_logs_tool_schema
+    ]
+  end
+
+  def execute_tool_call(tool_call)
     arguments = JSON.parse(tool_call.arguments)
 
-    ExerciseAlternativesTool.new(
-      workout_plan: @workout_plan
-    ).call(
-      exercise_name: arguments.fetch("exercise_name")
-    )
+    case tool_call.name
+    when "find_exercise_alternatives"
+      ExerciseAlternativesTool.new(
+        workout_plan: @workout_plan
+      ).call(
+        exercise_name: arguments.fetch("exercise_name")
+      )
+    when "log_completed_workout"
+      LogWorkoutTool.new(
+        workout_plan: @workout_plan_record
+      ).call(
+        day_name: arguments.fetch("day_name"),
+        notes: arguments.fetch("notes")
+      )
+    when "get_workout_logs"
+      WorkoutLogsTool.new(
+        workout_plan: @workout_plan_record
+      ).call
+    else
+      raise ProposalError, "Unknown AI tool: #{tool_call.name}"
+    end
   end
 
   def instructions
@@ -176,6 +238,23 @@ class WorkoutChangeProposalService
 
       Never claim a workout has already been changed.
       Only the Accept button can apply a change.
+
+      # WORKOUT LOGGING
+
+      - Log a workout only when the user clearly says they completed it.
+      - Never log a planned, future, or hypothetical workout.
+      - Use the exact day name from the current workout.
+      - If the day is unclear, ask which workout they completed.
+      - Only say the workout was logged if the tool returns success.
+      - For workout logging, set proposal to null.
+
+      # WORKOUT HISTORY
+
+      - Use get_workout_logs when the user asks to see or review completed workouts.
+      - Report only information returned by the tool.
+      - The tool returns at most the 10 most recent logs for this workout plan.
+      - If the tool returns no logs, say that no workouts have been logged yet.
+      - Never invent a workout, completion date, or note.
 
       # NUMERIC RULES
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_19_043259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -255,6 +255,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
     t.index ["message_id"], name: "index_workout_change_proposals_on_message_id", unique: true
   end
 
+  create_table "workout_logs", force: :cascade do |t|
+    t.bigint "workout_plan_id", null: false
+    t.string "day_name", null: false
+    t.datetime "completed_at", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["workout_plan_id"], name: "index_workout_logs_on_workout_plan_id"
+  end
+
   create_table "workout_plans", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "mentor_id", null: false
@@ -278,6 +288,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_17_090000) do
   add_foreign_key "chats", "workout_plans"
   add_foreign_key "messages", "chats"
   add_foreign_key "workout_change_proposals", "messages"
+  add_foreign_key "workout_logs", "workout_plans"
   add_foreign_key "workout_plans", "mentors"
   add_foreign_key "workout_plans", "users"
 end
