@@ -1,37 +1,105 @@
+
 <% content_for :title, "Choose your coach · Only Gains" %>
 
-<div class="gf-page">
+<div class="gf-page gf-coach-selection">
   <div class="container">
-    <%= link_to "← Back to my plans", workout_plans_path, class: "gf-back" %>
 
+    <%= link_to "← Back to home", root_path, class: "gf-back" %>
+
+    <!-- HEADER -->
     <header class="gf-header" data-controller="reveal">
-      <span class="gf-eyebrow"><span class="gf-dot"></span>Step 1 of 2 · Your coach</span>
-      <h1 class="gf-title">Choose your coach</h1>
-      <p class="gf-subtitle">Explore each coach's style, specialty, and signature quote. Find the legend you want in your corner.</p>
+
+      <div class="gf-selection-progress">
+        <span class="is-active"></span>
+        <span></span>
+      </div>
+
+      <span class="gf-eyebrow">
+        <span class="gf-dot"></span>
+        Step 1 of 2 · Your coach
+      </span>
+
+      <h1 class="gf-title">
+        Choose your <span class="gf-gradient-text">coach.</span>
+      </h1>
+
     </header>
 
     <% if @workout_plan.errors.any? %>
-      <div class="alert alert-danger" role="alert"><%= @workout_plan.errors.full_messages.to_sentence %></div>
+      <div class="alert alert-danger" role="alert">
+        <%= @workout_plan.errors.full_messages.to_sentence %>
+      </div>
     <% end %>
 
     <% if @mentors.empty? %>
-      <div class="gf-card"><p class="gf-muted mb-0">No coaches available yet. Run <code>bin/rails db:seed</code> and try again.</p></div>
-    <% else %>
-      <div class="row g-3" data-controller="reveal">
-        <% @mentors.each do |mentor| %>
-          <div class="col-md-6 col-lg-4" data-reveal-target="item">
-            <article class="gf-card gf-mentor-card h-100 d-flex flex-column" data-controller="tilt" data-tilt-max-value="5">
-              <%= render "mentors/coach_profile", mentor: mentor %>
-              <%= link_to "Choose #{mentor.display_name} →",
-                    new_workout_plan_path(mentor_id: mentor.id),
-                    class: "gf-btn gf-btn-primary gf-btn-block mt-auto" %>
-            </article>
-          </div>
-        <% end %>
+
+      <div class="gf-card">
+        <p class="gf-muted mb-0">
+          No coaches available yet.
+        </p>
       </div>
+
+    <% else %>
+
+      <% specialties = {
+        "Arnold “The Oak”" => "Muscle Building",
+        "David Goggins" => "Endurance",
+        "Jonah Hill" => "Fat Loss",
+        "Master Yoda" => "Mobility",
+        "Sonic" => "HIIT",
+        "Mikasa Ackerman" => "Strength"
+      } %>
+
+      <!-- COACH GRID -->
+      <div class="gf-selection-grid"
+           data-controller="reveal"
+           data-reveal-stagger-value="70">
+
+        <% @mentors.each do |mentor| %>
+
+          <article class="gf-card gf-selection-card"
+                   data-reveal-target="item">
+
+            <!-- COACH PHOTO -->
+            <div class="gf-selection-photo">
+              <%= mentor_avatar(mentor) %>
+            </div>
+
+            <!-- COACH INFORMATION -->
+            <div class="gf-selection-content">
+
+              <span class="gf-selection-category">
+                <%= specialties.fetch(mentor.name, "Fitness") %>
+              </span>
+
+              <h2 class="gf-selection-name">
+                <%= mentor.display_name %>
+              </h2>
+
+              <blockquote class="gf-selection-quote">
+                “<%= mentor.tagline %>”
+              </blockquote>
+
+              <%= link_to new_workout_plan_path(mentor_id: mentor.id),
+                  class: "gf-btn gf-btn-primary gf-btn-block mt-auto",
+                  aria: { label: "Select #{mentor.display_name}" } do %>
+                Select &nbsp; →
+              <% end %>
+
+            </div>
+
+          </article>
+
+        <% end %>
+
+      </div>
+
     <% end %>
+
   </div>
 </div>
+
+<!-- FOOTER -->
 <footer class="gf-site-footer">
   <div class="container d-flex justify-content-between flex-wrap gap-2">
     <span>Built at Le Wagon Japan • Only Gains © 2026</span>

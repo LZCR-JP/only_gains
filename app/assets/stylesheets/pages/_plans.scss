@@ -1,13 +1,17 @@
+
 // ---------- Plan show ----------
+
 .gf-detail-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: .75rem;
 }
+
 .gf-detail {
   padding: 1rem;
   background: var(--gf-card-2);
   border-radius: 12px;
+
   small {
     display: block;
     margin-bottom: .3rem;
@@ -17,21 +21,33 @@
     letter-spacing: .15em;
     color: var(--gf-muted);
   }
-  strong { font-family: $headers-font; font-size: 1.1rem; }
+
+  strong {
+    font-family: $headers-font;
+    font-size: 1.1rem;
+  }
 }
 
 .gf-coach-card {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  h3 { font-family: $headers-font; font-size: 1.25rem; margin: 0 0 .25rem; }
+
+  h3 {
+    font-family: $headers-font;
+    font-size: 1.25rem;
+    margin: 0 0 .25rem;
+  }
 }
 
 .gf-actions {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
-  form { margin: 0; }
+
+  form {
+    margin: 0;
+  }
 }
 
 .gf-description {
@@ -41,7 +57,9 @@
 }
 
 
-// ---------- Compact workout setup ----------
+// ======================================================
+// COMPACT WORKOUT SETUP
+// ======================================================
 
 .gf-setup-page {
   padding: 1rem 0 2rem;
@@ -99,6 +117,7 @@
   }
 }
 
+
 // ======================================================
 // WORKOUT DASHBOARD
 // ======================================================
@@ -115,7 +134,8 @@
   }
 }
 
-// Plan heading
+
+// ---------- Plan heading ----------
 
 .gf-workout-heading {
   display: flex;
@@ -144,7 +164,8 @@
   }
 }
 
-// Compact summary
+
+// ---------- Compact summary ----------
 
 .gf-workout-summary {
   background: var(--gf-card);
@@ -221,7 +242,8 @@
   }
 }
 
-// Section headings
+
+// ---------- Section headings ----------
 
 .gf-workout-section-heading {
   display: flex;
@@ -244,7 +266,8 @@
   }
 }
 
-// Responsive workout grid
+
+// ---------- Responsive workout grid ----------
 
 .gf-workout-grid {
   display: grid;
@@ -253,7 +276,8 @@
   gap: 1rem;
 }
 
-// Daily workout card
+
+// ---------- Daily workout card ----------
 
 .gf-workout-day {
   background: var(--gf-card);
@@ -299,7 +323,8 @@
   font-variant-numeric: tabular-nums;
 }
 
-// Exercise table
+
+// ---------- Exercise table ----------
 
 .gf-workout-table {
   width: 100%;
@@ -367,7 +392,8 @@
   }
 }
 
-// Empty workout
+
+// ---------- Empty workout ----------
 
 .gf-workout-empty {
   padding: 2rem;
@@ -387,7 +413,8 @@
   }
 }
 
-// Coach conversations
+
+// ---------- Coach conversations ----------
 
 .gf-workout-chats {
   margin-top: 2rem;
@@ -433,7 +460,8 @@
   }
 }
 
-// Delete workout
+
+// ---------- Delete workout ----------
 
 .gf-workout-footer {
   display: flex;
@@ -455,7 +483,8 @@
   }
 }
 
-// Tablet
+
+// ---------- Dashboard tablet ----------
 
 @media (max-width: 1199.98px) {
   .gf-workout-grid {
@@ -463,7 +492,8 @@
   }
 }
 
-// Mobile
+
+// ---------- Dashboard mobile ----------
 
 @media (max-width: 767.98px) {
   .gf-workout-grid {
@@ -494,5 +524,301 @@
 
   .gf-workout-table td {
     font-size: .8rem;
+  }
+}
+
+
+// ======================================================
+// COACH SELECTION — STEP 1
+// ======================================================
+
+.gf-coach-selection {
+  padding: 1rem 0 2rem;
+
+  .container {
+    max-width: 1380px;
+  }
+
+  // Back button
+
+  .gf-back {
+    font-family: $body-font;
+    font-size: .85rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  // Header
+
+  .gf-header {
+    padding: 1rem 0 1.25rem;
+  }
+
+  .gf-eyebrow {
+    font-family: $body-font;
+    font-size: .8rem;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: .03em;
+  }
+
+  .gf-title {
+    font-family: $body-font;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.05em;
+    color: var(--gf-text);
+    margin: .5rem 0 0;
+  }
+
+  .gf-subtitle {
+    display: none;
+  }
+
+  // Progress indicator
+
+  .gf-selection-progress {
+    display: flex;
+    gap: 6px;
+    width: 120px;
+    margin-bottom: .75rem;
+
+    span {
+      flex: 1;
+      height: 4px;
+      border-radius: 10px;
+      background: var(--gf-border);
+
+      &.is-active {
+        background: var(--gf-gradient);
+      }
+    }
+  }
+
+  // Coach grid — 3 columns, 2 rows
+
+  .gf-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  // Horizontal coach card
+
+  .gf-selection-card {
+    display: grid;
+    grid-template-columns: 40% minmax(0, 1fr);
+    height: auto;
+    min-height: 210px;
+    min-width: 0;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    border-radius: 14px;
+
+    transition:
+      transform .25s ease,
+      border-color .25s ease,
+      box-shadow .25s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      border-color: var(--gf-purple);
+      box-shadow: 0 8px 25px rgba($gf-purple, .15);
+
+      .gf-selection-photo img {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  // Coach portrait
+
+  .gf-selection-photo {
+    position: relative;
+    overflow: hidden;
+    background: var(--gf-card-2);
+
+    .gf-avatar {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      transition: transform .4s ease;
+    }
+
+    .gf-avatar-emoji {
+      display: grid;
+      place-items: center;
+      font-size: 4rem;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background: linear-gradient(
+        to right,
+        transparent 75%,
+        rgba(15, 14, 15, .18)
+      );
+
+      pointer-events: none;
+    }
+  }
+
+  // Coach information
+
+  .gf-selection-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 1rem;
+  }
+
+  .gf-selection-category {
+    display: block;
+    font-family: $body-font;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .035em;
+    text-transform: uppercase;
+    color: var(--gf-pink);
+    margin-bottom: .4rem;
+  }
+
+  .gf-selection-name {
+    font-family: $body-font;
+    font-size: clamp(1rem, 1.4vw, 1.35rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -.035em;
+    color: var(--gf-text);
+    margin: 0 0 .6rem;
+    overflow-wrap: anywhere;
+  }
+
+  .gf-selection-quote {
+    font-family: $body-font;
+    font-size: .8rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--gf-muted);
+    margin: 0 0 .9rem;
+    overflow-wrap: anywhere;
+  }
+
+  // Select button
+
+  .gf-selection-content .gf-btn {
+    width: 100%;
+    font-size: .75rem;
+    padding: .65rem .75rem;
+    border-radius: 7px;
+  }
+
+  + .gf-site-footer {
+    font-family: $body-font;
+    letter-spacing: 0;
+  }
+}
+
+
+// ======================================================
+// COACH SELECTION — TABLET
+// ======================================================
+
+@media (max-width: 991.98px) {
+  .gf-coach-selection {
+
+    .gf-selection-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gf-selection-name {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+
+// ======================================================
+// COACH SELECTION — SMALL DESKTOP
+// ======================================================
+
+@media (min-width: 992px) and (max-height: 800px) {
+  .gf-coach-selection {
+    padding: .75rem 0 1rem;
+
+    .gf-header {
+      padding: .7rem 0 1rem;
+    }
+
+    .gf-selection-grid {
+      gap: .75rem;
+    }
+
+    .gf-selection-card {
+      min-height: 185px;
+    }
+
+    .gf-selection-content {
+      padding: .8rem;
+    }
+  }
+}
+
+
+// ======================================================
+// COACH SELECTION — MOBILE
+// ======================================================
+
+@media (max-width: 575.98px) {
+  .gf-coach-selection {
+
+    .gf-selection-grid {
+      grid-template-columns: 1fr;
+      gap: .75rem;
+    }
+
+    .gf-selection-card {
+      min-height: 190px;
+    }
+
+    .gf-selection-content {
+      padding: .9rem;
+    }
+
+    .gf-header {
+      padding: 1rem 0 1.25rem;
+    }
+  }
+}
+
+
+// ---------- Reduced motion ----------
+
+@media (prefers-reduced-motion: reduce) {
+  .gf-coach-selection {
+
+    .gf-selection-card,
+    .gf-selection-photo img {
+      transition: none;
+      transform: none;
+    }
+
+    .gf-selection-card:hover,
+    .gf-selection-card:hover img {
+      transform: none;
+    }
   }
 }
