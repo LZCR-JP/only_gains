@@ -16,17 +16,17 @@ class WorkoutPlansController < ApplicationController
       fitness_level: "beginner", training_days: 3, duration_minutes: 30
     )
 
-    if params[:mentor_id].present?
-      @selected_mentor = @mentors.find_by(id: params[:mentor_id])
-      unless @selected_mentor
-        redirect_to new_workout_plan_path, alert: "Please choose an available coach."
-        return
-      end
+    return unless params[:mentor_id].present?
 
-      @workout_plan.mentor = @selected_mentor
-      @workout_plan.goal = @selected_mentor.training_goal
-      render :profile
+    @selected_mentor = @mentors.find_by(id: params[:mentor_id])
+    unless @selected_mentor
+      redirect_to new_workout_plan_path, alert: "Please choose an available coach."
+      return
     end
+
+    @workout_plan.mentor = @selected_mentor
+    @workout_plan.goal = @selected_mentor.training_goal
+    render :profile
   end
 
   def create
@@ -52,10 +52,10 @@ class WorkoutPlansController < ApplicationController
 
   def edit
     # A coach picked from the mentor page is only previewed until Save.
-    if params[:mentor_id].present?
-      mentor = @mentors.find_by(id: params[:mentor_id])
-      @workout_plan.mentor = mentor if mentor
-    end
+    return unless params[:mentor_id].present?
+
+    mentor = @mentors.find_by(id: params[:mentor_id])
+    @workout_plan.mentor = mentor if mentor
   end
 
   def update
@@ -64,7 +64,7 @@ class WorkoutPlansController < ApplicationController
 
     regenerate = @workout_plan.generated_workout.blank? ||
                  %w[mentor_id goal fitness_level equipment training_days duration_minutes description]
-                   .any? { |attribute| @workout_plan.will_save_change_to_attribute?(attribute) }
+                 .any? { |attribute| @workout_plan.will_save_change_to_attribute?(attribute) }
 
     if @workout_plan.valid? && (!regenerate || generate_workout) && @workout_plan.save
       redirect_to @workout_plan, notice: "Workout plan updated!", status: :see_other
@@ -110,6 +110,8 @@ class WorkoutPlansController < ApplicationController
   end
 
   def profile_params
-    params.require(:workout_plan).permit(*WorkoutPlan::PROFILE_FIELDS)
+    params.require(:workout_plan).permit(:title, :fitness_level, :training_days,
+                                         :duration_minutes, :description,
+                                         :mentor_id, equipment_list: [])
   end
 end

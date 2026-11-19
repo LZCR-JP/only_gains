@@ -10,7 +10,13 @@
 
     <header class="gf-header">
       <span class="gf-eyebrow">
-        Step 2 of 2 · BUILD YOUR PLAN
+        Step 2 of 2 · Your profile
+        <% if @workout_plan.goal.present? %>
+            <div class="gf-selected-goal">
+              <span class="gf-selected-goal__label"> · YOUR GOAL: </span>
+              <strong><%= @workout_plan.goal.humanize %></strong>
+            </div>
+          <% end %>
       </span>
 
       <h1 class="gf-title">Set up your workout</h1>
