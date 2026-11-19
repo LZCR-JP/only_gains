@@ -1,4 +1,3 @@
-
 <% editing = workout_plan.persisted? %>
 
 <%= simple_form_for workout_plan,
@@ -30,18 +29,51 @@
 
   </div>
 
-  <%= f.input :equipment,
-      placeholder: "Bodyweight, dumbbells, yoga mat...",
-      hint: "Leave blank for bodyweight-only workouts." %>
+  <%# Equipment multi-select (replaces the old free-text field) %>
+  <div class="mb-3 position-relative" data-controller="equipment-picker">
+    <label class="form-label">Equipment (optional)</label>
+
+    <button type="button"
+            class="form-select text-start d-flex flex-wrap gap-1 align-items-center"
+            data-action="equipment-picker#toggle">
+      <span class="d-flex flex-wrap gap-1" data-equipment-picker-target="summary">
+        Select your equipment...
+      </span>
+    </button>
+
+    <div class="card p-2 mt-1 position-absolute w-100 shadow"
+         style="z-index: 10;"
+         data-equipment-picker-target="panel" hidden>
+      <%= hidden_field_tag "workout_plan[equipment_list][]", "", id: nil %>
+      <div class="row g-1">
+        <% WorkoutPlan::EQUIPMENT_OPTIONS.each do |option| %>
+          <% box_id = "equipment_#{option.parameterize(separator: '_')}" %>
+          <div class="col-6">
+            <div class="form-check">
+              <%= check_box_tag "workout_plan[equipment_list][]", option,
+                    workout_plan.equipment_list.include?(option),
+                    id: box_id,
+                    class: "form-check-input",
+                    data: { action: "change->equipment-picker#update" } %>
+              <%= label_tag box_id, option, class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <small class="form-text text-muted">Leave blank for bodyweight-only training.</small>
+  </div>
 
   <div class="row g-2">
 
     <div class="col-sm-6">
       <%= f.input :training_days,
-          label: "Training days / week",
-          collection: 1..7,
-          include_blank: "Select days",
-          required: true %>
+          label: "How many days can you train?",
+          collection: (1..7).map { |days| ["#{days} #{'day'.pluralize(days)}", days] },
+          include_blank: "Choose your weekly rhythm",
+          required: true,
+          hint: "Choose a schedule that fits your routine." %>
     </div>
 
     <div class="col-sm-6">
@@ -57,8 +89,8 @@
   <%= f.input :description,
       label: "Anything else? (Optional)",
       as: :text,
-      input_html: { rows: 2 },
-      placeholder: "Preferences, limitations, or special requests..." %>
+      input_html: { rows: 2, maxlength: 500 },
+      placeholder: "Preferences, limitations, or extra equipment..." %>
 
   <% if editing %>
 

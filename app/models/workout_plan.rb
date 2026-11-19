@@ -8,6 +8,28 @@ class WorkoutPlan < ApplicationRecord
     beginner: 'beginner', intermediate: 'intermediate', advanced: 'advanced'
   }.freeze
 
+  EQUIPMENT_OPTIONS = [
+    "Dumbbells",
+    "Resistance bands",
+    "Kettlebell",
+    "Barbell",
+    "Bench",
+    "Pull-up bar",
+    "Yoga mat",
+    "Jump rope",
+    "Foam roller",
+    "Stationary bike",
+    "Treadmill"
+  ].freeze
+
+  def equipment_list
+    equipment.to_s.split(",").map(&:strip).reject(&:blank?)
+  end
+
+  def equipment_list=(items)
+    self.equipment = Array(items).reject(&:blank?).join(", ").presence
+  end
+
   belongs_to :user
   belongs_to :mentor, optional: true
   has_many :chats, dependent: :destroy

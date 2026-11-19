@@ -472,3 +472,15 @@ body {
   width: 100%;
   max-width: 420px;
 }
+
+.gf-step-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gf-step-label {
+  margin: 0;
+}
