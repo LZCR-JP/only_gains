@@ -9,21 +9,19 @@
         class: "gf-back" %>
 
     <header class="gf-header">
+
+      <div class="gf-selection-progress">
+        <span class="is-active"></span>
+        <span class="is-active"></span>
+      </div>
+
       <span class="gf-eyebrow">
-        Step 2 of 2 · Your profile
-        <% if @workout_plan.goal.present? %>
-            <div class="gf-selected-goal">
-              <span class="gf-selected-goal__label"> · YOUR GOAL: </span>
-              <strong><%= @workout_plan.goal.humanize %></strong>
-            </div>
-          <% end %>
+        <span class="gf-dot"></span>
+        Step 2 of 2
       </span>
 
       <h1 class="gf-title">Set up your workout</h1>
 
-      <p class="gf-subtitle">
-        Share your fitness goals with <%= @selected_mentor.display_name %>. Your coach will handle the rest.
-      </p>
     </header>
 
     <div class="row g-3 align-items-stretch">
