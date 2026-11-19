@@ -15,7 +15,7 @@
   small {
     display: block;
     margin-bottom: .3rem;
-    font-family: $mono-font;
+    font-family: $body-font;
     font-size: .62rem;
     text-transform: uppercase;
     letter-spacing: .15em;
@@ -23,7 +23,7 @@
   }
 
   strong {
-    font-family: $headers-font;
+    font-family: $body-font;
     font-size: 1.1rem;
   }
 }
@@ -34,7 +34,7 @@
   gap: 1rem;
 
   h3 {
-    font-family: $headers-font;
+    font-family: $body-font;
     font-size: 1.25rem;
     margin: 0 0 .25rem;
   }
@@ -1682,7 +1682,7 @@
 .gf-workout-eyebrow {
   margin: 0;
   color: var(--gf-muted, #aaa);
-  font-family: $mono-font;
+  font-family: $body-font;
   font-size: 0.8rem;
   letter-spacing: 0.18em;
 }
@@ -1754,7 +1754,7 @@
   span {
     margin-bottom: 0.35rem;
     color: var(--gf-muted, #aaa);
-    font-family: $mono-font;
+    font-family: $body-font;
     font-size: 0.72rem;
     letter-spacing: 0.12em;
   }
@@ -1869,5 +1869,140 @@
       width: 100%;
       text-align: center;
     }
+  }
+}
+
+// ======================================================
+// COACH SELECTION — SPECIALTY FOCUS
+// ======================================================
+
+.gf-coach-selection {
+
+  .gf-selection-content {
+    padding: 1.25rem;
+  }
+
+  .gf-selection-name {
+    font-family: $body-font;
+    font-size: clamp(1.15rem, 1.5vw, 1.5rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -.035em;
+    margin-bottom: .6rem;
+  }
+
+  .gf-selection-specialty {
+    font-family: $body-font;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--gf-pink);
+    margin: 0 0 1rem;
+  }
+}
+
+// WORKOUT SETUP — MATCH COACH SELECTION
+
+.gf-setup-page {
+  > .container {
+    max-width: 1380px;
+  }
+}
+
+
+
+// ======================================================
+// MY PLANS — RENAME WORKOUT
+// ======================================================
+
+.gf-my-plan-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .8rem;
+
+  .gf-my-plan-title {
+    min-width: 0;
+    margin: 0;
+  }
+}
+
+.gf-my-plan-rename {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  padding: 0;
+
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--gf-muted);
+
+  cursor: pointer;
+  transition: all .2s ease;
+
+  &:hover {
+    color: var(--gf-pink);
+    background: rgba(199, 125, 255, .1);
+    border-color: rgba(199, 125, 255, .25);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--gf-pink);
+    outline-offset: 2px;
+  }
+}
+
+
+// ---------- Rename modal ----------
+
+.gf-rename-icon {
+  display: grid;
+  place-items: center;
+
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1.25rem;
+
+  background: rgba(199, 125, 255, .12);
+  border: 1px solid rgba(199, 125, 255, .2);
+  border-radius: 13px;
+
+  font-size: 1.25rem;
+  color: var(--gf-pink);
+}
+
+.gf-rename-input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: .85rem 1rem;
+  margin-bottom: 1.5rem;
+
+  font-family: $body-font;
+  font-size: .95rem;
+  color: var(--gf-text);
+
+  background: #292629;
+  border: 1px solid var(--gf-border);
+  border-radius: 9px;
+  outline: none;
+
+  &:focus {
+    border-color: var(--gf-pink);
+    box-shadow: 0 0 0 3px rgba(199, 125, 255, .12);
+  }
+}
+
+.gf-rename-submit {
+  background: var(--gf-gradient);
+  border: 1px solid transparent;
+  color: #201025;
+
+  &:hover {
+    filter: brightness(1.1);
   }
 }

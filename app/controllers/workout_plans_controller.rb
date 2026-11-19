@@ -1,5 +1,5 @@
 class WorkoutPlansController < ApplicationController
-  before_action :set_workout_plan, only: %i[show edit update destroy]
+  before_action :set_workout_plan, only: %i[show edit update destroy rename]
   before_action :load_mentors, only: %i[new create edit update]
 
   def index
@@ -63,6 +63,18 @@ class WorkoutPlansController < ApplicationController
     # The coach determines the goal; ignore any goal submitted by the browser.
     @workout_plan.mentor = @selected_mentor
     @workout_plan.goal = @selected_mentor.training_goal
+    base_title = "#{@selected_mentor.display_name}’s Plan"
+
+    version = current_user.workout_plans.where(mentor: @selected_mentor).count + 1
+
+    title = version == 1 ? base_title : "#{base_title} V#{version}"
+
+    while current_user.workout_plans.exists?(title: title)
+      version += 1
+      title = "#{base_title} V#{version}"
+    end
+
+    @workout_plan.title = title
 
     if @workout_plan.valid? && generate_workout && @workout_plan.save
       redirect_to @workout_plan, notice: "AI workout plan created!", status: :see_other
@@ -99,6 +111,20 @@ class WorkoutPlansController < ApplicationController
     redirect_to workout_plans_path, notice: "Workout plan deleted!", status: :see_other
   end
 
+  def rename
+    title = params.require(:workout_plan).permit(:title)[:title].to_s.strip
+
+    if title.length.between?(1, 100) && @workout_plan.update(title: title)
+      redirect_to workout_plans_path,
+                  notice: "Plan renamed successfully!",
+                  status: :see_other
+    else
+      redirect_to workout_plans_path,
+                  alert: "Please enter a valid plan name (1–100 characters).",
+                  status: :see_other
+    end
+  end
+
   private
 
   def load_mentors
@@ -131,8 +157,13 @@ class WorkoutPlansController < ApplicationController
   end
 
   def profile_params
-    params.require(:workout_plan).permit(:title, :fitness_level, :training_days,
-                                         :duration_minutes, :description,
-                                         :mentor_id, equipment_list: [])
+    params.require(:workout_plan).permit(
+      :fitness_level,
+      :training_days,
+      :duration_minutes,
+      :description,
+      :mentor_id,
+      equipment_list: []
+    )
   end
 end

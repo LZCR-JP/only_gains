@@ -1,7 +1,7 @@
 .gf-mentor-card {
   .gf-mentor-head { display: flex; align-items: center; gap: .85rem; }
   .gf-mentor-name {
-    font-family: $headers-font;
+    font-family: $body-font;
     font-weight: 700;
     font-size: 1.35rem;
     color: var(--gf-pink);
@@ -40,7 +40,7 @@
   background: #141313;
   border: 1px solid var(--gf-border);
   border-radius: 12px;
-  font-family: $mono-font;
+  font-family: $body-font;
   font-size: .8rem;
   line-height: 1.6;
   color: var(--gf-muted);

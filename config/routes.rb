@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   resources :workout_plans do
+    patch :rename, on: :member
     resources :chats, only: %i[create show]
     resources :workout_logs, only: :create
   end
