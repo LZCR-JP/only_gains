@@ -35,7 +35,7 @@ class WorkoutPlan < ApplicationRecord
   has_many :chats, dependent: :destroy
   has_many :workout_logs, dependent: :destroy
 
-  enum :goal, GOALS, validate: { allow_nil: true }
+  enum :goal, GOALS, validate: { allow_nil: true }, prefix: true
   enum :fitness_level, FITNESS_LEVELS, validate: { allow_nil: true }
 
   validates :title, presence: true
@@ -43,4 +43,24 @@ class WorkoutPlan < ApplicationRecord
   validates :mentor, :goal, presence: true, unless: -> { validation_context == :profile_step }
   validates :training_days, numericality: { only_integer: true, in: 1..7 }
   validates :duration_minutes, numericality: { only_integer: true, greater_than: 0 }
+
+  before_validation :sync_training_days_from_schedule
+  validate :training_schedule_must_be_valid
+
+  private
+
+  def sync_training_days_from_schedule
+    self.training_schedule = Array(training_schedule).reject(&:blank?).uniq
+    self.training_days = training_schedule.length
+  end
+
+  def training_schedule_must_be_valid
+    weekdays = Date::DAYNAMES
+
+    if training_schedule.blank?
+      errors.add(:training_schedule, "Choose at least one training day")
+    elsif (training_schedule - weekdays).any?
+      errors.add(:training_schedule, "contains an invalid weekday")
+    end
+  end
 end

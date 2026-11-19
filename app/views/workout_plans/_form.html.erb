@@ -75,12 +75,11 @@
 
   <div class="row g-2">
     <div class="col-sm-6">
-      <%= f.input :training_days,
-          label: "How many days can you train?",
-          collection: (1..7).map { |days| ["#{days} #{'day'.pluralize(days)}", days] },
-          include_blank: "Choose your weekly rhythm",
-          required: true,
-          hint: "Choose a schedule that fits your routine." %>
+      <%= f.input :training_schedule,
+          as: :check_boxes,
+          label: "Which days will you train?",
+          collection: Date::DAYNAMES.rotate(1).map { |day| [day, day] },
+          hint: "Choose the days that fit your routine." %>
     </div>
 
     <div class="col-sm-6">

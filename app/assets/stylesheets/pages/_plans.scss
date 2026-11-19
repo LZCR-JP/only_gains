@@ -1871,3 +1871,142 @@
     }
   }
 }
+
+/* Today's workout and next session */
+.gf-todays-plan,
+.gf-next-session {
+  margin: 1rem 0 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(223, 143, 255, 0.3);
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(185, 88, 230, 0.16),
+    rgba(40, 31, 43, 0.95)
+  );
+}
+
+.gf-todays-plan h2,
+.gf-next-session h2 {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.gf-eyebrow {
+  margin-bottom: 0.5rem;
+  color: #d98aff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Keep the coach image and details together */
+.gf-workout-coach {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.gf-workout-coach img {
+  width: 4.5rem;
+  height: 4.5rem;
+  flex: 0 0 4.5rem;
+  object-fit: cover;
+  border: 2px solid #d98aff;
+  border-radius: 1rem;
+}
+
+.gf-workout-coach h3,
+.gf-workout-coach p {
+  margin: 0;
+}
+
+.gf-workout-coach p {
+  margin-top: 0.25rem;
+  color: #aaa;
+}
+
+.gf-workout-meta > span {
+  display: inline-flex;
+  gap: 0.35rem;
+  margin: 0.25rem;
+}
+
+.gf-workout-progress .progress {
+  height: 0.65rem;
+  margin-top: 0.65rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #39313c;
+}
+
+.gf-workout-progress .progress-bar {
+  border-radius: inherit;
+  background: linear-gradient(90deg, #d98aff, #ad5bff);
+}
+
+@media (max-width: 576px) {
+  .gf-todays-plan,
+  .gf-next-session {
+    padding: 1rem;
+  }
+
+  .gf-workout-coach img {
+    width: 3.5rem;
+    height: 3.5rem;
+    flex-basis: 3.5rem;
+  }
+}
+
+.gf-todays-plan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin: 1.5rem 0;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid rgba(217, 138, 255, 0.55);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(ellipse at top right, rgba(217, 138, 255, 0.25), transparent 55%),
+    linear-gradient(135deg, #302037, #1b191e);
+}
+
+.gf-todays-plan h1 {
+  margin: 0.4rem 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.gf-todays-plan-actions,
+.gf-workout-day-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.gf-icon-btn {
+  display: inline-grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+  border: 1px solid rgba(217, 138, 255, 0.4);
+  border-radius: 0.75rem;
+  color: #e6a5ff;
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.gf-icon-btn:hover,
+.gf-icon-btn:focus-visible {
+  background: rgba(217, 138, 255, 0.15);
+  color: #fff;
+}
+
+@media (max-width: 700px) {
+  .gf-todays-plan {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

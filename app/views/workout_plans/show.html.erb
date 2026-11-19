@@ -1,131 +1,115 @@
 <% content_for :title, "#{@workout_plan.title} · Only Gains" %>
 
 <% mentor = @workout_plan.mentor %>
-<% days = @days %>
-<% chats = @chats %>
-<% next_day_anchor = "workout-day-#{@next_day_index + 1}" %>
+<% days = @days || @workout_plan.generated_workout&.fetch("days", []) || [] %>
+<% chats = @chats || @workout_plan.chats.order(created_at: :desc, id: :desc).to_a %>
+<% completed_day_names = @completed_day_names || [] %>
+<% today = Date.current.strftime("%A") %>
+<% training_schedule = Array(@workout_plan.training_schedule) %>
 
 <div class="gf-page gf-workout-page">
   <div class="container">
-    <%= link_to "← My plans",
-        workout_plans_path,
-        class: "gf-back" %>
+    <%= link_to "← My plans", workout_plans_path, class: "gf-back" %>
 
-    <section class="gf-workout-hero">
-      <div class="gf-workout-hero-heading">
+    <%# Today's plan is the main focus %>
+    <% if @schedule_configured && @today_workout.present? %>
+      <section class="gf-todays-plan">
         <div>
-          <p class="gf-workout-eyebrow">YOUR TRAINING PLAN</p>
-          <h1><%= @workout_plan.title %></h1>
-          <p class="gf-workout-goal">
-            Built for <%= @workout_plan.goal&.humanize || "your fitness goals" %>
-          </p>
+          <p class="gf-eyebrow">TODAY'S PLAN · <%= today.upcase %></p>
+          <h1><%= @today_workout["name"] %></h1>
+          <p><%= pluralize(@today_workout.fetch("exercises", []).size, "exercise") %></p>
         </div>
 
-        <div class="gf-workout-hero-coach">
-          <%= mentor_avatar(mentor) %>
-          <div>
-            <strong><%= mentor.display_name %></strong>
-            <span><%= mentor.specialty %></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="gf-workout-stats">
-        <div>
-          <span>DIFFICULTY</span>
-          <strong><%= @workout_plan.fitness_level&.humanize || "All levels" %></strong>
-        </div>
-        <div>
-          <span>SESSION</span>
-          <strong><%= @workout_plan.duration_minutes %> min</strong>
-        </div>
-        <div>
-          <span>WEEKLY TARGET</span>
-          <strong><%= pluralize(@weekly_target, "session") %></strong>
-        </div>
-        <div>
-          <span>EQUIPMENT</span>
-          <strong><%= @workout_plan.equipment.presence || "Bodyweight" %></strong>
-        </div>
-      </div>
-
-      <div class="gf-workout-progress">
-        <div class="gf-workout-progress-label">
-          <strong>This week</strong>
-          <span><%= @completed_sessions %> of <%= @weekly_target %> sessions logged</span>
-        </div>
-
-        <div
-          class="gf-workout-progress-track"
-          role="progressbar"
-          aria-label="Weekly workout progress"
-          aria-valuemin="0"
-          aria-valuemax="<%= @weekly_target %>"
-          aria-valuenow="<%= [@completed_sessions, @weekly_target].min %>">
-          <div
-            class="gf-workout-progress-fill"
-            style="width: <%= @progress_percentage %>%">
-          </div>
-        </div>
-      </div>
-
-      <div class="gf-workout-coach-note">
-        <strong><%= mentor.display_name %>’s note</strong>
-        <p class="mb-0">
-          Your focus is <%= @workout_plan.goal&.humanize || "steady progress" %>.
-          Train at a pace you can sustain, and ask me if an exercise needs adjusting.
-        </p>
-      </div>
-
-      <div class="gf-workout-hero-actions">
-        <% if days.any? %>
-          <%= link_to "Start workout →",
-              "##{next_day_anchor}",
+        <div class="gf-todays-plan-actions">
+          <%= link_to "Start today’s workout",
+              "#workout-day-#{@today_day_index + 1}",
               class: "gf-btn gf-btn-primary" %>
-        <% end %>
 
-        <% if chats.any? %>
-          <%= link_to "Chat with #{mentor.display_name}",
-              workout_plan_chat_path(@workout_plan, chats.first),
+          <%= link_to "Edit plan",
+              edit_workout_plan_path(@workout_plan),
               class: "gf-btn gf-btn-outline" %>
-        <% else %>
-          <%= button_to "Chat with #{mentor.display_name}",
-              workout_plan_chats_path(@workout_plan),
-              method: :post,
-              class: "gf-btn gf-btn-outline" %>
-        <% end %>
+        </div>
+      </section>
+    <% elsif @schedule_configured %>
+      <section class="gf-todays-plan">
+        <p class="gf-eyebrow">TODAY · <%= today.upcase %></p>
+        <h1>Rest day</h1>
+        <p>Your next scheduled workout is coming up below.</p>
+      </section>
+    <% else %>
+      <section class="gf-todays-plan">
+        <div>
+          <p class="gf-eyebrow">YOUR TRAINING SCHEDULE</p>
+          <h1>Choose your training days</h1>
+          <p>Set your weekly schedule to see today’s plan here.</p>
+        </div>
 
         <%= link_to "Edit plan",
             edit_workout_plan_path(@workout_plan),
-            class: "gf-btn gf-btn-outline" %>
-      </div>
+            class: "gf-btn gf-btn-primary" %>
+      </section>
+    <% end %>
 
-      <% if @workout_plan.description.present? %>
-        <details class="gf-workout-notes">
-          <summary>Training notes</summary>
-          <p><%= @workout_plan.description %></p>
-        </details>
-      <% end %>
+    <%# Next scheduled workout %>
+    <% if @schedule_configured && @next_session_workout.present? %>
+      <section class="gf-next-session">
+        <div>
+          <p class="gf-eyebrow">
+            NEXT SESSION · <%= @next_session_date.strftime("%A, %B %-d").upcase %>
+          </p>
+          <h2><%= @next_session_workout["name"] %></h2>
+          <p><%= pluralize(@next_session_workout.fetch("exercises", []).size, "exercise") %></p>
+        </div>
+
+        <%= link_to "View workout",
+            "#workout-day-#{@next_session_day_index + 1}",
+            class: "gf-btn gf-btn-outline" %>
+      </section>
+    <% end %>
+
+    <%# Compact plan summary and progress %>
+      <div class="gf-workout-progress">
+        <div class="d-flex justify-content-between">
+          <strong>Current week</strong>
+          <span>
+            <%= @completed_sessions || 0 %> of
+            <%= @weekly_target || @workout_plan.training_days %>
+            sessions logged
+          </span>
+        </div>
+
+        <div class="progress"
+             role="progressbar"
+             aria-label="Weekly workout progress"
+             aria-valuenow="<%= @progress_percentage || 0 %>"
+             aria-valuemin="0"
+             aria-valuemax="100">
+          <div class="progress-bar"
+               style="width: <%= @progress_percentage || 0 %>%"></div>
+        </div>
+      </div>
     </section>
 
+    <%# Full weekly plan %>
     <div class="gf-workout-section-heading">
-      <h2>Your workout</h2>
+      <h2>Your weekly workout</h2>
     </div>
 
     <% if days.any? %>
       <div class="gf-workout-grid">
         <% days.each_with_index do |day, index| %>
           <% exercises = day.fetch("exercises", []) %>
-          <% completed = @completed_day_names.include?(day["name"]) %>
-          <% day_title = day["name"].to_s.sub(/\ADay\s*\d+\s*[-:–—]?\s*/i, "").presence || "Workout" %>
+          <% day_name = day["name"].to_s %>
+          <% day_title = day_name.sub(/\ADay\s*\d+\s*[-:–—]?\s*/i, "").presence || "Workout" %>
+          <% weekday = training_schedule[index] %>
+          <% weekday_label = weekday.presence || "Day #{index + 1}" %>
+          <% completed = completed_day_names.include?(day_name) %>
 
-          <article
-            id="workout-day-<%= index + 1 %>"
-            class="gf-workout-day<%= ' is-complete' if completed %>">
-
+          <article class="gf-workout-day" id="workout-day-<%= index + 1 %>">
             <header class="gf-workout-day-header">
-              <div class="gf-workout-day-number">
-                <%= format("%02d", index + 1) %>
+              <div class="gf-workout-day-weekday"
+                  aria-label="<%= weekday_label %>">
+                <%= weekday ? weekday.first(3).upcase : "DAY #{index + 1}" %>
               </div>
 
               <div>
@@ -133,9 +117,28 @@
                 <small><%= pluralize(exercises.size, "exercise") %></small>
               </div>
 
-              <% if completed %>
-                <span class="gf-workout-day-status">Logged this week</span>
-              <% end %>
+              <div class="gf-workout-day-tools">
+                <% if chats.any? %>
+                  <%= link_to "💬",
+                      workout_plan_chat_path(@workout_plan, chats.first),
+                      class: "gf-icon-btn",
+                      title: "Chat with your coach about #{day_title}",
+                      aria: { label: "Chat with your coach about #{day_title}" } %>
+                <% else %>
+                  <%= button_to "💬",
+                      workout_plan_chats_path(@workout_plan),
+                      method: :post,
+                      class: "gf-icon-btn",
+                      title: "Chat with your coach about #{day_title}",
+                      aria: { label: "Chat with your coach about #{day_title}" } %>
+                <% end %>
+
+                <%= link_to "✎",
+                    edit_workout_plan_path(@workout_plan),
+                    class: "gf-icon-btn",
+                    title: "Edit workout plan",
+                    aria: { label: "Edit workout plan" } %>
+              </div>
             </header>
 
             <table class="gf-workout-table">
@@ -167,7 +170,7 @@
                 <%= button_to "Mark complete",
                     workout_plan_workout_logs_path(@workout_plan),
                     method: :post,
-                    params: { workout_log: { day_name: day["name"] } },
+                    params: { workout_log: { day_name: day_name } },
                     class: "gf-btn gf-btn-outline" %>
               <% end %>
             </div>
@@ -178,7 +181,6 @@
       <div class="gf-workout-empty">
         <h3>Your workout is not ready yet.</h3>
         <p>Edit your plan to generate a personalized workout.</p>
-
         <%= link_to "Generate workout",
             edit_workout_plan_path(@workout_plan),
             class: "gf-btn gf-btn-primary" %>
@@ -189,11 +191,7 @@
       <%= button_to "Delete workout",
           workout_plan_path(@workout_plan),
           method: :delete,
-          form: {
-            data: {
-              turbo_confirm: "Delete this workout and its conversations?"
-            }
-          },
+          form: { data: { turbo_confirm: "Delete this workout and its conversations?" } },
           class: "gf-workout-delete" %>
     </div>
   </div>
