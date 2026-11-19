@@ -63,7 +63,7 @@
               <div class="gf-home-mentor-photo">
 
                 <% if mentor.avatar_url.present? %>
-                  <%= image_tag mentor.avatar_url,
+                  <%= image_tag mentor_photo_path(mentor, variant: :home),
                         alt: mentor.name,
                         loading: "lazy" %>
                 <% else %>
@@ -167,12 +167,25 @@
               </div>
 
               <div class="gf-rotator-photo">
-                <%= mentor_avatar(mentor) %>
+                <%= mentor_avatar(mentor, variant: :quotes) %>
               </div>
 
             </div>
 
           <% end %>
+          <div class="gf-rotator-nav">
+            <button type="button"
+                    data-action="rotator#previous"
+                    aria-label="Previous mentor">
+              ←
+            </button>
+
+            <button type="button"
+                    data-action="rotator#next"
+                    aria-label="Next mentor">
+              →
+            </button>
+          </div>
 
           <div class="gf-rotator-dots">
             <% @mentors.each_with_index do |mentor, i| %>
