@@ -6,7 +6,25 @@ class WorkoutPlansController < ApplicationController
     @workout_plans = current_user.workout_plans.includes(:mentor).order(created_at: :desc)
   end
 
-  def show; end
+  def show
+    @days = @workout_plan.generated_workout&.fetch("days", []) || []
+    @chats = @workout_plan.chats.order(created_at: :desc, id: :desc).to_a
+
+    week_logs = @workout_plan.workout_logs.where(completed_at: Time.current.all_week)
+    @completed_day_names = week_logs.distinct.pluck(:day_name)
+    @completed_sessions = @completed_day_names.size
+    @weekly_target = @workout_plan.training_days.to_i
+
+    @progress_percentage =
+      if @weekly_target.positive?
+        [(@completed_sessions.to_f / @weekly_target * 100).round, 100].min
+      else
+        0
+      end
+
+    @next_day_index =
+      @days.index { |day| !@completed_day_names.include?(day["name"]) } || 0
+  end
 
   # Step 1: GET /workout_plans/new displays all six coaches.
   # Step 2: GET /workout_plans/new?mentor_id=ID shows the profile form.
