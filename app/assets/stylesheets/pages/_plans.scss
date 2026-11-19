@@ -1532,3 +1532,123 @@
     animation: none;
   }
 }
+
+
+
+// ======================================================
+// WORKOUT SETUP — TYPOGRAPHY POLISH
+// ======================================================
+
+.gf-setup-page {
+
+  // Change coach
+
+  .gf-back {
+    font-family: $body-font;
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  // Page header
+
+  .gf-header {
+    .gf-eyebrow {
+      font-family: $body-font;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-transform: none;
+    }
+
+    .gf-title {
+      font-family: $body-font;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -.045em;
+      line-height: 1.15;
+      margin: .5rem 0;
+    }
+
+    .gf-subtitle {
+      font-family: $body-font;
+      font-size: .95rem;
+      line-height: 1.6;
+    }
+  }
+
+  // Workout form
+
+  .gf-form-card {
+    font-family: $body-font;
+
+    .form-label {
+      font-family: $body-font;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--gf-text);
+      margin-bottom: .45rem;
+    }
+
+    .form-control,
+    .form-select {
+      font-family: $body-font;
+      font-size: .95rem;
+      font-weight: 400;
+    }
+
+    .form-check-label {
+      font-family: $body-font;
+      font-size: .85rem;
+    }
+
+    .form-text {
+      font-family: $body-font;
+      font-size: .78rem;
+      letter-spacing: 0;
+      line-height: 1.5;
+    }
+
+    .gf-form-helper {
+      font-family: $body-font;
+      font-size: .85rem;
+      letter-spacing: 0;
+    }
+  }
+}
+
+// ======================================================
+// WORKOUT SETUP — PROGRESS BAR
+// ======================================================
+
+.gf-setup-page {
+
+  .gf-header {
+    padding: 1rem 0 1.25rem;
+  }
+
+  .gf-selection-progress {
+    display: flex;
+    gap: 6px;
+    width: 120px;
+    margin-bottom: .75rem;
+
+    span {
+      flex: 1;
+      height: 4px;
+      border-radius: 10px;
+      background: var(--gf-border);
+
+      &.is-active {
+        background: var(--gf-gradient);
+      }
+    }
+  }
+
+  .gf-header .gf-title {
+    margin: .5rem 0 0;
+  }
+}
