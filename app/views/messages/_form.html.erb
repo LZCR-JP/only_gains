@@ -1,12 +1,23 @@
 <%= form_with model: [chat, message],
-      data: {
-        controller: "chat-submit",
-        action: "turbo:submit-start->chat-submit#start turbo:submit-end->chat-submit#finish"
-      } do |form| %>
+    data: {
+      controller: "chat-submit",
+      action: "turbo:submit-start->chat-submit#start turbo:submit-end->chat-submit#finish"
+    } do |form| %>
+
+  <div class="chat-capability-hint mb-3 p-3 rounded border">
+    <strong>Your coach can help with:</strong>
+    <ul class="mb-0 mt-2">
+      <li>Questions about your workout plan</li>
+      <li>Alternatives for supported exercises</li>
+      <li>Proposed exercise swaps for you to review before they’re applied</li>
+      <li>Record a workout when you tell me you completed it</li>
+      <li>Show your 10 most recent workout logs</li>
+    </ul>
+  </div>
 
   <%= form.text_area :content,
       rows: 3,
-      placeholder: "Need more gains? Start typing mf!",
+      placeholder: "Ask your coach about your workout...",
       class: "form-control mb-3",
       required: true %>
 
@@ -15,7 +26,7 @@
 
     <div class="d-none" data-chat-submit-target="indicator" role="status">
       <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-      <span class="ms-2">One sec, loading gains...</span>
+      <span class="ms-2">Your coach is thinking…</span>
     </div>
   </div>
 <% end %>

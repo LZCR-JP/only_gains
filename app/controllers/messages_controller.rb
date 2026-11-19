@@ -35,6 +35,7 @@ class MessagesController < ApplicationController
         goal: workout_plan.goal,
         mentor: workout_plan.mentor,
         workout_plan: snapshot,
+        workout_plan_record: workout_plan,
         profile: profile
       )
 

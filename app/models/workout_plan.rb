@@ -33,6 +33,7 @@ class WorkoutPlan < ApplicationRecord
   belongs_to :user
   belongs_to :mentor, optional: true
   has_many :chats, dependent: :destroy
+  has_many :workout_logs, dependent: :destroy
 
   enum :goal, GOALS, validate: { allow_nil: true }
   enum :fitness_level, FITNESS_LEVELS, validate: { allow_nil: true }
