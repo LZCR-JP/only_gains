@@ -363,6 +363,12 @@ body {
   }
 }
 
+.gf-form-helper {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9rem;
+  letter-spacing: .03em;
+}
+
 // ---------- Flash toasts ----------
 .gf-toasts {
   position: fixed;

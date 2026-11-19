@@ -108,14 +108,23 @@
         hint: "Changing your coach or training preferences will regenerate your workout." %>
   <% end %>
 
-  <div class="d-flex align-items-center gap-3">
-    <%= f.button :submit,
-        editing ? "Update workout" : "Generate my workout",
-        class: "gf-btn gf-btn-primary" %>
 
-    <div class="d-none" data-workout-form-target="indicator" role="status">
-      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-      <span class="ms-2">Building your plan…</span>
-    </div>
-  </div>
+  <p class="gf-form-helper text-center mb-3">
+  The hardest part is starting. You're almost there.
+</p>
+
+<%= f.button :button,
+    type: "submit",
+    class: "gf-btn gf-btn-primary gf-btn-block mt-2" do %>
+  <%= editing ? "Save changes" : "Build my workout →" %>
+<% end %>
+
+<div class="d-none text-center mt-3"
+     data-workout-form-target="indicator"
+     role="status">
+  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+  <span class="ms-2">
+    <%= editing ? "Saving your changes…" : "Building your plan…" %>
+  </span>
+</div>
 <% end %>

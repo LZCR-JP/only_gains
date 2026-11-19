@@ -1,109 +1,243 @@
+
 <% primary_path = user_signed_in? ? new_workout_plan_path : new_user_registration_path %>
 
-<!-- HERO -->
-<section class="gf-hero" data-controller="spotlight">
-  <span class="gf-ghost" aria-hidden="true">GAINS</span>
+<div class="gf-home">
 
-  <div class="container gf-hero-inner" data-controller="reveal" data-reveal-stagger-value="120">
-    <%= image_tag "logo.png", alt: "Only Gains — Build Strength", class: "gf-hero-logo", data: { reveal_target: "item" } %>
+  <!-- HERO -->
+  <section class="gf-hero" data-controller="spotlight">
+    <span class="gf-ghost" aria-hidden="true">GAINS</span>
+
+    <div class="container gf-hero-inner" data-controller="reveal" data-reveal-stagger-value="120">
+
+      <%= image_tag "logo.png", alt: "Only Gains — Build Strength", class: "gf-hero-logo", data: { reveal_target: "item" } %>
+
+      <h1 class="gf-hero-title" data-reveal-target="item">
+        Train with a<br><span class="gf-gradient-text">legend</span> in your corner.
+      </h1>
+
+      <p class="gf-hero-sub" data-reveal-target="item">
+        Pick your iconic AI coach, tell us your goals, and get a workout plan tailored just for you. The gains start here.
+      </p>
+
+      <div class="gf-hero-ctas" data-reveal-target="item">
+        <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
+          BUILD YOUR LEGACY &nbsp; →
+        <% end %>
+      </div>
+
+    <span class="gf-scroll-hint" aria-hidden="true">scroll ↓</span>
+  </section>
 
 
-    <h1 class="gf-hero-title" data-reveal-target="item">
-      Train with a<br><span class="gf-gradient-text">legend</span> in your corner.
-    </h1>
+  <!-- MENTOR LINEUP -->
+  <% if @mentors.any? %>
+    <section class="gf-section gf-home-roster">
+      <div class="container">
 
-    <p class="gf-hero-sub" data-reveal-target="item">
-      Pick your iconic AI coach, tell them how you want to train, and get a personalized home workout.
-      Your couch has been notified.
-    </p>
+        <span class="gf-eyebrow">
+          <span class="gf-dot"></span>The lineup
+        </span>
 
-    <div class="gf-hero-ctas" data-reveal-target="item">
-      <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
-        ⚡ <%= user_signed_in? ? "Choose my coach" : "Start for free" %>
-      <% end %>
-      <%= link_to (user_signed_in? ? workout_plans_path : new_user_session_path), class: "gf-btn gf-btn-ghost gf-btn-lg" do %>
-        <%= user_signed_in? ? "My plans" : "I already lift" %>
-      <% end %>
-    </div>
-  </div>
+        <h2 class="gf-section-title">
+          Meet the <span class="gf-gradient-text">legends.</span>
+        </h2>
 
-  <span class="gf-scroll-hint" aria-hidden="true">scroll ↓</span>
-</section>
+        <% specialties = {
+          "Arnold “The Oak”" => "Muscle Building",
+          "David Goggins" => "Endurance",
+          "Jonah Hill" => "Fat Loss",
+          "Master Yoda" => "Mobility",
+          "Sonic" => "HIIT",
+          "Mikasa Ackerman" => "Strength"
+        } %>
 
-<!-- HOW IT WORKS -->
-<section class="gf-section">
-  <div class="container">
-    <span class="gf-eyebrow"><span class="gf-dot"></span>How it works</span>
-    <h2 class="gf-section-title">Three steps. Zero gym fees.</h2>
+        <div class="gf-home-mentor-grid"
+             data-controller="reveal"
+             data-reveal-stagger-value="80">
 
-    <div class="row g-3" data-controller="reveal" data-reveal-stagger-value="120">
-      <% [
-        ["01", "Choose your coach", "Browse each coach’s specialty and signature quote, then pick your training partner."],
-        ["02", "Set up your workout", "Tell your coach your level, equipment, and how many days you can actually commit to."],
-        ["03", "Get coached", "Chat with your mentor about your plan, swap exercises, and keep showing up."]
-      ].each do |num, title, body| %>
-        <div class="col-md-4" data-reveal-target="item">
-          <article class="gf-card gf-step" data-controller="tilt">
-            <span class="gf-step-num"><%= num %></span>
-            <h3><%= title %></h3>
-            <p><%= body %></p>
-          </article>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</section>
+          <% @mentors.each do |mentor| %>
 
-<!-- ROTATING MENTOR QUOTE -->
-<% if @mentors.any? %>
-  <section class="gf-section pt-0">
-    <div class="container">
-      <span class="gf-eyebrow"><span class="gf-dot"></span>Words from the bench</span>
-      <h2 class="gf-section-title">Your mentors have opinions.</h2>
+            <article class="gf-home-mentor-card"
+                     data-reveal-target="item">
 
-      <div class="gf-rotator" data-controller="rotator" data-rotator-interval-value="5000"
-           data-action="mouseenter->rotator#pause mouseleave->rotator#resume" aria-live="polite">
-        <% @mentors.each_with_index do |mentor, i| %>
-          <div class="gf-rotator-item<%= " is-active" if i.zero? %>" data-rotator-target="item">
-            <blockquote>“<%= mentor.tagline %>”</blockquote>
-            <div class="gf-rotator-who">
-              <%= mentor_avatar(mentor) %>
-              <div>
-                <span class="gf-mentor mb-0"><%= mentor.name %></span>
-                <small class="gf-mono gf-muted"><%= mentor.badge %></small>
+              <div class="gf-home-mentor-photo">
+
+                <% if mentor.avatar_url.present? %>
+                  <%= image_tag mentor.avatar_url,
+                        alt: mentor.name,
+                        loading: "lazy" %>
+                <% else %>
+                  <span class="gf-home-mentor-fallback">
+                    <%= mentor.emoji %>
+                  </span>
+                <% end %>
+
               </div>
-            </div>
+
+              <div class="gf-home-mentor-info">
+                <h3><%= mentor.name %></h3>
+                <p><%= specialties.fetch(mentor.name, "Fitness") %></p>
+              </div>
+
+            </article>
+
+          <% end %>
+
+        </div>
+      </div>
+    </section>
+  <% end %>
+
+
+  <!-- HOW IT WORKS -->
+  <section class="gf-section">
+    <div class="container">
+
+      <span class="gf-eyebrow">
+        <span class="gf-dot"></span>How it works
+      </span>
+
+      <h2 class="gf-section-title">
+        Three steps. Lifelong gains.
+      </h2>
+
+      <div class="row g-3" data-controller="reveal" data-reveal-stagger-value="120">
+
+        <% [
+          ["01", "Choose your coach", "Browse each coach's specialty and signature quote, then pick your training partner."],
+          ["02", "Build your plan", "Share your fitness level, equipment, and schedule to build a workout plan that fits your life."],
+          ["03", "Get coached", "Chat with your coach, fine-tune your workouts, and stay locked in."]
+        ].each do |num, title, body| %>
+
+          <div class="col-md-4" data-reveal-target="item">
+
+            <article class="gf-card gf-step" data-controller="tilt">
+              <span class="gf-step-num"><%= num %></span>
+              <h3><%= title %></h3>
+              <p><%= body %></p>
+            </article>
+
           </div>
+
         <% end %>
 
-        <div class="gf-rotator-dots">
-          <% @mentors.each_with_index do |mentor, i| %>
-            <button type="button" data-rotator-target="dot" data-action="rotator#go" data-index="<%= i %>"
-                    aria-label="Show quote from <%= mentor.name %>"></button>
-          <% end %>
-        </div>
       </div>
     </div>
   </section>
-<% end %>
 
-<!-- FINAL CTA -->
-<section class="gf-section pt-0">
-  <div class="container" data-controller="reveal">
-    <div class="gf-cta">
-      <span class="gf-eyebrow justify-content-center mb-3"><span class="gf-dot"></span>Rest interval over</span>
-      <h2>Stop scrolling.<br><span class="gf-gradient-text">Start lifting.</span></h2>
-      <p class="gf-muted mb-4">Choose your coach and build a plan. They are already warming up.</p>
-      <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
-        ⚡ <%= user_signed_in? ? "Choose my coach" : "Create my account" %>
-      <% end %>
+
+
+  <!-- ROTATING MENTOR QUOTE -->
+  <% if @mentors.any? %>
+    <section class="gf-section pt-0">
+      <div class="container">
+
+        <span class="gf-eyebrow">
+          <span class="gf-dot"></span>Words from the bench
+        </span>
+
+        <h2 class="gf-section-title">
+          Your mentors have opinions.
+        </h2>
+
+        <div class="gf-rotator gf-rotator-feature"
+            data-controller="rotator"
+            data-rotator-interval-value="5000"
+            data-action="mouseenter->rotator#pause mouseleave->rotator#resume"
+            aria-live="polite">
+
+          <% @mentors.each_with_index do |mentor, i| %>
+
+            <div class="gf-rotator-item<%= " is-active" if i.zero? %>"
+                data-rotator-target="item">
+
+              <div class="gf-rotator-content">
+
+                <span class="gf-rotator-quote-mark" aria-hidden="true">“</span>
+
+                <blockquote>
+                  <%= mentor.tagline %>
+                </blockquote>
+
+                <div class="gf-rotator-identity">
+                  <h3><%= mentor.name %></h3>
+                  <p><%= mentor.badge %></p>
+                </div>
+
+              </div>
+
+              <div class="gf-rotator-photo">
+                <%= mentor_avatar(mentor) %>
+              </div>
+
+            </div>
+
+          <% end %>
+
+          <div class="gf-rotator-dots">
+            <% @mentors.each_with_index do |mentor, i| %>
+
+              <button type="button"
+                      data-rotator-target="dot"
+                      data-action="rotator#go"
+                      data-index="<%= i %>"
+                      aria-label="Show quote from <%= mentor.name %>">
+              </button>
+
+            <% end %>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  <% end %>
+
+
+
+  <!-- FINAL CTA -->
+
+  <section class="gf-section pt-0">
+    <div class="container" data-controller="reveal">
+
+      <div class="gf-cta gf-cta-final">
+
+        <span class="gf-cta-ghost" aria-hidden="true">
+          GAINS
+        </span>
+
+        <div class="gf-cta-final-inner">
+
+          <div class="gf-cta-accent"></div>
+
+          <h2>
+            Stop scrolling.<br>
+            <span class="gf-gradient-text">Start lifting.</span>
+          </h2>
+
+          <p>
+            Your coach is ready. The rest is up to you.
+          </p>
+
+          <%= link_to primary_path, class: "gf-btn gf-btn-primary gf-btn-lg" do %>
+            BUILD YOUR LEGACY &nbsp; →
+          <% end %>
+
+        </div>
+      </div>
+
     </div>
-  </div>
-</section>
+  </section>
 
-<footer class="gf-site-footer">
-  <div class="container d-flex justify-content-between flex-wrap gap-2">
-    <span>Built at Le Wagon Japan © <%= Date.current.year %> · Only Gains</span>
-    <span>Keep showing up · The gains will follow</span>
-  </div>
-</footer>
+
+
+  <!-- FOOTER -->
+  <footer class="gf-site-footer">
+
+    <div class="container d-flex justify-content-between flex-wrap gap-2">
+      <span>Built at Le Wagon Japan • Only Gains © 2026</span>
+      <span>Keep showing up · The gains will follow</span>
+    </div>
+
+  </footer>
+
+</div>
