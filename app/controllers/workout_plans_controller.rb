@@ -10,7 +10,10 @@ class WorkoutPlansController < ApplicationController
     @days = @workout_plan.generated_workout&.fetch("days", []) || []
     @chats = @workout_plan.chats.order(created_at: :desc, id: :desc).to_a
 
-    week_logs = @workout_plan.workout_logs.where(completed_at: Time.current.all_week)
+    week_logs = @workout_plan.workout_logs.where(
+      completed_at: Time.current.all_week
+    )
+
     @completed_day_names = week_logs.distinct.pluck(:day_name)
     @completed_sessions = @completed_day_names.size
     @weekly_target = @workout_plan.training_days.to_i

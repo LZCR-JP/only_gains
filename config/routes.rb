@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resources :workout_plans do
     resources :chats, only: %i[create show]
+    resources :workout_logs, only: :create
   end
 
   resources :chats, only: [] do
