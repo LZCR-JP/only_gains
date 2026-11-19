@@ -1,90 +1,246 @@
-<% content_for :title, "Your plans · Only Gains" %>
 
-<div class="gf-page">
+<% content_for :title, "My Plans · Only Gains" %>
+
+<div class="gf-page gf-my-plans">
   <div class="container">
 
-    <header class="gf-header" data-controller="reveal">
-      <span class="gf-eyebrow"><span class="gf-dot"></span>Workout plans</span>
-      <h1 class="gf-title">Your Workout Plans</h1>
-      <p class="gf-subtitle">
-        Every session moves you forward. Pick up where you left off or create a new plan.
-      </p>
+    <!-- HEADER -->
+    <header class="gf-my-plans-header">
 
-      <div class="gf-header-row">
-        <span class="gf-mono gf-muted small"></span>
-        <%= link_to new_workout_plan_path, class: "gf-btn gf-btn-primary" do %>
-          ⚡ Create New Plan
-        <% end %>
+      <div>
+        <h1>
+          My <span class="gf-gradient-text">plans.</span>
+        </h1>
       </div>
+
+      <%= link_to new_workout_plan_path,
+          class: "gf-btn gf-btn-primary" do %>
+        + Create new plan
+      <% end %>
+
     </header>
 
     <% if @workout_plans.any? %>
 
-      <div class="gf-section-label">
-        <span>Your Training Lineup</span>
-        <small class="gf-mono gf-muted"></small>
+      <div class="gf-my-plans-count">
+        <%= pluralize(@workout_plans.size, "workout plan") %>
       </div>
 
-      <div class="row g-3" data-controller="reveal">
-        <% @workout_plans.each_with_index do |plan, i| %>
+      <!-- WORKOUT PLANS -->
+      <div class="gf-my-plans-grid"
+           data-controller="reveal"
+           data-reveal-stagger-value="80">
+
+        <% @workout_plans.each do |plan| %>
+
           <% mentor = plan.mentor %>
-          <div class="col-md-6 col-lg-4" data-reveal-target="item">
-            <article class="gf-card" data-controller="tilt">
 
-              <div class="gf-card-top">
-                <span class="gf-label"><span class="gf-dot"></span>Plan <%= format("%02d", i + 1) %></span>
-                <span class="gf-mono gf-muted"><%= mentor.badge %></span>
-              </div>
+          <article class="gf-my-plan-card"
+                   data-reveal-target="item">
 
-              <h3 class="gf-card-title"><%= plan.title %></h3>
+            <!-- MENTOR PHOTO -->
+            <div class="gf-my-plan-photo">
 
-              <div class="gf-stats">
-                <div class="gf-stat">
-                  <small>Goal</small>
-                  <strong><%= plan.goal&.humanize || "—" %></strong>
-                </div>
-                <div class="gf-stat">
-                  <small>Level</small>
-                  <strong><%= plan.fitness_level&.humanize || "Beast?" %></strong>
-                </div>
-                <div class="gf-stat">
-                  <small>Time</small>
-                  <strong class="gf-yellow"><%= plan.duration_minutes %> min</strong>
-                </div>
-              </div>
-
-              <blockquote class="gf-quote">
-                <span class="gf-mentor"><%= mentor.display_name %></span>
-                “<%= mentor.tagline.presence || "Let's get to work." %>”
-              </blockquote>
-
-              <%= link_to workout_plan_path(plan), class: "gf-btn gf-btn-primary gf-btn-block" do %>
-                ▶ Let's go! View plan
+              <% if mentor.present? %>
+                <%= mentor_avatar(mentor, variant: :selection) %>
+              <% else %>
+                <span class="gf-my-plan-fallback">OG</span>
               <% end %>
 
-            </article>
-          </div>
+              <div class="gf-my-plan-photo-overlay"></div>
+
+            </div>
+
+            <!-- PLAN INFORMATION -->
+            <div class="gf-my-plan-content">
+
+              <span class="gf-my-plan-mentor">
+                <%= mentor&.display_name || "No coach assigned" %>
+              </span>
+
+              <h2 class="gf-my-plan-title">
+                <%= plan.title %>
+              </h2>
+
+              <!-- STATS -->
+              <div class="gf-my-plan-stats">
+
+                <div class="gf-my-plan-stat">
+                  <small>Goal</small>
+                  <strong>
+                    <%= plan.goal&.humanize || "—" %>
+                  </strong>
+                </div>
+
+                <div class="gf-my-plan-stat">
+                  <small>Level</small>
+                  <strong>
+                    <%= plan.fitness_level&.humanize || "—" %>
+                  </strong>
+                </div>
+
+                <div class="gf-my-plan-stat">
+                  <small>Weekly sessions</small>
+                  <strong>
+                    <%= pluralize(plan.training_days, "day") %>
+                  </strong>
+                </div>
+
+                <div class="gf-my-plan-stat">
+                  <small>Duration</small>
+                  <strong>
+                    <%= plan.duration_minutes %> min
+                  </strong>
+                </div>
+
+              </div>
+
+
+              <!-- PLAN ACTIONS -->
+              <div class="gf-my-plan-actions" data-controller="delete-confirm">
+
+                <%= link_to workout_plan_path(plan),
+                    class: "gf-btn gf-btn-primary" do %>
+                  View plan &nbsp; →
+                <% end %>
+
+                <!-- TRASH BUTTON -->
+                <button type="button"
+                        class="gf-my-plan-delete"
+                        data-action="click->delete-confirm#open"
+                        title="Delete plan"
+                        aria-label="Delete workout plan">
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true">
+                    <path d="M3 6h18"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M9 6V3h6v3"/>
+                    <path d="M10 10v6"/>
+                    <path d="M14 10v6"/>
+                  </svg>
+
+                </button>
+
+                <!-- DELETE CONFIRMATION MODAL -->
+                <dialog class="gf-delete-dialog"
+                        data-delete-confirm-target="dialog"
+                        data-action="click->delete-confirm#backdrop"
+                        aria-labelledby="delete-title-<%= plan.id %>"
+                        aria-describedby="delete-description-<%= plan.id %>">
+
+                  <div class="gf-delete-dialog-inner">
+
+                    <div class="gf-delete-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg"
+                          width="26"
+                          height="26"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true">
+                        <path d="M3 6h18"/>
+                        <path d="M19 6l-1 14H6L5 6"/>
+                        <path d="M9 6V3h6v3"/>
+                        <path d="M10 10v6"/>
+                        <path d="M14 10v6"/>
+                      </svg>
+                    </div>
+
+                    <h2 id="delete-title-<%= plan.id %>">
+                      Delete workout plan?
+                    </h2>
+
+                    <p id="delete-description-<%= plan.id %>">
+                      Your workout plan and all conversations with
+                      your coach will be permanently deleted.
+                    </p>
+
+                    <span class="gf-delete-warning">
+                      This action cannot be undone.
+                    </span>
+
+                    <div class="gf-delete-dialog-actions">
+
+                      <button type="button"
+                              class="gf-delete-cancel"
+                              data-action="click->delete-confirm#close"
+                              autofocus>
+                        Cancel
+                      </button>
+
+                      <%= button_to "Delete plan",
+                          workout_plan_path(plan),
+                          method: :delete,
+                          class: "gf-delete-submit" %>
+
+                    </div>
+
+                  </div>
+                </dialog>
+
+              </div>
+
+
+            </div>
+
+          </article>
+
         <% end %>
+
       </div>
+
     <% else %>
 
-      <div class="gf-card gf-empty" data-controller="reveal">
-        <span class="gf-label"><span class="gf-dot"></span>0 plans loaded</span>
-        <h3 class="gf-card-title">The bench is empty.</h3>
-        <blockquote class="gf-quote">
-          <span class="gf-mentor">🟢 Master Yoda</span>
-          “Do or do not, there is no empty list. Create a plan, you must.”
-        </blockquote>
-        <%= link_to new_workout_plan_path, class: "gf-btn gf-btn-primary" do %>
-          ⚡ Create my first plan
-        <% end %>
+      <!-- EMPTY STATE -->
+      <div class="gf-my-plans-empty">
+
+        <%= image_tag "mentors/home/yoda.jpg",
+            alt: "Master Yoda",
+            class: "gf-my-plans-empty-photo" %>
+
+        <div class="gf-my-plans-empty-content">
+
+          <span class="gf-eyebrow">
+            <span class="gf-dot"></span>0 workout plans
+          </span>
+
+          <h2>The bench is empty.</h2>
+
+          <blockquote>
+            “Do or do not, there is no empty list.
+            Create a plan, you must.”
+          </blockquote>
+
+          <p>— Master Yoda</p>
+
+          <%= link_to new_workout_plan_path,
+              class: "gf-btn gf-btn-primary" do %>
+            BUILD YOUR LEGACY &nbsp; →
+          <% end %>
+
+        </div>
+
       </div>
 
     <% end %>
 
   </div>
 </div>
-<footer class="gf-site-footer">
+
+<!-- FOOTER -->
+<footer class="gf-site-footer gf-my-plans-footer">
   <div class="container d-flex justify-content-between flex-wrap gap-2">
     <span>Built at Le Wagon Japan • Only Gains © 2026</span>
     <span>Keep showing up · The gains will follow</span>
