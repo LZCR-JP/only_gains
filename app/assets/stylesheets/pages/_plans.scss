@@ -1652,3 +1652,208 @@
     margin: .5rem 0 0;
   }
 }
+
+.gf-workout-hero {
+  margin: 1.5rem 0 3rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  color: var(--gf-text, #f5f2f7);
+  background:
+    linear-gradient(135deg, rgba(224, 53, 122, 0.12), rgba(190, 108, 255, 0.1)),
+    var(--gf-card, #1b1b1b);
+  border: 1px solid var(--gf-border, #38343b);
+  border-radius: 1.5rem;
+}
+
+.gf-workout-hero-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0.35rem 0;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--gf-pink, #efa0ff);
+  }
+}
+
+.gf-workout-eyebrow {
+  margin: 0;
+  color: var(--gf-muted, #aaa);
+  font-family: $mono-font;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+}
+
+.gf-workout-goal {
+  margin: 0;
+  color: var(--gf-muted, #aaa);
+  font-size: 1.1rem;
+}
+
+.gf-workout-hero-coach {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 240px;
+
+  img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 2px solid var(--gf-pink, #efa0ff);
+    border-radius: 1rem;
+  }
+
+  strong,
+  span {
+    display: block;
+  }
+
+  span {
+    margin-top: 0.2rem;
+    color: var(--gf-muted, #aaa);
+    font-size: 0.9rem;
+  }
+}
+
+.gf-workout-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+
+  > div {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid var(--gf-border, #38343b);
+    border-radius: 0.9rem;
+  }
+
+  span,
+  strong {
+    display: block;
+  }
+
+  span {
+    margin-bottom: 0.35rem;
+    color: var(--gf-muted, #aaa);
+    font-family: $mono-font;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  strong {
+    font-size: 1rem;
+  }
+}
+
+.gf-workout-progress {
+  margin-bottom: 1.5rem;
+}
+
+.gf-workout-progress-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.55rem;
+
+  span {
+    color: var(--gf-muted, #aaa);
+  }
+}
+
+.gf-workout-progress-track {
+  height: 0.7rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+
+.gf-workout-progress-fill {
+  height: 100%;
+  background: var(--gf-gradient, linear-gradient(90deg, #e0357a, #c274f5));
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.gf-workout-coach-note {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-left: 3px solid var(--gf-pink, #efa0ff);
+  background: rgba(255, 255, 255, 0.045);
+  border-radius: 0 0.8rem 0.8rem 0;
+
+  strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--gf-pink, #efa0ff);
+  }
+
+  p {
+    color: var(--gf-muted, #ccc);
+  }
+}
+
+.gf-workout-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.gf-workout-notes {
+  margin-top: 1.25rem;
+  color: var(--gf-muted, #aaa);
+
+  summary {
+    cursor: pointer;
+    color: var(--gf-text, #f5f2f7);
+  }
+
+  p {
+    margin: 0.6rem 0 0;
+  }
+}
+
+.gf-workout-day {
+  scroll-margin-top: 6rem;
+
+  &.is-complete {
+    border-color: rgba(190, 108, 255, 0.55);
+  }
+}
+
+.gf-workout-day-status {
+  margin-left: auto;
+  color: var(--gf-lime, #d4ff42);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 767.98px) {
+  .gf-workout-hero-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .gf-workout-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .gf-workout-progress-label {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .gf-workout-hero-actions {
+    flex-direction: column;
+
+    .gf-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
