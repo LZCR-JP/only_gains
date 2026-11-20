@@ -20,11 +20,13 @@
 
     </header>
 
+
     <% if @workout_plans.any? %>
 
       <div class="gf-my-plans-count">
         <%= pluralize(@workout_plans.size, "workout plan") %>
       </div>
+
 
       <!-- WORKOUT PLANS -->
       <div class="gf-my-plans-grid"
@@ -37,6 +39,7 @@
 
           <article class="gf-my-plan-card"
                    data-reveal-target="item">
+
 
             <!-- MENTOR PHOTO -->
             <div class="gf-my-plan-photo">
@@ -51,6 +54,7 @@
 
             </div>
 
+
             <!-- PLAN INFORMATION -->
             <div class="gf-my-plan-content">
 
@@ -58,9 +62,95 @@
                 <%= mentor&.display_name || "No coach assigned" %>
               </span>
 
-              <h2 class="gf-my-plan-title">
-                <%= plan.title %>
-              </h2>
+
+              <!-- PLAN TITLE & RENAME -->
+              <div class="gf-my-plan-title-row"
+                   data-controller="rename-plan">
+
+                <h2 class="gf-my-plan-title">
+                  <%= plan.title %>
+                </h2>
+
+                <button type="button"
+                        class="gf-my-plan-rename"
+                        data-action="click->rename-plan#open"
+                        title="Rename plan"
+                        aria-label="Rename <%= plan.title %>">
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       width="16"
+                       height="16"
+                       viewBox="0 0 24 24"
+                       fill="none"
+                       stroke="currentColor"
+                       stroke-width="1.8"
+                       stroke-linecap="round"
+                       stroke-linejoin="round"
+                       aria-hidden="true">
+
+                    <path d="m16 3 5 5L8 21H3v-5Z"/>
+                    <path d="m14 5 5 5"/>
+
+                  </svg>
+
+                </button>
+
+
+                <!-- RENAME MODAL -->
+                <dialog class="gf-delete-dialog gf-rename-dialog"
+                        data-rename-plan-target="dialog"
+                        data-action="click->rename-plan#backdrop"
+                        aria-labelledby="rename-title-<%= plan.id %>">
+
+                  <div class="gf-delete-dialog-inner">
+
+                    <div class="gf-rename-icon">
+                      <i class="fa-solid fa-pen"
+                         aria-hidden="true"></i>
+                    </div>
+
+                    <h2 id="rename-title-<%= plan.id %>">
+                      Rename your plan
+                    </h2>
+
+                    <p>
+                      Give your workout plan a name of your own.
+                    </p>
+
+                    <%= form_with model: plan,
+                        url: rename_workout_plan_path(plan),
+                        method: :patch do |f| %>
+
+                      <%= f.text_field :title,
+                          class: "gf-rename-input",
+                          required: true,
+                          maxlength: 100,
+                          aria: { label: "Plan name" },
+                          data: { rename_plan_target: "input" } %>
+
+                      <div class="gf-delete-dialog-actions">
+
+                        <button type="button"
+                                class="gf-delete-cancel"
+                                data-action="click->rename-plan#close">
+                          Cancel
+                        </button>
+
+                        <button type="submit"
+                                class="gf-rename-submit">
+                          Save name
+                        </button>
+
+                      </div>
+
+                    <% end %>
+
+                  </div>
+
+                </dialog>
+
+              </div>
+
 
               <!-- STATS -->
               <div class="gf-my-plan-stats">
@@ -97,38 +187,43 @@
 
 
               <!-- PLAN ACTIONS -->
-              <div class="gf-my-plan-actions" data-controller="delete-confirm">
+              <div class="gf-my-plan-actions"
+                   data-controller="delete-confirm">
 
                 <%= link_to workout_plan_path(plan),
                     class: "gf-btn gf-btn-primary" do %>
                   View plan &nbsp; →
                 <% end %>
 
+
                 <!-- TRASH BUTTON -->
                 <button type="button"
                         class="gf-my-plan-delete"
                         data-action="click->delete-confirm#open"
                         title="Delete plan"
-                        aria-label="Delete workout plan">
+                        aria-label="Delete <%= plan.title %>">
 
                   <svg xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true">
+                       width="18"
+                       height="18"
+                       viewBox="0 0 24 24"
+                       fill="none"
+                       stroke="currentColor"
+                       stroke-width="1.8"
+                       stroke-linecap="round"
+                       stroke-linejoin="round"
+                       aria-hidden="true">
+
                     <path d="M3 6h18"/>
                     <path d="M19 6l-1 14H6L5 6"/>
                     <path d="M9 6V3h6v3"/>
                     <path d="M10 10v6"/>
                     <path d="M14 10v6"/>
+
                   </svg>
 
                 </button>
+
 
                 <!-- DELETE CONFIRMATION MODAL -->
                 <dialog class="gf-delete-dialog"
@@ -140,22 +235,26 @@
                   <div class="gf-delete-dialog-inner">
 
                     <div class="gf-delete-icon">
+
                       <svg xmlns="http://www.w3.org/2000/svg"
-                          width="26"
-                          height="26"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.8"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true">
+                           width="26"
+                           height="26"
+                           viewBox="0 0 24 24"
+                           fill="none"
+                           stroke="currentColor"
+                           stroke-width="1.8"
+                           stroke-linecap="round"
+                           stroke-linejoin="round"
+                           aria-hidden="true">
+
                         <path d="M3 6h18"/>
                         <path d="M19 6l-1 14H6L5 6"/>
                         <path d="M9 6V3h6v3"/>
                         <path d="M10 10v6"/>
                         <path d="M14 10v6"/>
+
                       </svg>
+
                     </div>
 
                     <h2 id="delete-title-<%= plan.id %>">
@@ -188,10 +287,10 @@
                     </div>
 
                   </div>
+
                 </dialog>
 
               </div>
-
 
             </div>
 
@@ -202,6 +301,7 @@
       </div>
 
     <% else %>
+
 
       <!-- EMPTY STATE -->
       <div class="gf-my-plans-empty">
@@ -239,10 +339,13 @@
   </div>
 </div>
 
+
 <!-- FOOTER -->
 <footer class="gf-site-footer gf-my-plans-footer">
+
   <div class="container d-flex justify-content-between flex-wrap gap-2">
     <span>Built at Le Wagon Japan • Only Gains © 2026</span>
     <span>Keep showing up · The gains will follow</span>
   </div>
+
 </footer>

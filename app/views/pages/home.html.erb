@@ -25,7 +25,46 @@
         <% end %>
       </div>
 
+    </div>
+
     <span class="gf-scroll-hint" aria-hidden="true">scroll ↓</span>
+  </section>
+
+
+  <!-- HOW IT WORKS -->
+  <section class="gf-section">
+    <div class="container">
+
+      <span class="gf-eyebrow">
+        <span class="gf-dot"></span>How it works
+      </span>
+
+      <h2 class="gf-section-title">
+        Three steps. Lifelong gains.
+      </h2>
+
+      <div class="row g-3" data-controller="reveal" data-reveal-stagger-value="120">
+
+        <% [
+          ["01", "Choose your coach", "Choose a coach whose specialty matches your fitness goals."],
+          ["02", "Build your plan", "Share your fitness level, equipment, and schedule to build a workout plan that fits your life."],
+          ["03", "Get coached", "Chat with your coach, fine-tune your workouts, and stay locked in."]
+        ].each do |num, title, body| %>
+
+          <div class="col-md-4" data-reveal-target="item">
+
+            <article class="gf-card gf-step" data-controller="tilt">
+              <span class="gf-step-num"><%= num %></span>
+              <h3><%= title %></h3>
+              <p><%= body %></p>
+            </article>
+
+          </div>
+
+        <% end %>
+
+      </div>
+    </div>
   </section>
 
 
@@ -89,44 +128,6 @@
   <% end %>
 
 
-  <!-- HOW IT WORKS -->
-  <section class="gf-section">
-    <div class="container">
-
-      <span class="gf-eyebrow">
-        <span class="gf-dot"></span>How it works
-      </span>
-
-      <h2 class="gf-section-title">
-        Three steps. Lifelong gains.
-      </h2>
-
-      <div class="row g-3" data-controller="reveal" data-reveal-stagger-value="120">
-
-        <% [
-          ["01", "Choose your coach", "Browse each coach's specialty and signature quote, then pick your training partner."],
-          ["02", "Build your plan", "Share your fitness level, equipment, and schedule to build a workout plan that fits your life."],
-          ["03", "Get coached", "Chat with your coach, fine-tune your workouts, and stay locked in."]
-        ].each do |num, title, body| %>
-
-          <div class="col-md-4" data-reveal-target="item">
-
-            <article class="gf-card gf-step" data-controller="tilt">
-              <span class="gf-step-num"><%= num %></span>
-              <h3><%= title %></h3>
-              <p><%= body %></p>
-            </article>
-
-          </div>
-
-        <% end %>
-
-      </div>
-    </div>
-  </section>
-
-
-
   <!-- ROTATING MENTOR QUOTE -->
   <% if @mentors.any? %>
     <section class="gf-section pt-0">
@@ -141,15 +142,15 @@
         </h2>
 
         <div class="gf-rotator gf-rotator-feature"
-            data-controller="rotator"
-            data-rotator-interval-value="5000"
-            data-action="mouseenter->rotator#pause mouseleave->rotator#resume"
-            aria-live="polite">
+             data-controller="rotator"
+             data-rotator-interval-value="5000"
+             data-action="mouseenter->rotator#pause mouseleave->rotator#resume"
+             aria-live="polite">
 
           <% @mentors.each_with_index do |mentor, i| %>
 
             <div class="gf-rotator-item<%= " is-active" if i.zero? %>"
-                data-rotator-target="item">
+                 data-rotator-target="item">
 
               <div class="gf-rotator-content">
 
@@ -173,7 +174,9 @@
             </div>
 
           <% end %>
+
           <div class="gf-rotator-nav">
+
             <button type="button"
                     data-action="rotator#previous"
                     aria-label="Previous mentor">
@@ -185,9 +188,11 @@
                     aria-label="Next mentor">
               →
             </button>
+
           </div>
 
           <div class="gf-rotator-dots">
+
             <% @mentors.each_with_index do |mentor, i| %>
 
               <button type="button"
@@ -198,6 +203,7 @@
               </button>
 
             <% end %>
+
           </div>
 
         </div>
@@ -206,9 +212,7 @@
   <% end %>
 
 
-
   <!-- FINAL CTA -->
-
   <section class="gf-section pt-0">
     <div class="container" data-controller="reveal">
 
@@ -240,7 +244,6 @@
 
     </div>
   </section>
-
 
 
   <!-- FOOTER -->

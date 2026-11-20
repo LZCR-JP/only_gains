@@ -30,7 +30,7 @@ body {
 
 // ---------- Utilities ----------
 .gf-mono, .gf-label, .gf-pill, .gf-stat small, .gf-section-label small, .gf-eyebrow {
-  font-family: $mono-font;
+  font-family: $body-font;
 }
 .gf-muted  { color: var(--gf-muted); }
 .gf-yellow { color: var(--gf-yellow); }
@@ -59,7 +59,7 @@ body {
 .gf-header { padding: 1rem 0 1.25rem; }
 
 .gf-title {
-  font-family: $headers-font;
+  font-family: $body-font;
   font-weight: 700;
   font-size: clamp(2rem, 5vw, 3.25rem);
   line-height: 1.05;
@@ -83,7 +83,7 @@ body {
   gap: .4rem;
   color: var(--gf-muted);
   text-decoration: none;
-  font-family: $mono-font;
+  font-family: $body-font;
   font-size: .75rem;
   text-transform: uppercase;
   letter-spacing: .12em;
@@ -137,7 +137,7 @@ body {
   justify-content: space-between;
   align-items: baseline;
   margin: 2rem 0 1rem;
-  font-family: $headers-font;
+  font-family: $body-font;
   font-weight: 700;
   font-size: 1.2rem;
   color: var(--gf-pink);
@@ -171,7 +171,7 @@ body {
 }
 
 .gf-card-title {
-  font-family: $headers-font;
+  font-family: $body-font;
   font-weight: 700;
   font-size: 1.5rem;
   color: var(--gf-pink);
@@ -220,13 +220,13 @@ body {
   border-radius: 14px;
   strong {
     display: block;
-    font-family: $headers-font;
+    font-family: $body-font;
     font-size: clamp(1.8rem, 4vw, 2.5rem);
     line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   small {
-    font-family: $mono-font;
+    font-family: $body-font;
     font-size: .68rem;
     text-transform: uppercase;
     letter-spacing: .14em;
@@ -247,7 +247,7 @@ body {
 .gf-mentor {
   display: block;
   margin-bottom: .25rem;
-  font-family: $mono-font;
+  font-family: $body-font;
   font-size: .65rem;
   text-transform: uppercase;
   letter-spacing: .12em;
@@ -276,7 +276,7 @@ body {
   padding: .75rem 1.25rem;
   border-radius: 10px;
   border: 1px solid transparent;
-  font-family: $headers-font;
+  font-family: $body-font;
   font-weight: 700;
   font-size: .9rem;
   text-transform: uppercase;
@@ -318,7 +318,7 @@ body {
   border-radius: 4px;
   background: var(--gf-card-2);
   color: var(--gf-muted);
-  font-family: $mono-font;
+  font-family: $body-font;
   font-size: .55rem;
   text-transform: uppercase;
   letter-spacing: .1em;
@@ -336,7 +336,7 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
 
   .form-label {
-    font-family: $mono-font;
+    font-family: $body-font;
     font-size: .7rem;
     text-transform: uppercase;
     letter-spacing: .14em;
