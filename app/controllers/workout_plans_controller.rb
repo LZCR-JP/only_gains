@@ -10,6 +10,27 @@ class WorkoutPlansController < ApplicationController
     @days = @workout_plan.generated_workout&.fetch("days", []) || []
     @chats = @workout_plan.chats.order(created_at: :desc, id: :desc).to_a
 
+    schedule = Array(@workout_plan.training_schedule)
+    @schedule_configured = schedule.present? && schedule.length == @days.length
+
+    if @schedule_configured
+      today = Date.current
+
+      @today_day_index = schedule.index(today.strftime("%A"))
+      @today_workout = @today_day_index && @days[@today_day_index]
+
+      next_offset = (1..7).find do |offset|
+        schedule.include?((today + offset).strftime("%A"))
+      end
+
+      if next_offset
+        next_weekday = (today + next_offset).strftime("%A")
+        @next_session_day_index = schedule.index(next_weekday)
+        @next_session_workout = @days[@next_session_day_index]
+        @next_session_date = today + next_offset
+      end
+    end
+
     week_logs = @workout_plan.workout_logs.where(
       completed_at: Time.current.all_week
     )
@@ -24,9 +45,6 @@ class WorkoutPlansController < ApplicationController
       else
         0
       end
-
-    @next_day_index =
-      @days.index { |day| !@completed_day_names.include?(day["name"]) } || 0
   end
 
   # Step 1: GET /workout_plans/new displays all six coaches.
@@ -96,7 +114,7 @@ class WorkoutPlansController < ApplicationController
     assign_selected_mentor
 
     regenerate = @workout_plan.generated_workout.blank? ||
-                 %w[mentor_id goal fitness_level equipment training_days duration_minutes description]
+                 %w[mentor_id goal fitness_level equipment training_schedule duration_minutes description]
                  .any? { |attribute| @workout_plan.will_save_change_to_attribute?(attribute) }
 
     if @workout_plan.valid? && (!regenerate || generate_workout) && @workout_plan.save
@@ -157,13 +175,7 @@ class WorkoutPlansController < ApplicationController
   end
 
   def profile_params
-    params.require(:workout_plan).permit(
-      :fitness_level,
-      :training_days,
-      :duration_minutes,
-      :description,
-      :mentor_id,
-      equipment_list: []
-    )
+    params.require(:workout_plan).permit(:title, :fitness_level, :duration_minutes, :description, :mentor_id,
+                                         { equipment_list: [], training_schedule: [] })
   end
 end
