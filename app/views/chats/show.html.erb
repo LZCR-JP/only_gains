@@ -120,24 +120,14 @@
             data-chat-submit-target="alert"
             role="alert"></div>
 
-         <div class="og-dm-chips">
-            <button type="button"
-                    class="og-dm-chip"
-                    data-action="click->chat-submit#quick"
-                    data-chat-submit-text-param="Show my 10 most recent workout logs">
-              <i class="fa-solid fa-clock-rotate-left"></i> Recent logs
-            </button>
-          </div>
-
         <!-- MESSAGE COMPOSER -->
         <div id="message_form" class="og-dm-composer">
-
-          <%= render "messages/form",
-              chat: @chat,
-              message: @message %>
-
-        </div>
-
+          <div id="message_form"
+              class="og-dm-composer"
+              data-controller="coach-tools">
+            <%= render "messages/form",
+                chat: @chat,
+                message: @message %>
       </div>
     </div>
   </div>
