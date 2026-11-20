@@ -7,6 +7,7 @@
 
       <%= link_to "← Back to workout",
           workout_plan_path(@workout_plan),
+          data: { turbo_frame: "_top" },
           class: "og-dm-back" %>
 
       <div class="og-dm-panel"
