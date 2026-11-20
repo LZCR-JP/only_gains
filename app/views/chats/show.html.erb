@@ -38,7 +38,7 @@
         </header>
         <!-- COACH CAPABILITIES -->
         <details class="og-dm-help">
-          <summary>What can my coach do?</summary>
+          <summary>Capabilities of my coach:</summary>
 
           <ul>
             <li>Answer questions about your workout plan</li>
@@ -119,6 +119,15 @@
         <div id="chat_alert"
             data-chat-submit-target="alert"
             role="alert"></div>
+
+         <div class="og-dm-chips">
+            <button type="button"
+                    class="og-dm-chip"
+                    data-action="click->chat-submit#quick"
+                    data-chat-submit-text-param="Show my 10 most recent workout logs">
+              <i class="fa-solid fa-clock-rotate-left"></i> Recent logs
+            </button>
+          </div>
 
         <!-- MESSAGE COMPOSER -->
         <div id="message_form" class="og-dm-composer">
