@@ -120,10 +120,18 @@
               <div class="gf-workout-day-tools">
                 <% if chats.any? %>
                   <%= link_to "💬",
-                      workout_plan_chat_path(@workout_plan, chats.first),
+                      chats.any? ? workout_plan_chat_path(@workout_plan, chats.first) : "#coachChatModal",
                       class: "gf-icon-btn",
                       title: "Chat with your coach about #{day_title}",
-                      aria: { label: "Chat with your coach about #{day_title}" } %>
+                      aria: { label: "Chat with your coach about #{day_title}" },
+                      data: chats.any? ? {
+                        bs_toggle: "modal",
+                        bs_target: "#coachChatModal",
+                        turbo_frame: "coach-chat"
+                      } : {
+                        bs_toggle: "modal",
+                        bs_target: "#coachChatModal"
+                      } %>
                 <% else %>
                   <%= button_to "💬",
                       workout_plan_chats_path(@workout_plan),
@@ -195,4 +203,46 @@
           class: "gf-workout-delete" %>
     </div>
   </div>
+  <div class="modal fade"
+        id="coachChatModal"
+        tabindex="-1"
+        aria-labelledby="coachChatModalLabel"
+        aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content og-chat-modal">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5" id="coachChatModalLabel">
+              Chat with <%= @workout_plan.mentor.display_name %>
+            </h2>
+
+            <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body p-0">
+            <% if chats.any? %>
+              <%= turbo_frame_tag "coach-chat",
+                  src: workout_plan_chat_path(@workout_plan, chats.first),
+                  loading: :eager do %>
+                <p class="p-4 mb-0">Loading your coach chat…</p>
+              <% end %>
+            <% else %>
+              <%= turbo_frame_tag "coach-chat" do %>
+                <div class="og-chat-start">
+                  <p>Start a conversation with your coach about this plan.</p>
+
+                  <%= button_to "Start chat",
+                      workout_plan_chats_path(@workout_plan),
+                      method: :post,
+                      form: { data: { turbo_frame: "coach-chat" } },
+                      class: "gf-btn gf-btn-primary" %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>

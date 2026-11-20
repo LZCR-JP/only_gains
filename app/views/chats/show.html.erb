@@ -1,111 +1,113 @@
+<turbo-frame id="coach-chat">
+  <% content_for :title, "Coach Chat · Only Gains" %>
+  <% mentor = @workout_plan.mentor %>
 
-<% content_for :title, "Coach Chat · Only Gains" %>
-<% mentor = @workout_plan.mentor %>
+  <div class="og-dm">
+    <div class="container">
 
-<div class="og-dm">
-  <div class="container">
+      <%= link_to "← Back to workout",
+          workout_plan_path(@workout_plan),
+          class: "og-dm-back" %>
 
-    <%= link_to "← Back to workout",
-        workout_plan_path(@workout_plan),
-        class: "og-dm-back" %>
+      <div class="og-dm-panel"
+          data-controller="chat-submit"
+          data-action="
+            submit->chat-submit#guard
+            turbo:submit-start->chat-submit#start
+            turbo:submit-end->chat-submit#finish
+            turbo:before-cache@document->chat-submit#beforeCache
+          ">
 
-    <div class="og-dm-panel"
-         data-controller="chat-submit"
-         data-action="
-           submit->chat-submit#guard
-           turbo:submit-start->chat-submit#start
-           turbo:submit-end->chat-submit#finish
-           turbo:before-cache@document->chat-submit#beforeCache
-         ">
+        <!-- CHAT BACKGROUND -->
+        <% if mentor_photo_path(mentor, variant: :home).present? %>
+          <%= image_tag mentor_photo_path(mentor, variant: :home),
+              class: "og-dm-watermark",
+              alt: "",
+              aria: { hidden: true } %>
+        <% end %>
 
-      <!-- CHAT BACKGROUND -->
-      <% if mentor_photo_path(mentor, variant: :home).present? %>
-        <%= image_tag mentor_photo_path(mentor, variant: :home),
-            class: "og-dm-watermark",
-            alt: "",
-            aria: { hidden: true } %>
-      <% end %>
-
-      <!-- CHAT HEADER -->
-      <header class="og-dm-header">
-
-        <%= mentor_avatar(mentor) %>
-
-        <div class="og-dm-identity">
-          <h1><%= mentor.name %></h1>
-        </div>
-
-      </header>
-      <!-- COACH CAPABILITIES -->
-      <details class="og-dm-help">
-        <summary>What can my coach do?</summary>
-
-        <ul>
-          <li>Answer questions about your workout plan</li>
-          <li>Find alternative exercises</li>
-          <li>Suggest workout changes for your approval</li>
-          <li>Record your completed workouts</li>
-          <li>Show your 10 most recent workout logs</li>
-        </ul>
-      </details>
-
-      <!-- CHAT MESSAGES -->
-      <div class="og-dm-messages"
-           data-controller="chat-scroll"
-           data-chat-submit-target="scroll">
-
-        <div class="og-dm-intro">
+        <!-- CHAT HEADER -->
+        <header class="og-dm-header">
 
           <%= mentor_avatar(mentor) %>
 
-          <h2><%= mentor.name %></h2>
-          <p>“<%= mentor.tagline %>”</p>
-
-        </div>
-
-        <div id="messages"
-             data-chat-scroll-target="list"
-             data-chat-submit-target="list">
-
-          <% @messages.each do |message| %>
-
-            <%= render "messages/message",
-                message: message,
-                workout_plan: @workout_plan %>
-
-          <% end %>
-
-        </div>
-
-        <!-- PENDING MESSAGE -->
-        <div class="og-dm-pending"
-             data-chat-submit-target="pending"
-             hidden>
-
-          <div class="chat-message chat-message--user">
-
-            <div class="chat-bubble chat-bubble--user og-dm-pending-bubble"
-                 data-chat-submit-target="pendingText"></div>
-
+          <div class="og-dm-identity">
+            <h1><%= mentor.name %></h1>
           </div>
 
-          <!-- TYPING ANIMATION -->
-          <div class="og-dm-typing">
+        </header>
+        <!-- COACH CAPABILITIES -->
+        <details class="og-dm-help">
+          <summary>What can my coach do?</summary>
+
+          <ul>
+            <li>Answer questions about your workout plan</li>
+            <li>Find alternative exercises</li>
+            <li>Suggest workout changes for your approval</li>
+            <li>Record your completed workouts</li>
+            <li>Show your 10 most recent workout logs</li>
+          </ul>
+        </details>
+
+        <!-- CHAT MESSAGES -->
+        <div class="og-dm-messages"
+            data-controller="chat-scroll"
+            data-chat-submit-target="scroll">
+
+          <div class="og-dm-intro">
 
             <%= mentor_avatar(mentor) %>
 
-            <div>
+            <h2><%= mentor.name %></h2>
+            <p>“<%= mentor.tagline %>”</p>
 
-              <div class="og-dm-typing-bubble"
-                   aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
+          </div>
+
+          <div id="messages"
+              data-chat-scroll-target="list"
+              data-chat-submit-target="list">
+
+            <% @messages.each do |message| %>
+
+              <%= render "messages/message",
+                  message: message,
+                  workout_plan: @workout_plan %>
+
+            <% end %>
+
+          </div>
+
+          <!-- PENDING MESSAGE -->
+          <div class="og-dm-pending"
+              data-chat-submit-target="pending"
+              hidden>
+
+            <div class="chat-message chat-message--user">
+
+              <div class="chat-bubble chat-bubble--user og-dm-pending-bubble"
+                  data-chat-submit-target="pendingText"></div>
+
+            </div>
+
+            <!-- TYPING ANIMATION -->
+            <div class="og-dm-typing">
+
+              <%= mentor_avatar(mentor) %>
+
+              <div>
+
+                <div class="og-dm-typing-bubble"
+                    aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <small role="status">
+                  <%= mentor.name %> is typing...
+                </small>
+
               </div>
-
-              <small role="status">
-                <%= mentor.name %> is typing...
-              </small>
 
             </div>
 
@@ -113,22 +115,21 @@
 
         </div>
 
+        <!-- ERROR MESSAGES -->
+        <div id="chat_alert"
+            data-chat-submit-target="alert"
+            role="alert"></div>
+
+        <!-- MESSAGE COMPOSER -->
+        <div id="message_form" class="og-dm-composer">
+
+          <%= render "messages/form",
+              chat: @chat,
+              message: @message %>
+
+        </div>
+
       </div>
-
-      <!-- ERROR MESSAGES -->
-      <div id="chat_alert"
-           data-chat-submit-target="alert"
-           role="alert"></div>
-
-      <!-- MESSAGE COMPOSER -->
-      <div id="message_form" class="og-dm-composer">
-
-        <%= render "messages/form",
-            chat: @chat,
-            message: @message %>
-
-      </div>
-
     </div>
   </div>
-</div>
+</turbo-frame>
