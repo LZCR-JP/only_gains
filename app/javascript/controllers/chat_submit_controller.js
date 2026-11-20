@@ -102,6 +102,16 @@ export default class extends Controller {
     this.toBottom()
   }
 
+  quick(event) {
+    if (this.waiting) return
+
+    const form = this.element.querySelector(".og-dm-form")
+    const input = form.querySelector("textarea")
+
+    input.value = event.params.text
+    form.requestSubmit()
+  }
+
   keydown(event) {
     if (event.isComposing || event.keyCode === 229) return
     if (event.key !== "Enter" || event.shiftKey) return

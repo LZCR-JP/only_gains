@@ -777,3 +777,74 @@
     display: none;
   }
 }
+
+.og-dm-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 24px 0;
+}
+
+.og-dm-chip {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+.og-dm-form {
+  position: relative;
+}
+
+.og-dm-tools {
+  position: relative;
+  flex: 0 0 auto;
+
+  summary {
+    display: grid;
+    width: 2.8rem;
+    height: 2.8rem;
+    place-items: center;
+    border: 1px solid rgba(217, 138, 255, 0.4);
+    border-radius: 0.8rem;
+    color: #e6a5ff;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.og-dm-tools-menu {
+  position: absolute;
+  z-index: 10;
+  bottom: calc(100% + 0.6rem);
+  left: 0;
+  display: grid;
+  width: max-content;
+  max-width: 80vw;
+  gap: 0.25rem;
+  padding: 0.45rem;
+  border: 1px solid rgba(217, 138, 255, 0.3);
+  border-radius: 0.8rem;
+  background: #211d24;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+
+  button {
+    padding: 0.65rem 0.8rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #f2edf4;
+    text-align: left;
+  }
+
+  button:hover,
+  button:focus-visible {
+    background: rgba(217, 138, 255, 0.13);
+  }
+}

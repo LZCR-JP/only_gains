@@ -1,6 +1,36 @@
+<%= form_with model: [chat, message], class: "og-dm-form" do |form| %>
+  <details class="og-dm-tools">
+    <summary aria-label="Open coach tools"
+             title="Coach tools">
+      ✦
+    </summary>
 
-<%= form_with model: [chat, message],
-    class: "og-dm-form" do |form| %>
+    <div class="og-dm-tools-menu">
+      <button type="button"
+              data-action="coach-tools#insert"
+              data-prompt="Can you suggest an easier alternative to an exercise in my workout?">
+        Find an exercise alternative
+      </button>
+
+      <button type="button"
+              data-action="coach-tools#insert"
+              data-prompt="I’d like to change my workout plan. Suggest a suitable change for me to review.">
+        Suggest a plan change
+      </button>
+
+      <button type="button"
+              data-action="coach-tools#insert"
+              data-prompt="I completed today’s workout. Please record it.">
+        Log today’s workout
+      </button>
+
+      <button type="button"
+              data-action="coach-tools#insert"
+              data-prompt="Show me my 10 most recent workout logs.">
+        Show recent workout logs
+      </button>
+    </div>
+  </details>
 
   <%= form.text_area :content,
       rows: 1,
@@ -10,13 +40,13 @@
       autocomplete: "off",
       aria: { label: "Message" },
       data: {
-        action: "keydown.enter->chat-submit#keydown"
+        action: "keydown.enter->chat-submit#keydown",
+        coach_tools_target: "input"
       } %>
 
   <button type="submit"
           class="og-dm-send"
           aria-label="Send message">
-
     <svg xmlns="http://www.w3.org/2000/svg"
          width="23"
          height="23"
@@ -25,15 +55,12 @@
          stroke="currentColor"
          stroke-width="2"
          stroke-linecap="round"
-         stroke-linejoin="round">
-
+         stroke-linejoin="round"
+         aria-hidden="true">
       <path d="M12 19V5"/>
       <path d="m5 12 7-7 7 7"/>
-
     </svg>
-
   </button>
-
 <% end %>
 
 <div class="og-dm-keyboard-hint">

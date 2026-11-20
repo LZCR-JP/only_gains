@@ -13,29 +13,56 @@
 
     <%# Today's plan is the main focus %>
     <% if @schedule_configured && @today_workout.present? %>
-      <section class="gf-todays-plan">
-        <div>
-          <p class="gf-eyebrow">TODAY'S PLAN · <%= today.upcase %></p>
+      <% today_exercises = Array(@today_workout["exercises"]) %>
+
+      <section class="gf-todays-plan gf-todays-plan--details">
+        <div class="gf-todays-plan-overview">
+          <p class="gf-eyebrow">TODAY’S PLAN · <%= today.upcase %></p>
           <h1><%= @today_workout["name"] %></h1>
-          <p><%= pluralize(@today_workout.fetch("exercises", []).size, "exercise") %></p>
+          <p><%= pluralize(today_exercises.size, "exercise") %> · <%= @workout_plan.duration_minutes %> min</p>
         </div>
 
-        <div class="gf-todays-plan-actions">
-          <%= link_to "Start today’s workout",
-              "#workout-day-#{@today_day_index + 1}",
-              class: "gf-btn gf-btn-primary" %>
+        <div class="gf-todays-exercises">
+          <h2>Today’s exercises</h2>
 
-          <%= link_to "Edit plan",
-              edit_workout_plan_path(@workout_plan),
-              class: "gf-btn gf-btn-outline" %>
+          <% if today_exercises.any? %>
+            <ul>
+              <% today_exercises.first(4).each do |exercise| %>
+                <li>
+                  <span class="gf-todays-exercise-name"><%= exercise["name"] %></span>
+
+                  <span class="gf-todays-exercise-details">
+                    <%= exercise["sets"] %> × <%= exercise["reps"] %>
+                  </span>
+
+                  <span class="gf-todays-exercise-rest">
+                    <%= exercise["rest_seconds"] %>s rest
+                  </span>
+                </li>
+              <% end %>
+            </ul>
+
+            <% if today_exercises.size > 4 %>
+              <p class="gf-todays-exercises-more">
+                + <%= today_exercises.size - 4 %> more
+                <%= "exercise".pluralize(today_exercises.size - 4) %> below
+              </p>
+            <% end %>
+          <% else %>
+            <p>Exercise details aren’t available yet.</p>
+          <% end %>
         </div>
       </section>
+
     <% elsif @schedule_configured %>
       <section class="gf-todays-plan">
-        <p class="gf-eyebrow">TODAY · <%= today.upcase %></p>
-        <h1>Rest day</h1>
-        <p>Your next scheduled workout is coming up below.</p>
+        <div>
+          <p class="gf-eyebrow">TODAY · <%= today.upcase %></p>
+          <h1>Rest day</h1>
+          <p>Your next scheduled workout is coming up below.</p>
+        </div>
       </section>
+
     <% else %>
       <section class="gf-todays-plan">
         <div>
@@ -43,10 +70,6 @@
           <h1>Choose your training days</h1>
           <p>Set your weekly schedule to see today’s plan here.</p>
         </div>
-
-        <%= link_to "Edit plan",
-            edit_workout_plan_path(@workout_plan),
-            class: "gf-btn gf-btn-primary" %>
       </section>
     <% end %>
 
@@ -120,10 +143,18 @@
               <div class="gf-workout-day-tools">
                 <% if chats.any? %>
                   <%= link_to "💬",
-                      workout_plan_chat_path(@workout_plan, chats.first),
+                      chats.any? ? workout_plan_chat_path(@workout_plan, chats.first) : "#coachChatModal",
                       class: "gf-icon-btn",
                       title: "Chat with your coach about #{day_title}",
-                      aria: { label: "Chat with your coach about #{day_title}" } %>
+                      aria: { label: "Chat with your coach about #{day_title}" },
+                      data: chats.any? ? {
+                        bs_toggle: "modal",
+                        bs_target: "#coachChatModal",
+                        turbo_frame: "coach-chat"
+                      } : {
+                        bs_toggle: "modal",
+                        bs_target: "#coachChatModal"
+                      } %>
                 <% else %>
                   <%= button_to "💬",
                       workout_plan_chats_path(@workout_plan),
@@ -195,4 +226,46 @@
           class: "gf-workout-delete" %>
     </div>
   </div>
+  <div class="modal fade"
+        id="coachChatModal"
+        tabindex="-1"
+        aria-labelledby="coachChatModalLabel"
+        aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content og-chat-modal">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5" id="coachChatModalLabel">
+              Chat with <%= @workout_plan.mentor.display_name %>
+            </h2>
+
+            <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body p-0">
+            <% if chats.any? %>
+              <%= turbo_frame_tag "coach-chat",
+                  src: workout_plan_chat_path(@workout_plan, chats.first),
+                  loading: :eager do %>
+                <p class="p-4 mb-0">Loading your coach chat…</p>
+              <% end %>
+            <% else %>
+              <%= turbo_frame_tag "coach-chat" do %>
+                <div class="og-chat-start">
+                  <p>Start a conversation with your coach about this plan.</p>
+
+                  <%= button_to "Start chat",
+                      workout_plan_chats_path(@workout_plan),
+                      method: :post,
+                      form: { data: { turbo_frame: "coach-chat" } },
+                      class: "gf-btn gf-btn-primary" %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
